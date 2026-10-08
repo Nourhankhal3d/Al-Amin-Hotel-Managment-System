@@ -1,0 +1,14 @@
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: ReactNode;
+  variant?: 'primary' | 'secondary' | 'ghost';
+}
+
+export function Button({ children, variant = 'primary', className = '', type = 'button', ...props }: ButtonProps) {
+  return (
+    <button type={type} className={`ui-button ui-button--${variant} ${className}`.trim()} {...props}>
+      {children}
+    </button>
+  );
+}

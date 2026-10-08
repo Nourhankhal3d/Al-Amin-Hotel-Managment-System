@@ -1,0 +1,22 @@
+{
+  "appName": "أمين | إدارة الفندق",
+  "dashboard": "لوحة القيادة",
+  "rooms": "الغرف",
+  "housekeeping": "تنظيف الغرف",
+  "maintenance": "الصيانة",
+  "payments": "الدفع",
+  "shiftHandover": "تبادل المناوبة",
+  "shiftReport": "تقرير المناوبة",
+  "profile": "الملف الشخصي",
+  "settings": "الإعدادات",
+  "login": "تسجيل الدخول",
+  "logout": "تسجيل الخروج",
+  "search": "البحث",
+  "notifications": "الإشعارات",
+  "language": "اللغة",
+  "english": "English",
+  "arabic": "العربية",
+  "loading": "جارٍ التحميل...",
+  "notFound": "الصفحة غير موجودة",
+  "back": "رجوع"
+}

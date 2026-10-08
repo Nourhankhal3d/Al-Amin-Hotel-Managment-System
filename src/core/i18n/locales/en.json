@@ -1,0 +1,22 @@
+{
+  "appName": "Al-Amin | Hotel Management",
+  "dashboard": "Dashboard",
+  "rooms": "Rooms",
+  "housekeeping": "Housekeeping",
+  "maintenance": "Maintenance",
+  "payments": "Payments",
+  "shiftHandover": "Shift Handover",
+  "shiftReport": "Shift Report",
+  "profile": "Profile",
+  "settings": "Settings",
+  "login": "Log in",
+  "logout": "Log out",
+  "search": "Search",
+  "notifications": "Notifications",
+  "language": "Language",
+  "english": "English",
+  "arabic": "العربية",
+  "loading": "Loading...",
+  "notFound": "Page not found",
+  "back": "Back"
+}
