@@ -1,3 +1,4 @@
+import './Badge.css';
 import type { ReactNode } from 'react';
 
 interface BadgeProps {
@@ -6,5 +7,5 @@ interface BadgeProps {
 }
 
 export function Badge({ children, tone = 'neutral' }: BadgeProps) {
-  return <span className={`ui-badge ui-badge--${tone}`}>{children}</span>;
+  return <span className={`badge badge--${tone}`}>{children}</span>;
 }
