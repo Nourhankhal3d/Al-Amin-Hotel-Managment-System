@@ -1,9 +1,11 @@
 import './Badge.css';
 import type { ReactNode } from 'react';
 
+export type BadgeTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple';
+
 interface BadgeProps {
   children: ReactNode;
-  tone?: 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple';
+  tone?: BadgeTone;
 }
 
 export function Badge({ children, tone = 'neutral' }: BadgeProps) {

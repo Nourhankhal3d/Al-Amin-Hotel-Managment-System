@@ -1,7 +1,7 @@
 import './Timeline.css';
 import type { ReactNode } from 'react';
 
-interface TimelineItem {
+export interface TimelineItem {
   id: string;
   title: string;
   description?: string;
