@@ -78,4 +78,24 @@
 
 .drawer__footer .ui-button--secondary {
   border-color: #e8e2d6;
+}[data-theme="dark"] .drawer__panel {
+  background: #12181f;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .drawer__header,
+[data-theme="dark"] .drawer__footer {
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .drawer__close {
+  background: #1a222c;
+  border-color: #2a3441;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .drawer__footer .ui-button--secondary {
+  background: #1a222c;
+  border-color: #2a3441;
+  color: #e2e8f0;
 }

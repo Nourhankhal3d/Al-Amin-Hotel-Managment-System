@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 interface BadgeProps {
   children: ReactNode;
-  tone?: 'neutral' | 'success' | 'warning' | 'danger' | 'info';
+  tone?: 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple';
 }
 
 export function Badge({ children, tone = 'neutral' }: BadgeProps) {
