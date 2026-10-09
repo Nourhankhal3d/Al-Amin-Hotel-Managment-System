@@ -3,30 +3,14 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Drawer } from '../../../components/ui/Drawer';
-
-// TEMP: texts live here until i18n is wired
-const LABELS = {
-  eyebrow: 'مهمة جديدة',
-  title: 'إضافة مهمة نظافة',
-  room: 'الغرفة',
-  roomPlaceholder: 'اختر الغرفة',
-  taskType: 'نوع المهمة',
-  taskTypePlaceholder: 'اختر نوع المهمة',
-  priority: 'الأولوية',
-  priorityPlaceholder: 'حدد الأولوية',
-  status: 'الحالة',
-  statusValue: 'معلّقة',
-  notes: 'ملاحظات',
-  notesPlaceholder: 'أضف تعليمات أو ملاحظات',
-  hint: 'سيتم إرسال البلاغ إلى إدارة التنظيف للتعيين والمتابعة.',
-  cancel: 'إلغاء',
-  submit: 'إرسال البلاغ',
-};
-
-// TEMP: options until the real data is connected. TODO: confirm with backend
-const ROOM_OPTIONS = ['101', '102', '207', '305'];
-const TASK_TYPE_OPTIONS = ['تنظيف بعد المغادرة', 'تجهيز قبل الوصول', 'تنظيف يومي', 'طلب من الضيف'];
-const PRIORITY_OPTIONS = ['عادي', 'مرتفع', 'حرج'];
+import { useLanguage } from '../../../core/i18n/useLanguage';
+import {
+  PRIORITY_LABEL_KEY,
+  PRIORITY_OPTIONS,
+  ROOM_OPTIONS,
+  TASK_TYPE_LABEL_KEY,
+  TASK_TYPE_OPTIONS,
+} from '../constants/housekeeping.constants';
 
 export interface NewTaskValues {
   roomNumber: string;
@@ -44,6 +28,7 @@ interface TaskFormDrawerProps {
 }
 
 export function TaskFormDrawer({ open, onClose, onSubmit }: TaskFormDrawerProps) {
+  const { t } = useLanguage();
   const [values, setValues] = useState<NewTaskValues>(EMPTY_VALUES);
 
   const handleChange =
@@ -66,52 +51,57 @@ export function TaskFormDrawer({ open, onClose, onSubmit }: TaskFormDrawerProps)
   return (
     <Drawer
       open={open}
-      title={LABELS.title}
-      eyebrow={LABELS.eyebrow}
+      title={t('hkFormTitle')}
+      eyebrow={t('hkFormEyebrow')}
+      closeLabel={t('drawerClose')}
       onClose={handleClose}
       footer={
         <>
-          <Button variant="secondary" onClick={handleClose}>{LABELS.cancel}</Button>
-          <Button type="submit" form="housekeeping-task-form">{LABELS.submit}</Button>
+          <Button variant="secondary" onClick={handleClose}>{t('cancel')}</Button>
+          <Button type="submit" form="housekeeping-task-form">{t('hkFormSubmit')}</Button>
         </>
       }
     >
       <form id="housekeeping-task-form" className="task-form" onSubmit={handleSubmit}>
         <div className="task-form__row">
           <label className="task-form__field">
-            <span>{LABELS.room}</span>
+            <span>{t('roomLabel')}</span>
             <select required value={values.roomNumber} onChange={handleChange('roomNumber')}>
-              <option value="" disabled>{LABELS.roomPlaceholder}</option>
+              <option value="" disabled>{t('selectRoom')}</option>
               {ROOM_OPTIONS.map((room) => <option key={room} value={room}>{room}</option>)}
             </select>
           </label>
           <label className="task-form__field">
-            <span>{LABELS.taskType}</span>
+            <span>{t('hkColTaskType')}</span>
             <select required value={values.taskType} onChange={handleChange('taskType')}>
-              <option value="" disabled>{LABELS.taskTypePlaceholder}</option>
-              {TASK_TYPE_OPTIONS.map((type) => <option key={type} value={type}>{type}</option>)}
+              <option value="" disabled>{t('hkFormTaskTypePh')}</option>
+              {TASK_TYPE_OPTIONS.map((type) => (
+                <option key={type} value={type}>{t(TASK_TYPE_LABEL_KEY[type])}</option>
+              ))}
             </select>
           </label>
         </div>
 
         <label className="task-form__field">
-          <span>{LABELS.priority}</span>
+          <span>{t('priorityLabel')}</span>
           <select required value={values.priority} onChange={handleChange('priority')}>
-            <option value="" disabled>{LABELS.priorityPlaceholder}</option>
-            {PRIORITY_OPTIONS.map((priority) => <option key={priority} value={priority}>{priority}</option>)}
+            <option value="" disabled>{t('selectPriority')}</option>
+            {PRIORITY_OPTIONS.map((priority) => (
+              <option key={priority} value={priority}>{t(PRIORITY_LABEL_KEY[priority])}</option>
+            ))}
           </select>
         </label>
 
         <label className="task-form__field">
-          <span>{LABELS.status}</span>
-          <input readOnly value={LABELS.statusValue} />
+          <span>{t('statusLabel')}</span>
+          <input readOnly value={t('hkStatus_pending')} />
         </label>
 
         <label className="task-form__field">
-          <span>{LABELS.notes}</span>
+          <span>{t('notesLabel')}</span>
           <textarea
             rows={4}
-            placeholder={LABELS.notesPlaceholder}
+            placeholder={t('hkFormNotesPh')}
             value={values.notes}
             onChange={handleChange('notes')}
           />
@@ -119,7 +109,7 @@ export function TaskFormDrawer({ open, onClose, onSubmit }: TaskFormDrawerProps)
 
         <p className="task-form__hint">
           <span>✦</span>
-          {LABELS.hint}
+          {t('hkFormHint')}
         </p>
       </form>
     </Drawer>

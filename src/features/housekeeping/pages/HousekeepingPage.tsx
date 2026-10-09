@@ -6,42 +6,28 @@ import { Button } from '../../../components/ui/Button';
 import { Pagination } from '../../../components/ui/Pagination';
 import { StatCard } from '../../../components/ui/StatCard';
 import { Table } from '../../../components/ui/Table';
+import { useLanguage } from '../../../core/i18n/useLanguage';
 import { HousekeepingFilters } from '../components/HousekeepingFilters';
 import { TaskDetailsDrawer } from '../components/TaskDetailsDrawer';
 import type { TaskDetails } from '../components/TaskDetailsDrawer';
 import { TaskFormDrawer } from '../components/TaskFormDrawer';
-
-// TEMP: texts live here until i18n is wired
-const LABELS = {
-  heroTitle: 'متابعة التنظيف',
-  heroDescription: 'الإبلاغ عن احتياجات تنظيف الغرف ومتابعة حالتها حتى الاكتمال.',
-  newTask: 'الإبلاغ عن تنظيف',
-  statToday: 'مهام اليوم',
-  statHigh: 'أولوية مرتفعة',
-  statDone: 'مكتملة',
-  statInProgress: 'قيد التنفيذ',
-  statPending: 'معلّقة',
-  room: 'الغرفة',
-  taskType: 'نوع المهمة',
-  priority: 'الأولوية',
-  status: 'الحالة',
-  createdAt: 'وقت التسجيل',
-  actions: 'الإجراءات',
-};
-
-// TODO: move these maps to constants/housekeeping.constants.ts
-type Tone = 'neutral' | 'success' | 'warning' | 'danger' | 'info';
-const STATUS_TONE: Record<string, Tone> = { 'معلّقة': 'warning', 'قيد التنفيذ': 'info', 'مكتملة': 'success' };
-const PRIORITY_TONE: Record<string, Tone> = { 'عادي': 'neutral', 'مرتفع': 'warning', 'حرج': 'danger' };
+import {
+  PRIORITY_LABEL_KEY,
+  PRIORITY_TONE,
+  STATUS_LABEL_KEY,
+  STATUS_TONE,
+  TASK_TYPE_LABEL_KEY,
+} from '../constants/housekeeping.constants';
 
 // TEMP: placeholder data until the real service is connected
+// (log texts, notes and times below are sample data, they will come from the backend)
 const rows: TaskDetails[] = [
   {
     id: '1',
     roomNumber: '207',
-    taskType: 'تنظيف بعد المغادرة',
-    status: 'قيد التنفيذ',
-    priority: 'مرتفع',
+    taskType: 'checkout',
+    status: 'in_progress',
+    priority: 'high',
     assignedAt: 'أسندت الساعة ١١:١٨ ص',
     followUpAt: '١٢:٣٠ م',
     notes: 'يرجى تجهيز الغرفة بالكامل والتأكد من المناشف ومستلزمات الضيافة.',
@@ -54,30 +40,31 @@ const rows: TaskDetails[] = [
   {
     id: '2',
     roomNumber: '305',
-    taskType: 'تجهيز قبل الوصول',
-    status: 'معلّقة',
-    priority: 'حرج',
+    taskType: 'precheckin',
+    status: 'pending',
+    priority: 'critical',
     log: [{ id: 'l1', title: 'طُلب التنظيف', description: 'تم إنشاء الطلب من الاستقبال', time: '١١:٠٥ ص' }],
   },
   {
     id: '3',
     roomNumber: '112',
-    taskType: 'تنظيف يومي',
-    status: 'مكتملة',
-    priority: 'عادي',
+    taskType: 'daily',
+    status: 'done',
+    priority: 'normal',
     log: [{ id: 'l1', title: 'اكتملت المهمة', description: 'تم تنظيف الغرفة', time: '٩:٣٠ ص' }],
   },
   {
     id: '4',
     roomNumber: '210',
-    taskType: 'طلب من الضيف',
-    status: 'معلّقة',
-    priority: 'مرتفع',
+    taskType: 'guest',
+    status: 'pending',
+    priority: 'high',
     log: [{ id: 'l1', title: 'طُلب التنظيف', description: 'طلب من الضيف', time: '١٠:١٠ ص' }],
   },
 ];
 
 export function HousekeepingPage() {
+  const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('');
   const [priority, setPriority] = useState('');
@@ -86,7 +73,8 @@ export function HousekeepingPage() {
   const [formOpen, setFormOpen] = useState(false);
 
   const filteredRows = rows.filter((row) => {
-    const matchesQuery = !query || row.roomNumber.includes(query) || row.taskType.includes(query);
+    const typeLabel = t(TASK_TYPE_LABEL_KEY[row.taskType]);
+    const matchesQuery = !query || row.roomNumber.includes(query) || typeLabel.includes(query);
     const matchesStatus = !status || row.status === status;
     const matchesPriority = !priority || row.priority === priority;
     return matchesQuery && matchesStatus && matchesPriority;
@@ -102,16 +90,16 @@ export function HousekeepingPage() {
 
   return (
     <div className="feature-page">
-      <PageHero title={LABELS.heroTitle} description={LABELS.heroDescription}>
-        <Button onClick={() => setFormOpen(true)}>{LABELS.newTask}</Button>
+      <PageHero title={t('hkHeroTitle')} description={t('hkHeroDesc')}>
+        <Button onClick={() => setFormOpen(true)}>{t('hkNewTask')}</Button>
       </PageHero>
 
       <div className="housekeeping-stats">
-        <StatCard label={LABELS.statToday} value={rows.length} icon="▤" tone="amber" />
-        <StatCard label={LABELS.statHigh} value={rows.filter((row) => row.priority === 'مرتفع').length} icon="!" tone="rose" />
-        <StatCard label={LABELS.statDone} value={rows.filter((row) => row.status === 'مكتملة').length} icon="✓" tone="teal" />
-        <StatCard label={LABELS.statInProgress} value={rows.filter((row) => row.status === 'قيد التنفيذ').length} icon="✦" tone="blue" />
-        <StatCard label={LABELS.statPending} value={rows.filter((row) => row.status === 'معلّقة').length} icon="◷" tone="amber" />
+        <StatCard label={t('hkStatToday')} value={rows.length} icon="▤" tone="amber" />
+        <StatCard label={t('hkStatHigh')} value={rows.filter((row) => row.priority === 'high').length} icon="!" tone="rose" />
+        <StatCard label={t('hkStatDone')} value={rows.filter((row) => row.status === 'done').length} icon="✓" tone="teal" />
+        <StatCard label={t('hkStatInProgress')} value={rows.filter((row) => row.status === 'in_progress').length} icon="✦" tone="blue" />
+        <StatCard label={t('hkStatPending')} value={rows.filter((row) => row.status === 'pending').length} icon="◷" tone="amber" />
       </div>
 
       <HousekeepingFilters
@@ -126,27 +114,31 @@ export function HousekeepingPage() {
 
       <Table
         columns={[
-          { key: 'roomNumber', label: LABELS.room, render: (row: unknown) => (row as TaskDetails).roomNumber },
-          { key: 'taskType', label: LABELS.taskType, render: (row: unknown) => (row as TaskDetails).taskType },
+          { key: 'roomNumber', label: t('colRoom'), render: (row: unknown) => (row as TaskDetails).roomNumber },
+          {
+            key: 'taskType',
+            label: t('hkColTaskType'),
+            render: (row: unknown) => t(TASK_TYPE_LABEL_KEY[(row as TaskDetails).taskType]),
+          },
           {
             key: 'priority',
-            label: LABELS.priority,
+            label: t('priorityLabel'),
             render: (row: unknown) => {
               const task = row as TaskDetails;
-              return <Badge tone={PRIORITY_TONE[task.priority] ?? 'neutral'}>{task.priority}</Badge>;
+              return <Badge tone={PRIORITY_TONE[task.priority]}>{t(PRIORITY_LABEL_KEY[task.priority])}</Badge>;
             },
           },
           {
             key: 'status',
-            label: LABELS.status,
+            label: t('statusLabel'),
             render: (row: unknown) => {
               const task = row as TaskDetails;
-              return <Badge tone={STATUS_TONE[task.status] ?? 'neutral'}>{task.status}</Badge>;
+              return <Badge tone={STATUS_TONE[task.status]}>{t(STATUS_LABEL_KEY[task.status])}</Badge>;
             },
           },
           {
             key: 'createdAt',
-            label: LABELS.createdAt,
+            label: t('hkColCreatedAt'),
             render: (row: unknown) => {
               const task = row as TaskDetails;
               return task.log[task.log.length - 1]?.time ?? '';
@@ -154,7 +146,7 @@ export function HousekeepingPage() {
           },
           {
             key: 'actions',
-            label: LABELS.actions,
+            label: t('colActions'),
             render: (row: unknown) => {
               const task = row as TaskDetails;
               return <Button variant="ghost" onClick={() => setSelectedId(task.id)}>›</Button>;

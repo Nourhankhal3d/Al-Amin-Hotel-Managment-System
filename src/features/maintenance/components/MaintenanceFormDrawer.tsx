@@ -3,32 +3,14 @@ import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { Button } from '../../../components/ui/Button';
 import { Drawer } from '../../../components/ui/Drawer';
-
-// TEMP: texts live here until i18n is wired
-const LABELS = {
-  eyebrow: 'بلاغ جديد',
-  title: 'تسجيل مشكلة صيانة',
-  room: 'رقم الغرفة',
-  roomPlaceholder: 'اختر الغرفة',
-  priority: 'الأولوية',
-  priorityPlaceholder: 'حدد الأولوية',
-  issueType: 'نوع المشكلة',
-  issueTypePlaceholder: 'اختر نوع المشكلة',
-  description: 'الوصف',
-  descriptionPlaceholder: 'صف المشكلة باختصار',
-  status: 'الحالة',
-  statusValue: 'معلّقة',
-  notes: 'ملاحظات',
-  notesPlaceholder: 'أضف تفاصيل تساعد فريق الصيانة',
-  hint: 'سيتم إرسال البلاغ إلى إدارة الصيانة للتعيين والمتابعة.',
-  cancel: 'إلغاء',
-  submit: 'تسجيل البلاغ',
-};
-
-// TEMP: options until the real data is connected. TODO: confirm with backend
-const ROOM_OPTIONS = ['101', '112', '207', '305'];
-const PRIORITY_OPTIONS = ['عادي', 'مرتفع', 'حرج'];
-const ISSUE_TYPE_OPTIONS = ['سباكة', 'كهرباء', 'تكييف', 'أثاث', 'أخرى'];
+import { useLanguage } from '../../../core/i18n/useLanguage';
+import {
+  ISSUE_TYPE_LABEL_KEY,
+  ISSUE_TYPE_OPTIONS,
+  PRIORITY_LABEL_KEY,
+  PRIORITY_OPTIONS,
+  ROOM_OPTIONS,
+} from '../constants/maintenance.constants';
 
 export interface NewRequestValues {
   roomNumber: string;
@@ -53,6 +35,7 @@ interface MaintenanceFormDrawerProps {
 }
 
 export function MaintenanceFormDrawer({ open, onClose, onSubmit }: MaintenanceFormDrawerProps) {
+  const { t } = useLanguage();
   const [values, setValues] = useState<NewRequestValues>(EMPTY_VALUES);
 
   const handleChange =
@@ -75,47 +58,52 @@ export function MaintenanceFormDrawer({ open, onClose, onSubmit }: MaintenanceFo
   return (
     <Drawer
       open={open}
-      title={LABELS.title}
-      eyebrow={LABELS.eyebrow}
+      title={t('mtFormTitle')}
+      eyebrow={t('mtFormEyebrow')}
+      closeLabel={t('drawerClose')}
       onClose={handleClose}
       footer={
         <>
-          <Button variant="secondary" onClick={handleClose}>{LABELS.cancel}</Button>
-          <Button type="submit" form="maintenance-request-form">{LABELS.submit}</Button>
+          <Button variant="secondary" onClick={handleClose}>{t('cancel')}</Button>
+          <Button type="submit" form="maintenance-request-form">{t('mtFormSubmit')}</Button>
         </>
       }
     >
       <form id="maintenance-request-form" className="maintenance-form" onSubmit={handleSubmit}>
         <div className="maintenance-form__row">
           <label className="maintenance-form__field">
-            <span>{LABELS.room}</span>
+            <span>{t('roomNumberLabel')}</span>
             <select required value={values.roomNumber} onChange={handleChange('roomNumber')}>
-              <option value="" disabled>{LABELS.roomPlaceholder}</option>
+              <option value="" disabled>{t('selectRoom')}</option>
               {ROOM_OPTIONS.map((room) => <option key={room} value={room}>{room}</option>)}
             </select>
           </label>
           <label className="maintenance-form__field">
-            <span>{LABELS.priority}</span>
+            <span>{t('priorityLabel')}</span>
             <select required value={values.priority} onChange={handleChange('priority')}>
-              <option value="" disabled>{LABELS.priorityPlaceholder}</option>
-              {PRIORITY_OPTIONS.map((priority) => <option key={priority} value={priority}>{priority}</option>)}
+              <option value="" disabled>{t('selectPriority')}</option>
+              {PRIORITY_OPTIONS.map((priority) => (
+                <option key={priority} value={priority}>{t(PRIORITY_LABEL_KEY[priority])}</option>
+              ))}
             </select>
           </label>
         </div>
 
         <div className="maintenance-form__row">
           <label className="maintenance-form__field">
-            <span>{LABELS.issueType}</span>
+            <span>{t('mtFormIssueType')}</span>
             <select required value={values.issueType} onChange={handleChange('issueType')}>
-              <option value="" disabled>{LABELS.issueTypePlaceholder}</option>
-              {ISSUE_TYPE_OPTIONS.map((type) => <option key={type} value={type}>{type}</option>)}
+              <option value="" disabled>{t('mtFormIssueTypePh')}</option>
+              {ISSUE_TYPE_OPTIONS.map((type) => (
+                <option key={type} value={type}>{t(ISSUE_TYPE_LABEL_KEY[type])}</option>
+              ))}
             </select>
           </label>
           <label className="maintenance-form__field">
-            <span>{LABELS.description}</span>
+            <span>{t('mtFormDescription')}</span>
             <input
               required
-              placeholder={LABELS.descriptionPlaceholder}
+              placeholder={t('mtFormDescriptionPh')}
               value={values.description}
               onChange={handleChange('description')}
             />
@@ -123,15 +111,15 @@ export function MaintenanceFormDrawer({ open, onClose, onSubmit }: MaintenanceFo
         </div>
 
         <label className="maintenance-form__field">
-          <span>{LABELS.status}</span>
-          <input readOnly value={LABELS.statusValue} />
+          <span>{t('statusLabel')}</span>
+          <input readOnly value={t('mtStatus_pending')} />
         </label>
 
         <label className="maintenance-form__field">
-          <span>{LABELS.notes}</span>
+          <span>{t('notesLabel')}</span>
           <textarea
             rows={4}
-            placeholder={LABELS.notesPlaceholder}
+            placeholder={t('mtFormNotesPh')}
             value={values.notes}
             onChange={handleChange('notes')}
           />
@@ -139,7 +127,7 @@ export function MaintenanceFormDrawer({ open, onClose, onSubmit }: MaintenanceFo
 
         <p className="maintenance-form__hint">
           <span>🔧</span>
-          {LABELS.hint}
+          {t('mtFormHint')}
         </p>
       </form>
     </Drawer>

@@ -93,3 +93,45 @@
 .task-details__action span {
   font-size: 1.3rem;
 }
+
+/* Dark theme */
+[data-theme="dark"] .task-details__summary,
+[data-theme="dark"] .task-details__info,
+[data-theme="dark"] .task-details__box,
+[data-theme="dark"] .task-details__action {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .task-details__summary {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .task-details__icon {
+  background: rgba(65, 192, 106, 0.18);
+  color: #41c06a;
+}
+
+[data-theme="dark"] .task-details__summary-text strong,
+[data-theme="dark"] .task-details__info strong,
+[data-theme="dark"] .task-details__heading {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .task-details__summary-text span,
+[data-theme="dark"] .task-details__info span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .task-details__box {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .task-details__action {
+  color: #41c06a;
+}
+
+[data-theme="dark"] .task-details__action:hover {
+  background: rgba(65, 192, 106, 0.15);
+  border-color: #41c06a;
+}

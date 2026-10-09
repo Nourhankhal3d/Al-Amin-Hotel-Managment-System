@@ -1,16 +1,16 @@
-.housekeeping-filters__field {
+.maintenance-filters__field {
   display: grid;
   gap: 6px;
   min-width: 140px;
 }
 
-.housekeeping-filters__field span {
+.maintenance-filters__field span {
   color: #7d827e;
   font-size: 0.75rem;
   font-weight: 600;
 }
 
-.housekeeping-filters__field select {
+.maintenance-filters__field select {
   min-height: 44px;
   padding: 8px 14px;
   border: 1px solid #ebe8e0;
@@ -21,11 +21,11 @@
   font-size: 0.85rem;
 }
 
-[data-theme="dark"] .housekeeping-filters__field span {
+[data-theme="dark"] .maintenance-filters__field span {
   color: #94a3b8;
 }
 
-[data-theme="dark"] .housekeeping-filters__field select {
+[data-theme="dark"] .maintenance-filters__field select {
   background: #1a222c;
   border-color: #2a3441;
   color: #f8fafc;

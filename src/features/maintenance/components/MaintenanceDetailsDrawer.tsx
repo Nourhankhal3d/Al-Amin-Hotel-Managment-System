@@ -3,20 +3,13 @@ import { Timeline } from '../../../components/common/Timeline';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { Drawer } from '../../../components/ui/Drawer';
-
-// TEMP: texts live here until i18n is wired
-const LABELS = {
-  eyebrow: 'تفاصيل بلاغ الصيانة',
-  status: 'الحالة',
-  expectedFix: 'الحل المتوقع',
-  lastUpdate: 'آخر تحديث',
-  description: 'وصف المشكلة',
-  log: 'سجل البلاغ',
-  followStatus: 'متابعة الحالة',
-  viewLog: 'عرض السجل',
-  updateStatus: 'تحديث الحالة',
-  saveChanges: 'حفظ التغييرات',
-};
+import { useLanguage } from '../../../core/i18n/useLanguage';
+import {
+  PRIORITY_LABEL_KEY,
+  PRIORITY_TONE,
+  STATUS_LABEL_KEY,
+} from '../constants/maintenance.constants';
+import type { RequestPriority, RequestStatus } from '../constants/maintenance.constants';
 
 // TODO: move to types/maintenance.types.ts and confirm fields with backend
 export interface MaintenanceDetails {
@@ -25,8 +18,8 @@ export interface MaintenanceDetails {
   issue: string;
   reference?: string;
   reportedAt?: string;
-  status: string;
-  priority: string;
+  status: RequestStatus;
+  priority: RequestPriority;
   expectedFixAt?: string;
   lastUpdate?: string;
   notes?: string;
@@ -39,16 +32,19 @@ interface MaintenanceDetailsDrawerProps {
 }
 
 export function MaintenanceDetailsDrawer({ request, onClose }: MaintenanceDetailsDrawerProps) {
+  const { t } = useLanguage();
+
   return (
     <Drawer
       open={request !== null}
-      title={request ? `غرفة ${request.roomNumber}` : ''}
-      eyebrow={LABELS.eyebrow}
+      title={request ? `${t('roomLabel')} ${request.roomNumber}` : ''}
+      eyebrow={t('mtDetailsEyebrow')}
+      closeLabel={t('drawerClose')}
       onClose={onClose}
       footer={
         <>
-          <Button variant="secondary">{LABELS.updateStatus}</Button>
-          <Button>{LABELS.saveChanges}</Button>
+          <Button variant="secondary">{t('updateStatus')}</Button>
+          <Button>{t('mtSaveChanges')}</Button>
         </>
       }
     >
@@ -64,24 +60,23 @@ export function MaintenanceDetailsDrawer({ request, onClose }: MaintenanceDetail
                 {request.reportedAt}
               </span>
             </div>
-            {/* TODO: map priority to tone from maintenance.constants.ts */}
-            <Badge tone="danger">{request.priority}</Badge>
+            <Badge tone={PRIORITY_TONE[request.priority]}>{t(PRIORITY_LABEL_KEY[request.priority])}</Badge>
           </section>
 
           <div className="maintenance-details__grid">
             <div className="maintenance-details__info">
-              <span>{LABELS.status}</span>
-              <strong>{request.status}</strong>
+              <span>{t('statusLabel')}</span>
+              <strong>{t(STATUS_LABEL_KEY[request.status])}</strong>
             </div>
             {request.expectedFixAt && (
               <div className="maintenance-details__info">
-                <span>{LABELS.expectedFix}</span>
+                <span>{t('mtExpectedFix')}</span>
                 <strong>{request.expectedFixAt}</strong>
               </div>
             )}
             {request.lastUpdate && (
               <div className="maintenance-details__info">
-                <span>{LABELS.lastUpdate}</span>
+                <span>{t('mtColLastUpdate')}</span>
                 <strong>{request.lastUpdate}</strong>
               </div>
             )}
@@ -89,13 +84,13 @@ export function MaintenanceDetailsDrawer({ request, onClose }: MaintenanceDetail
 
           {request.notes && (
             <section>
-              <h3 className="maintenance-details__heading">{LABELS.description}</h3>
+              <h3 className="maintenance-details__heading">{t('mtDescription')}</h3>
               <p className="maintenance-details__box">{request.notes}</p>
             </section>
           )}
 
           <section>
-            <h3 className="maintenance-details__heading">{LABELS.log}</h3>
+            <h3 className="maintenance-details__heading">{t('mtLog')}</h3>
             <Timeline items={request.log} />
           </section>
 
@@ -103,11 +98,11 @@ export function MaintenanceDetailsDrawer({ request, onClose }: MaintenanceDetail
           <div className="maintenance-details__actions">
             <button type="button" className="maintenance-details__action">
               <span>✓</span>
-              {LABELS.followStatus}
+              {t('followStatus')}
             </button>
             <button type="button" className="maintenance-details__action">
               <span>▤</span>
-              {LABELS.viewLog}
+              {t('viewLog')}
             </button>
           </div>
         </div>
