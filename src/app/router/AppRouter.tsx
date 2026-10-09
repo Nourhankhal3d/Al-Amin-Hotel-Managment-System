@@ -8,6 +8,7 @@ import { MaintenancePage } from '../../features/maintenance/pages/MaintenancePag
 import { PaymentsPage } from '../../features/payments/pages/PaymentsPage';
 import { ShiftHandoverPage } from '../../features/shift-handover/pages/ShiftHandoverPage';
 import { ShiftReportPage } from '../../features/shift-report/pages/ShiftReportPage';
+import { PersonalShiftPage } from '../../features/shift-report/pages/PersonalShiftPage';
 import { ProfilePage } from '../../features/profile/pages/ProfilePage';
 import { SettingsPage } from '../../features/settings/pages/SettingsPage';
 import { ROUTES } from '../../core/constants/routes';
@@ -27,6 +28,7 @@ export function AppRouter() {
           <Route path={ROUTES.payments} element={<PaymentsPage />} />
           <Route path={ROUTES.shiftHandover} element={<ShiftHandoverPage />} />
           <Route path={ROUTES.shiftReport} element={<ShiftReportPage />} />
+          <Route path={ROUTES.personalShift} element={<PersonalShiftPage />} />
           <Route path={ROUTES.profile} element={<ProfilePage />} />
           <Route path={ROUTES.settings} element={<SettingsPage />} />
         </Route>

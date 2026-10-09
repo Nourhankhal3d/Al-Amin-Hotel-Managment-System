@@ -7,6 +7,7 @@ export const ROUTES = {
   payments: '/payments',
   shiftHandover: '/shift-handover',
   shiftReport: '/shift-report',
+  personalShift: '/personal-shift',
   profile: '/profile',
   settings: '/settings',
 } as const;

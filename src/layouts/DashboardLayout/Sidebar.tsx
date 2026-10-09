@@ -9,6 +9,7 @@ const items = [
   { labelKey: 'payments', path: ROUTES.payments },
   { labelKey: 'shiftHandover', path: ROUTES.shiftHandover },
   { labelKey: 'shiftReport', path: ROUTES.shiftReport },
+  { labelKey: 'personalShift', path: ROUTES.personalShift },
   { labelKey: 'profile', path: ROUTES.profile },
   { labelKey: 'settings', path: ROUTES.settings },
 ] as const;

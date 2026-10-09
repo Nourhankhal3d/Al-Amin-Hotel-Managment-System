@@ -6,4 +6,5 @@ export const mockHandlers = {
   payments: '/payments',
   shiftHandover: '/shift-handover',
   shiftReport: '/shift-report',
+  personalShift: '/shift-report/personal',
 } as const;
