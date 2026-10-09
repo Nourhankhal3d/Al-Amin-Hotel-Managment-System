@@ -1,5 +1,6 @@
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
+import { AuthLayout } from '../../../layouts/AuthLayout/AuthLayout';
 import { validateLogin } from '../schemas/login.schema';
 
 export function LoginPage() {
@@ -10,5 +11,14 @@ export function LoginPage() {
     validateLogin(input);
   }
 
-  return <form className="auth-form" onSubmit={handleSubmit}><h1>تسجيل الدخول</h1><Input name="email" type="email" placeholder="البريد الإلكتروني" required /><Input name="password" type="password" placeholder="كلمة المرور" required /><Button type="submit">تسجيل الدخول</Button></form>;
+  return (
+    <AuthLayout>
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <h1>تسجيل الدخول</h1>
+        <Input name="email" type="email" placeholder="البريد الإلكتروني" required />
+        <Input name="password" type="password" placeholder="كلمة المرور" required />
+        <Button type="submit">تسجيل الدخول</Button>
+      </form>
+    </AuthLayout>
+  );
 }

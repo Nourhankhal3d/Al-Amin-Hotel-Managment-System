@@ -18,5 +18,277 @@
   "arabic": "العربية",
   "loading": "جارٍ التحميل...",
   "notFound": "الصفحة غير موجودة",
-  "back": "رجوع"
+  "back": "رجوع",
+  "toast": { "dismiss": "إخفاء الإشعار" },
+  "pagination": { "label": "التنقل بين الصفحات", "previous": "الصفحة السابقة", "next": "الصفحة التالية" },
+  "sidebar": {
+    "brand": "الأمين",
+    "location": "فندق · أسوان",
+    "section": "مساحة عمل الوردية",
+    "shiftTitle": "الوردية الصباحية",
+    "shiftEnds": "تنتهي خلال {hours} س و{minutes} د",
+    "logout": "تسجيل الخروج"
+  },
+  "topbar": {
+    "search": "ابحث عن غرفة أو موظف",
+    "searchRooms": "ابحث عن غرفة أو مهمة أو ضيف",
+    "searchShortcut": "⌘K",
+    "date": "تاريخ اليوم",
+    "time": "الوقت المحلي",
+    "notifications": "الإشعارات",
+    "userName": "س",
+    "userRole": "موظف الاستقبال"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "rooms": "الغرف",
+    "housekeeping": "التنظيف",
+    "maintenance": "الصيانة",
+    "payments": "المدفوعات",
+    "shiftHandover": "الوردية والتسليم",
+    "shiftReport": "تقرير الوردية",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات"
+  },
+  "dashboard": {
+    "heroEyebrow": "صباح الخير",
+    "heroTitle": "مرحبًا بعودتك يا س.",
+    "heroDescription": "إليك لمحة الفندق اليوم، كل ما تحتاج إليه لتبدأ ورديتك بثقة.",
+    "shiftProgress": "تقدم الوردية",
+    "overviewTitle": "نظرة عامة على اليوم",
+    "overviewCaption": "ملخص هادئ لكل ما يجري في فندقك",
+    "viewSummary": "عرض الملخص الكامل",
+    "stats": {
+      "open": "مفتوح",
+      "warning": "تنبيه",
+      "roomsPrepared": { "label": "غرف تم تجهيزها", "caption": "أكثر من المعتاد بـ ٢ غرفة" },
+      "cleaning": { "label": "طلبات النظافة", "caption": "طلبات بانتظار التحديث" },
+      "maintenance": { "label": "بلاغات الصيانة", "caption": "إبلاغ واحد يحتاج المتابعة" },
+      "revenue": { "label": "إيراد اليوم", "caption": "إجمالي الدخل اليوم" },
+      "checkouts": { "label": "تسجيل المغادرة", "caption": "مغادرات تمت حتى الآن" },
+      "checkins": { "label": "تسجيل الوصول", "caption": "وصول متوقع خلال الوردية" },
+      "completed": { "label": "مهام مكتملة", "caption": "أُنجزت خلال هذه الوردية" },
+      "pending": { "label": "مهام معلقة", "caption": "مهام تحتاج إلى متابعة" }
+    },
+    "revenue": {
+      "title": "نظرة على الإيرادات",
+      "caption": "المدفوعات المسجلة اليوم",
+      "chartLabel": "اتجاه الإيرادات خلال الأسبوع",
+      "cash": "نقدي",
+      "digital": "مدفوعات رقمية",
+      "change": "+{value}",
+      "days": {
+        "saturday": "السبت",
+        "sunday": "الأحد",
+        "monday": "الإثنين",
+        "tuesday": "الثلاثاء",
+        "wednesday": "الأربعاء",
+        "thursday": "الخميس",
+        "friday": "الجمعة"
+      }
+    },
+    "activity": {
+      "title": "نشاط اليوم",
+      "caption": "أحدث التحديثات خلال ورديتك",
+      "viewAll": "عرض كل الأنشطة",
+      "agoMinutes": "منذ {value} دقيقة",
+      "items": {
+        "checkin": { "title": "تم تسجيل دخول ضيف", "description": "غرفة ٢٠٤ · أحمد النعيمي" },
+        "checkout": { "title": "تم تسجيل مغادرة", "description": "غرفة ١١٨ · مريم القحطاني" },
+        "maintenance": { "title": "تم تسجيل بلاغ صيانة", "description": "تكييف الغرفة ٣٠٥" },
+        "cleaning": { "title": "اكتملت مهمة تنظيف", "description": "الغرفة ٤١٢ جاهزة للضيف" }
+      }
+    },
+    "quickActions": {
+      "title": "إجراءات سريعة",
+      "caption": "العمليات الأكثر استخدامًا خلال الوردية",
+      "shiftNote": "تدوين ملاحظة",
+      "addTask": "إضافة نشاط",
+      "payment": "إضافة دفعة",
+      "checkout": "تسجيل مغادرة",
+      "report": "إنشاء تقرير",
+      "handover": "إنهاء الوردية"
+    },
+    "attention": {
+      "title": "يحتاج إلى انتباهك",
+      "caption": "المهام ذات الأولوية في الفندق",
+      "openCount": "٣ مفتوحة",
+      "critical": "حرج",
+      "high": "مرتفع",
+      "normal": "متوسط",
+      "items": {
+        "critical": { "title": "المكيف في الغرفة ٣٠٥", "detail": "بحاجة إلى فحص فني عاجل" },
+        "high": { "title": "تجهيز الغرفة للوصول", "detail": "الغرفة ٤١٢ قبل الساعة ١٢" },
+        "normal": { "title": "طلب صيانة متأخر", "detail": "صنبور الحمام في الغرفة ١١٢" }
+      },
+      "legend": "مستوى الأولوية",
+      "maintenance": "الصيانة",
+      "housekeeping": "التنظيف"
+    },
+    "pulse": {
+      "title": "نبض الوردية",
+      "headline": "صباح يسير بتناغم",
+      "message": "معظم العمليات تسير كما ينبغي، ركّز على المهام التي تحتاج إلى متابعة.",
+      "revenue": "الإيرادات",
+      "pending": "مهام معلقة",
+      "completed": "مهام مكتملة",
+      "arrivals": "تسجيلات الوصول"
+    },
+    "empty": "لا توجد بيانات للعرض الآن",
+    "loadError": "تعذر تحميل بيانات لوحة التحكم"
+  },
+  "rooms": {
+    "eyebrow": "الغرف",
+    "title": "إدارة الغرف",
+    "description": "إدارة حالة الغرف ومعلومات الضيوف بسهولة وهدوء.",
+    "addActivity": "إضافة نشاط غرفة",
+    "export": "تصدير",
+    "stats": {
+      "total": "إجمالي الغرف",
+      "available": "متاحة",
+      "occupied": "مشغولة",
+      "cleaning": "قيد التنظيف",
+      "maintenance": "صيانة",
+      "vip": "غرف VIP"
+    },
+    "filters": {
+      "title": "تصفية الغرف",
+      "search": "ابحث برقم الغرفة أو اسم الضيف",
+      "type": "نوع الغرفة",
+      "status": "الحالة",
+      "floor": "الطابق",
+      "availability": "الإتاحة",
+      "reset": "إعادة ضبط"
+    },
+    "options": {
+      "all": "الكل",
+      "type": { "standard": "عادية", "vip": "VIP" },
+      "status": { "available": "متاحة", "reserved": "محجوزة", "occupied": "مشغولة", "cleaning": "تنظيف", "maintenance": "صيانة" },
+      "floor": { "1": "الأول", "2": "الثاني", "3": "الثالث" },
+      "availability": { "available": "متاحة الآن", "unavailable": "غير متاحة" }
+    },
+    "status": {
+      "available": "متاحة",
+      "occupied": "مشغولة",
+      "reserved": "محجوزة",
+      "cleaning": "تنظيف",
+      "maintenance": "صيانة"
+    },
+    "type": { "standard": "عادية", "vip": "VIP" },
+    "floor": { "1": "الأول", "2": "الثاني", "3": "الثالث" },
+    "views": { "nile": "النيل", "garden": "الحديقة", "city": "المدينة" },
+    "table": {
+      "title": "سجل الغرف",
+      "summary": "عرض {rows} من أصل {total} غرفة",
+      "updatedNow": "آخر تحديث الآن",
+      "roomNumber": "رقم الغرفة",
+      "roomType": "نوع الغرفة",
+      "status": "الحالة الحالية",
+      "guest": "اسم الضيف",
+      "floor": "الطابق",
+      "updatedAt": "آخر تحديث",
+      "notes": "ملاحظات",
+      "actions": "الإجراءات",
+      "empty": "لا توجد غرف تطابق خيارات البحث",
+      "emptyDescription": "جرّب تغيير عوامل التصفية أو إعادة ضبطها.",
+      "resetFilters": "إعادة ضبط التصفية",
+      "loading": "جارٍ تحميل الغرف",
+      "error": "تعذر تحميل الغرف",
+      "retry": "إعادة المحاولة",
+      "page": "الصفحة {page} من {total}"
+    },
+    "guest": {
+      "roomNumber": "ضيف الغرفة {number}",
+      "confirmedReservation": "حجز مؤكد",
+      "reserved": "ضيف الحجز"
+    },
+    "notes": {
+      "101": "جاهزة لوصول الضيف",
+      "104": "ضيف مميز · VIP",
+      "207": "تنظيف بعد المغادرة",
+      "208": "وصول الساعة ٣:٠٠ م",
+      "305": "فحص المروحة",
+      "312": "مغادرة متأخرة"
+    },
+    "drawer": {
+      "detailsEyebrow": "تفاصيل الغرفة",
+      "roomTitle": "غرفة {number}",
+      "viewOn": "{floor} · إطلالة على {view}",
+      "guest": "الضيف",
+      "arrival": "تاريخ الوصول",
+      "currentStatus": "الحالة الحالية",
+      "lastUpdated": "آخر تحديث",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أضف ملاحظات الغرفة",
+      "roomLog": "سجل الغرفة",
+      "updateStatus": "تحديث الحالة",
+      "chooseStatus": "اختر الحالة الجديدة",
+      "saveChanges": "حفظ التغييرات",
+      "close": "إغلاق",
+      "arrivalEmpty": "—",
+      "logEmpty": "لا يوجد سجل لهذه الغرفة بعد",
+      "activityEyebrow": "نشاط جديد",
+      "activityTitle": "إضافة نشاط غرفة",
+      "roomNumber": "رقم الغرفة",
+      "chooseRoom": "اختر رقم الغرفة",
+      "newStatus": "حالة الغرفة",
+      "guestName": "اسم الضيف",
+      "guestNamePlaceholder": "أدخل اسم الضيف",
+      "activityNotes": "ملاحظات",
+      "activityNotesPlaceholder": "أضف ملاحظات النشاط",
+      "shiftInfo": "سيتم تسجيل هذا النشاط تلقائيًا في سجل الوردية.",
+      "saveActivity": "حفظ النشاط",
+      "cancel": "إلغاء"
+    },
+    "validation": {
+      "roomRequired": "اختر رقم الغرفة",
+      "statusRequired": "اختر حالة الغرفة",
+      "guestRequired": "اسم الضيف مطلوب للحالة المحددة"
+    },
+    "toast": {
+      "roomSaved": "تم حفظ تغييرات الغرفة",
+      "activitySaved": "تمت إضافة نشاط الغرفة",
+      "exported": "تم تصدير {count} غرفة",
+      "noExportRows": "لا توجد غرف لتصديرها"
+    },
+    "log": {
+      "statusUpdate": "تحديث حالة الغرفة",
+      "ready": "تم تأكيد جاهزية الغرفة لوصول الضيف",
+      "checkIn": "تسجيل دخول",
+      "guestCheckedIn": "تم تسجيل دخول ضيف الغرفة",
+      "cleaningStarted": "بدء التنظيف",
+      "cleaningAssigned": "استلمت المهمة وحدة النظافة",
+      "reservationConfirmed": "تأكيد الحجز",
+      "reservationSaved": "تم تأكيد حجز الغرفة",
+      "maintenance": "بلاغ صيانة",
+      "fanInspection": "تم تسجيل فحص للمروحة",
+      "checkOut": "تسجيل مغادرة",
+      "lateDeparture": "تم الاتفاق على مغادرة متأخرة",
+      "updated": "تم تحديث بيانات الغرفة",
+      "changesSaved": "تم حفظ تغييرات الغرفة",
+      "activityAdded": "إضافة نشاط غرفة",
+      "activityAddedDescription": "تم تسجيل نشاط جديد للغرفة"
+    },
+    "time": {
+      "now": "الآن",
+      "minutesAgo": "منذ {value} دقيقة",
+      "hourAgo": "منذ ساعة",
+      "twoHoursAgo": "منذ ساعتين",
+      "threeHoursAgo": "منذ ٣ ساعات",
+      "hoursAgo": "منذ {value} ساعات",
+      "yesterday": "أمس"
+    },
+    "dateFormat": "dd MMMM yyyy",
+    "csv": {
+      "roomNumber": "رقم الغرفة",
+      "type": "نوع الغرفة",
+      "status": "الحالة الحالية",
+      "guest": "اسم الضيف",
+      "floor": "الطابق",
+      "view": "الإطلالة",
+      "arrival": "تاريخ الوصول",
+      "notes": "ملاحظات",
+      "updatedAt": "آخر تحديث"
+    }
+  }
 }

@@ -1,0 +1,8 @@
+.ui-timeline { display: grid; gap: var(--space-5); margin: 0; padding: 0; list-style: none; }
+.ui-timeline li { display: grid; grid-template-columns: 1rem minmax(0, 1fr); gap: var(--space-3); }
+.ui-timeline__marker { width: 0.75rem; aspect-ratio: 1; margin-block-start: var(--space-1); border: 3px solid var(--color-primary-soft); border-radius: 50%; background: var(--color-primary); }
+.ui-timeline--gold .ui-timeline__marker { border-color: var(--color-gold-soft); background: var(--color-gold); }
+.ui-timeline strong,
+.ui-timeline time { display: block; }
+.ui-timeline p { margin: var(--space-1) 0; color: var(--color-text-muted); }
+.ui-timeline time { color: var(--color-text-muted); font-size: var(--font-size-xs); }

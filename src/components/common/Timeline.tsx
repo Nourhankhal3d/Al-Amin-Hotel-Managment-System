@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import './Timeline.css';
 
 interface TimelineItem {
   id: string;
@@ -10,11 +11,12 @@ interface TimelineItem {
 interface TimelineProps {
   items: TimelineItem[];
   renderItem?: (item: TimelineItem) => ReactNode;
+  markerTone?: 'primary' | 'gold';
 }
 
-export function Timeline({ items, renderItem }: TimelineProps) {
+export function Timeline({ items, renderItem, markerTone = 'primary' }: TimelineProps) {
   return (
-    <ol className="ui-timeline">
+    <ol className={`ui-timeline ui-timeline--${markerTone}`}>
       {items.map((item) => (
         <li key={item.id}>
           <span className="ui-timeline__marker" />
