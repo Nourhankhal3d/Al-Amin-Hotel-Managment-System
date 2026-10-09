@@ -1,98 +1,88 @@
 .maintenance-form {
   display: grid;
-  gap: 18px;
+  gap: var(--space-5);
 }
 
+/* Two equal columns; a row with one field (status) keeps it at half width, as in the prototype */
 .maintenance-form__row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
 }
 
 .maintenance-form__field {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
-.maintenance-form__field > span {
-  color: #7d827e;
-  font-size: 0.78rem;
-  font-weight: 600;
+.maintenance-form__field > span:first-child {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
 }
 
-.maintenance-form__field select,
+/* Same height and corners for every field (the room field gets them from the shared Combobox) */
+.maintenance-form .ui-select__trigger,
+.maintenance-form__field input {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
 .maintenance-form__field input,
 .maintenance-form__field textarea {
   width: 100%;
-  min-height: 50px;
-  padding: 12px 16px;
-  border: 1px solid #ebe8e0;
-  border-radius: 16px;
-  background: #fff;
-  color: #2f2f2f;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-ink);
+  background: var(--color-surface);
   font: inherit;
-  font-size: 0.88rem;
+  font-size: var(--font-size-sm);
   outline: none;
 }
 
+.maintenance-form__field input::placeholder,
+.maintenance-form__field textarea::placeholder { color: var(--color-text-muted); }
+
 .maintenance-form__field textarea {
-  min-height: 110px;
+  min-height: 7rem;
+  line-height: 1.7;
   resize: vertical;
 }
 
-.maintenance-form__field select:focus,
-.maintenance-form__field input:focus,
-.maintenance-form__field textarea:focus {
-  border-color: #41c06a;
-  box-shadow: 0 0 0 3px rgba(65, 192, 106, 0.12);
-}
+.maintenance-form__field .maintenance-form__control--error { border-color: var(--color-danger); }
+.maintenance-form__field input:disabled,
+.maintenance-form__field textarea:disabled { opacity: 0.6; }
 
-.maintenance-form__field input[readonly] {
-  color: #7d827e;
+.maintenance-form__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
 }
 
 .maintenance-form__hint {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-3);
   margin: 0;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: #eaf8ef;
-  color: #36a85a;
-  font-size: 0.8rem;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-sm);
 }
 
-/* Dark theme */
-[data-theme="dark"] .maintenance-form__field > span {
-  color: #94a3b8;
+.maintenance-form__hint svg { flex: 0 0 1.1rem; width: 1.1rem; height: 1.1rem; color: var(--color-primary); }
+
+/* Footer: "cancel" on the start side, wider "submit" on the end side */
+.maintenance-form__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-3);
+  width: 100%;
 }
 
-[data-theme="dark"] .maintenance-form__field select,
-[data-theme="dark"] .maintenance-form__field input,
-[data-theme="dark"] .maintenance-form__field textarea {
-  background: #1a222c;
-  border-color: #2a3441;
-  color: #f8fafc;
-}
+.maintenance-form__footer .ui-button { min-height: 3.25rem; border-radius: var(--radius-card); }
 
-[data-theme="dark"] .maintenance-form__field input::placeholder,
-[data-theme="dark"] .maintenance-form__field textarea::placeholder {
-  color: #64748b;
-}
-
-[data-theme="dark"] .maintenance-form__field input[readonly] {
-  color: #94a3b8;
-}
-
-[data-theme="dark"] .maintenance-form__field select:focus,
-[data-theme="dark"] .maintenance-form__field input:focus,
-[data-theme="dark"] .maintenance-form__field textarea:focus {
-  border-color: #41c06a;
-  box-shadow: 0 0 0 3px rgba(65, 192, 106, 0.2);
-}
-
-[data-theme="dark"] .maintenance-form__hint {
-  background: rgba(65, 192, 106, 0.14);
-  color: #41c06a;
+@media (max-width: 30rem) {
+  .maintenance-form__row { grid-template-columns: 1fr; }
 }

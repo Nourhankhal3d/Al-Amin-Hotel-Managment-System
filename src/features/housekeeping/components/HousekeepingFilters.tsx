@@ -1,74 +1,61 @@
-import './HousekeepingFilters.css';
 import { FilterBar } from '../../../components/common/FilterBar';
-import { Button } from '../../../components/ui/Button';
-import { useLanguage } from '../../../core/i18n/useLanguage';
+import { Select } from '../../../components/ui/Select';
+import { getTranslation, type Language } from '../../../core/i18n';
+import { formatNumber } from '../../../utils/format';
 import {
   PRIORITY_LABEL_KEY,
   PRIORITY_OPTIONS,
   STATUS_LABEL_KEY,
   STATUS_OPTIONS,
 } from '../constants/housekeeping.constants';
+import type { HousekeepingFilterName, HousekeepingFilters as Filters } from '../types/housekeeping.types';
+import './HousekeepingFilters.css';
 
 interface HousekeepingFiltersProps {
-  query: string;
-  status: string;
-  priority: string;
-  floor: string;
+  language: Language;
+  value: string;
+  onSearchChange: (value: string) => void;
+  filters: Filters;
   floorOptions: string[];
-  onQueryChange: (value: string) => void;
-  onStatusChange: (value: string) => void;
-  onPriorityChange: (value: string) => void;
-  onFloorChange: (value: string) => void;
+  onFilterChange: (name: HousekeepingFilterName, value: string) => void;
   onReset: () => void;
 }
 
 export function HousekeepingFilters({
-  query,
-  status,
-  priority,
-  floor,
+  language,
+  value,
+  onSearchChange,
+  filters,
   floorOptions,
-  onQueryChange,
-  onStatusChange,
-  onPriorityChange,
-  onFloorChange,
+  onFilterChange,
   onReset,
 }: HousekeepingFiltersProps) {
-  const { t } = useLanguage();
+  const t = (key: string) => getTranslation(language, key);
+  const all = { value: '', label: t('filterAll') };
 
   return (
-    <FilterBar
-      className="housekeeping-filters"
-      value={query}
-      onChange={onQueryChange}
-      placeholder={t('hkSearch')}
-    >
-      <label className="housekeeping-filters__field">
-        <span>{t('statusLabel')}</span>
-        <select value={status} onChange={(event) => onStatusChange(event.target.value)}>
-          <option value="">{t('filterAll')}</option>
-          {STATUS_OPTIONS.map((option) => (
-            <option key={option} value={option}>{t(STATUS_LABEL_KEY[option])}</option>
-          ))}
-        </select>
-      </label>
-      <label className="housekeeping-filters__field">
-        <span>{t('priorityLabel')}</span>
-        <select value={priority} onChange={(event) => onPriorityChange(event.target.value)}>
-          <option value="">{t('filterAll')}</option>
-          {PRIORITY_OPTIONS.map((option) => (
-            <option key={option} value={option}>{t(PRIORITY_LABEL_KEY[option])}</option>
-          ))}
-        </select>
-      </label>
-      <label className="housekeeping-filters__field">
-        <span>{t('floorLabel')}</span>
-        <select value={floor} onChange={(event) => onFloorChange(event.target.value)}>
-          <option value="">{t('filterAll')}</option>
-          {floorOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-        </select>
-      </label>
-      <Button variant="ghost" onClick={onReset}>{t('filterReset')}</Button>
+    <FilterBar className="housekeeping-filters" value={value} onChange={onSearchChange} placeholder={t('hkSearch')}>
+      <Select
+        label={t('statusLabel')}
+        value={filters.status}
+        options={[all, ...STATUS_OPTIONS.map((option) => ({ value: option, label: t(STATUS_LABEL_KEY[option]) }))]}
+        onChange={(next) => onFilterChange('status', next)}
+      />
+      <Select
+        label={t('priorityLabel')}
+        value={filters.priority}
+        options={[all, ...PRIORITY_OPTIONS.map((option) => ({ value: option, label: t(PRIORITY_LABEL_KEY[option]) }))]}
+        onChange={(next) => onFilterChange('priority', next)}
+      />
+      <Select
+        label={t('floorLabel')}
+        value={filters.floor}
+        options={[all, ...floorOptions.map((option) => ({ value: option, label: formatNumber(Number(option), language) }))]}
+        onChange={(next) => onFilterChange('floor', next)}
+      />
+      <button type="button" className="housekeeping-filters__reset" onClick={onReset}>
+        {t('filterReset')}
+      </button>
     </FilterBar>
   );
 }

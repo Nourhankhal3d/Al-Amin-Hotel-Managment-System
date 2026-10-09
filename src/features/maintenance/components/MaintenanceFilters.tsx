@@ -1,69 +1,61 @@
-import './MaintenanceFilters.css';
 import { FilterBar } from '../../../components/common/FilterBar';
-import { Button } from '../../../components/ui/Button';
-import { useLanguage } from '../../../core/i18n/useLanguage';
+import { Select } from '../../../components/ui/Select';
+import { getTranslation, type Language } from '../../../core/i18n';
+import { formatNumber } from '../../../utils/format';
 import {
   PRIORITY_LABEL_KEY,
   PRIORITY_OPTIONS,
   STATUS_LABEL_KEY,
   STATUS_OPTIONS,
 } from '../constants/maintenance.constants';
+import type { MaintenanceFilterName, MaintenanceFilters as Filters } from '../types/maintenance.types';
+import './MaintenanceFilters.css';
 
 interface MaintenanceFiltersProps {
-  query: string;
-  status: string;
-  priority: string;
-  room: string;
+  language: Language;
+  value: string;
+  onSearchChange: (value: string) => void;
+  filters: Filters;
   roomOptions: string[];
-  onQueryChange: (value: string) => void;
-  onStatusChange: (value: string) => void;
-  onPriorityChange: (value: string) => void;
-  onRoomChange: (value: string) => void;
+  onFilterChange: (name: MaintenanceFilterName, value: string) => void;
   onReset: () => void;
 }
 
 export function MaintenanceFilters({
-  query,
-  status,
-  priority,
-  room,
+  language,
+  value,
+  onSearchChange,
+  filters,
   roomOptions,
-  onQueryChange,
-  onStatusChange,
-  onPriorityChange,
-  onRoomChange,
+  onFilterChange,
   onReset,
 }: MaintenanceFiltersProps) {
-  const { t } = useLanguage();
+  const t = (key: string) => getTranslation(language, key);
+  const all = { value: '', label: t('filterAll') };
 
   return (
-    <FilterBar value={query} onChange={onQueryChange} placeholder={t('mtSearch')}>
-      <label className="maintenance-filters__field">
-        <span>{t('statusLabel')}</span>
-        <select value={status} onChange={(event) => onStatusChange(event.target.value)}>
-          <option value="">{t('filterAll')}</option>
-          {STATUS_OPTIONS.map((option) => (
-            <option key={option} value={option}>{t(STATUS_LABEL_KEY[option])}</option>
-          ))}
-        </select>
-      </label>
-      <label className="maintenance-filters__field">
-        <span>{t('priorityLabel')}</span>
-        <select value={priority} onChange={(event) => onPriorityChange(event.target.value)}>
-          <option value="">{t('filterAll')}</option>
-          {PRIORITY_OPTIONS.map((option) => (
-            <option key={option} value={option}>{t(PRIORITY_LABEL_KEY[option])}</option>
-          ))}
-        </select>
-      </label>
-      <label className="maintenance-filters__field">
-        <span>{t('roomNumberLabel')}</span>
-        <select value={room} onChange={(event) => onRoomChange(event.target.value)}>
-          <option value="">{t('filterAll')}</option>
-          {roomOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-        </select>
-      </label>
-      <Button variant="ghost" onClick={onReset}>{t('filterReset')}</Button>
+    <FilterBar className="maintenance-filters" value={value} onChange={onSearchChange} placeholder={t('mtSearch')}>
+      <Select
+        label={t('roomNumberLabel')}
+        value={filters.room}
+        options={[all, ...roomOptions.map((room) => ({ value: room, label: formatNumber(Number(room), language) }))]}
+        onChange={(next) => onFilterChange('room', next)}
+      />
+      <Select
+        label={t('priorityLabel')}
+        value={filters.priority}
+        options={[all, ...PRIORITY_OPTIONS.map((option) => ({ value: option, label: t(PRIORITY_LABEL_KEY[option]) }))]}
+        onChange={(next) => onFilterChange('priority', next)}
+      />
+      <Select
+        label={t('statusLabel')}
+        value={filters.status}
+        options={[all, ...STATUS_OPTIONS.map((option) => ({ value: option, label: t(STATUS_LABEL_KEY[option]) }))]}
+        onChange={(next) => onFilterChange('status', next)}
+      />
+      <button type="button" className="maintenance-filters__reset" onClick={onReset}>
+        {t('filterReset')}
+      </button>
     </FilterBar>
   );
 }

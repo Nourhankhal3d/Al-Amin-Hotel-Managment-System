@@ -1,213 +1,298 @@
-import './MaintenancePage.css';
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Bell, CalendarDays, Check, Clock, FileText, Plus, Timer, Wrench } from 'lucide-react';
+import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { EmptyState } from '../../../components/common/EmptyState';
+import { ErrorState } from '../../../components/common/ErrorState';
+import { LoadingState } from '../../../components/common/LoadingState';
 import { PageHero } from '../../../components/common/PageHero';
-import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
-import { Pagination } from '../../../components/ui/Pagination';
+import { Card } from '../../../components/ui/Card';
 import { StatCard } from '../../../components/ui/StatCard';
-import { Table } from '../../../components/ui/Table';
-import { useLanguage } from '../../../core/i18n/useLanguage';
+import { useToast } from '../../../components/ui/ToastContext';
+import { getTranslation, type Language } from '../../../core/i18n';
+import { useDebounce } from '../../../hooks/useDebounce';
+import { normalizeDigits } from '../../../utils/digits';
+import { exportCsv } from '../../../utils/exportCsv';
+import { formatNumber } from '../../../utils/format';
 import { MaintenanceDetailsDrawer } from '../components/MaintenanceDetailsDrawer';
-import type { MaintenanceDetails } from '../components/MaintenanceDetailsDrawer';
 import { MaintenanceFilters } from '../components/MaintenanceFilters';
 import { MaintenanceFormDrawer } from '../components/MaintenanceFormDrawer';
+import { MaintenanceTable } from '../components/MaintenanceTable';
 import {
+  ISSUE_TYPE_LABEL_KEY,
+  MT_PAGE_SIZE,
   PRIORITY_LABEL_KEY,
-  PRIORITY_TONE,
+  PRIORITY_OPTIONS,
   STATUS_LABEL_KEY,
-  STATUS_TONE,
+  STATUS_OPTIONS,
 } from '../constants/maintenance.constants';
+import {
+  useCreateMaintenanceRequest,
+  useMaintenanceRequests,
+  useUpdateMaintenanceStatus,
+} from '../hooks/useMaintenanceRequests';
+import type {
+  CreateMaintenanceRequestInput,
+  MaintenanceFilterName,
+  MaintenanceFilters as Filters,
+  MaintenanceRequest,
+  RequestPriority,
+  RequestStatus,
+} from '../types/maintenance.types';
+import {
+  averageResolutionMinutes,
+  formatReference,
+  formatRequestTime,
+  formatTimeAgo,
+  isToday,
+} from '../utils/maintenanceDisplay';
+import './MaintenancePage.css';
 
-const PAGE_SIZE = 4;
-
-// TEMP: placeholder average until the real service is connected
-const AVERAGE_RESOLUTION = '٤٢ د';
-
-// TEMP: placeholder data until the real service is connected
-// (issue, notes, log texts and times below are sample data, they will come from the backend)
-const rows: MaintenanceDetails[] = [
-  {
-    id: '1',
-    roomNumber: '305',
-    issue: 'ضعف ضغط المياه',
-    reference: 'MT-127',
-    reportedAt: 'أُبلغ ١٠:٢٠ ص',
-    status: 'pending',
-    priority: 'high',
-    expectedFixAt: '١٢:٤٥ م',
-    lastUpdate: 'منذ ٣٢ د',
-    notes: 'ضعف المياه في غرفة الضيف. تم إبلاغ الفريق الفني مع طلب الفحص في أقرب وقت.',
-    log: [
-      { id: 'l1', title: 'تحديث حالة الغرفة', description: 'تم تأكيد حالة الغرفة', time: '١١:٤٢ ص' },
-      { id: 'l2', title: 'بدأ التنظيف', description: 'أسندت المهمة إلى موظف نظافة', time: '٩:١٥ ص' },
-      { id: 'l3', title: 'تسجيل المغادرة', description: 'تم إغلاق حساب الضيف', time: 'أمس' },
-    ],
-  },
-  {
-    id: '2',
-    roomNumber: '112',
-    issue: 'المكيّف لا يبرّد',
-    reference: 'MT-128',
-    reportedAt: 'أُبلغ ١٠:٥٦ ص',
-    status: 'in_progress',
-    priority: 'critical',
-    expectedFixAt: '١٢:٤٥ م',
-    lastUpdate: 'منذ ٨ د',
-    notes: 'المكيّف لا يبرّد في غرفة الضيف. تم إبلاغ الفريق الفني مع طلب الفحص في أقرب وقت.',
-    log: [
-      { id: 'l1', title: 'تحديث حالة الغرفة', description: 'تم تأكيد حالة الغرفة', time: '١١:٤٢ ص' },
-      { id: 'l2', title: 'تم الإبلاغ', description: 'سُجّل البلاغ من الاستقبال', time: '١٠:٥٦ ص' },
-    ],
-  },
-  {
-    id: '3',
-    roomNumber: '207',
-    issue: 'تسرّب في الحمّام',
-    reference: 'MT-126',
-    reportedAt: 'أُبلغ ٩:٣٠ ص',
-    status: 'in_progress',
-    priority: 'high',
-    expectedFixAt: '١:١٥ م',
-    lastUpdate: 'منذ ٢٠ د',
-    log: [{ id: 'l1', title: 'تم الإبلاغ', description: 'سُجّل البلاغ من الاستقبال', time: '٩:٣٠ ص' }],
-  },
-  {
-    id: '4',
-    roomNumber: '210',
-    issue: 'مصباح لا يعمل',
-    reference: 'MT-125',
-    reportedAt: 'أُبلغ ٩:٠٥ ص',
-    status: 'resolved',
-    priority: 'normal',
-    lastUpdate: 'منذ ساعة',
-    log: [{ id: 'l1', title: 'تم الحل', description: 'تم استبدال المصباح', time: '١٠:٠٠ ص' }],
-  },
-  {
-    id: '5',
-    roomNumber: '401',
-    issue: 'باب لا يُغلق',
-    reference: 'MT-124',
-    reportedAt: 'أُبلغ ٨:٤٠ ص',
-    status: 'pending',
-    priority: 'normal',
-    lastUpdate: 'منذ ساعتين',
-    log: [{ id: 'l1', title: 'تم الإبلاغ', description: 'سُجّل البلاغ من الاستقبال', time: '٨:٤٠ ص' }],
-  },
-];
+// URL params: q, room, priority, status, page — plus id (details drawer) and request=new (form drawer)
+function parseFilters(params: URLSearchParams): Filters {
+  const status = params.get('status') ?? '';
+  const priority = params.get('priority') ?? '';
+  const room = params.get('room') ?? '';
+  const page = Number.parseInt(params.get('page') ?? '1', 10);
+  return {
+    q: params.get('q') ?? '',
+    room: /^\d+$/.test(room) ? room : '',
+    priority: PRIORITY_OPTIONS.includes(priority as RequestPriority) ? priority as RequestPriority : '',
+    status: STATUS_OPTIONS.includes(status as RequestStatus) ? status as RequestStatus : '',
+    page: Number.isFinite(page) && page > 0 ? page : 1,
+  };
+}
 
 export function MaintenancePage() {
-  const { t } = useLanguage();
-  const [query, setQuery] = useState('');
-  const [status, setStatus] = useState('');
-  const [priority, setPriority] = useState('');
-  const [room, setRoom] = useState('');
-  const [page, setPage] = useState(1);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [formOpen, setFormOpen] = useState(false);
+  const { language } = useOutletContext<{ language: Language }>();
+  const t = (key: string) => getTranslation(language, key);
+  const toast = useToast();
+  const tableRef = useRef<HTMLDivElement>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const filters = useMemo(() => parseFilters(searchParams), [searchParams]);
+  const [searchDraft, setSearchDraft] = useState(filters.q);
+  const debouncedSearch = useDebounce(searchDraft, 300);
 
-  const roomOptions = Array.from(new Set(rows.map((row) => row.roomNumber)));
+  const requestsQuery = useMaintenanceRequests();
+  const createRequest = useCreateMaintenanceRequest();
+  const updateStatus = useUpdateMaintenanceStatus();
+  const requests = useMemo(() => requestsQuery.data ?? [], [requestsQuery.data]);
 
-  const filteredRows = rows.filter((row) => {
-    const search = query.trim();
-    const matchesQuery = !search || row.roomNumber.includes(search) || row.issue.includes(search);
-    const matchesStatus = !status || row.status === status;
-    const matchesPriority = !priority || row.priority === priority;
-    const matchesRoom = !room || row.roomNumber === room;
-    return matchesQuery && matchesStatus && matchesPriority && matchesRoom;
-  });
+  const selectedId = searchParams.get('id');
+  const selectedRequest = requests.find((request) => request.id === selectedId) ?? null;
+  const isFormOpen = searchParams.get('request') === 'new';
 
-  const totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
-  const visibleRows = filteredRows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const selectedRequest = rows.find((row) => row.id === selectedId) ?? null;
+  const updateParams = useCallback((changes: Record<string, string | null>, replace = false) => {
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      for (const [name, value] of Object.entries(changes)) {
+        if (value === null || value === '') next.delete(name);
+        else next.set(name, value);
+      }
+      return next;
+    }, { replace });
+  }, [setSearchParams]);
 
-  const changeFilter = (setter: (value: string) => void) => (value: string) => {
-    setter(value);
-    setPage(1);
+  // Keep the search box in sync when the URL changes (back button, reset)
+  useEffect(() => {
+    setSearchDraft(filters.q);
+  }, [filters.q]);
+
+  // Write the search to the URL 300ms after the user stops typing
+  useEffect(() => {
+    if (debouncedSearch === filters.q || searchDraft !== debouncedSearch) return;
+    updateParams({ q: debouncedSearch.trim(), page: null }, true);
+  }, [debouncedSearch, filters.q, searchDraft, updateParams]);
+
+  const roomOptions = useMemo(
+    () => Array.from(new Set(requests.map((request) => request.roomNumber))).sort((a, b) => Number(a) - Number(b)),
+    [requests],
+  );
+
+  // Search by room number or issue description, as the search placeholder says
+  const filteredRequests = useMemo(() => {
+    const search = normalizeDigits(filters.q.trim()).toLocaleLowerCase();
+    return requests.filter((request) => {
+      const matchesQuery = !search
+        || request.roomNumber.includes(search)
+        || request.title.toLocaleLowerCase().includes(search)
+        || getTranslation(language, ISSUE_TYPE_LABEL_KEY[request.issueType]).toLocaleLowerCase().includes(search);
+      const matchesRoom = !filters.room || request.roomNumber === filters.room;
+      const matchesPriority = !filters.priority || request.priority === filters.priority;
+      const matchesStatus = !filters.status || request.status === filters.status;
+      return matchesQuery && matchesRoom && matchesPriority && matchesStatus;
+    });
+  }, [filters, language, requests]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRequests.length / MT_PAGE_SIZE));
+  const page = Math.min(filters.page, totalPages);
+  const pageRequests = filteredRequests.slice((page - 1) * MT_PAGE_SIZE, page * MT_PAGE_SIZE);
+
+  const averageMinutes = averageResolutionMinutes(requests);
+  const stats = {
+    total: requests.length,
+    critical: requests.filter((request) => request.priority === 'critical').length,
+    pending: requests.filter((request) => request.status === 'pending').length,
+    resolved: requests.filter((request) => request.status === 'resolved').length,
+    today: requests.filter((request) => isToday(request.reportedAt)).length,
+    average: averageMinutes === null ? '—' : t('mtDurationMinutes').replace('{n}', formatNumber(averageMinutes, language)),
   };
 
-  const resetFilters = () => {
-    setQuery('');
-    setStatus('');
-    setPriority('');
-    setRoom('');
-    setPage(1);
-  };
+  function changeFilter(name: MaintenanceFilterName, value: string) {
+    updateParams({ [name]: value, page: null });
+  }
+
+  function resetFilters() {
+    setSearchDraft('');
+    updateParams({ q: null, room: null, priority: null, status: null, page: null });
+  }
+
+  function changePage(nextPage: number) {
+    updateParams({ page: nextPage > 1 ? String(nextPage) : null });
+    window.setTimeout(() => tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
+  }
+
+  const openRequest = (requestId: string) => updateParams({ id: requestId, request: null });
+  const openForm = () => updateParams({ request: 'new', id: null });
+  const closeDrawers = () => updateParams({ id: null, request: null });
+
+  async function submitRequest(input: CreateMaintenanceRequestInput) {
+    try {
+      await createRequest.mutateAsync(input);
+      closeDrawers();
+      toast.notify(t('mtToastCreated'), 'success');
+    } catch {
+      toast.notify(t('error'), 'error');
+    }
+  }
+
+  async function saveStatus(status: RequestStatus) {
+    if (!selectedRequest) return;
+    try {
+      await updateStatus.mutateAsync({ id: selectedRequest.id, status });
+      closeDrawers();
+      toast.notify(t('mtToastUpdated'), 'success');
+    } catch {
+      toast.notify(t('error'), 'error');
+    }
+  }
+
+  function exportRequests() {
+    if (filteredRequests.length === 0) {
+      toast.notify(t('mtToastNoExport'), 'warning');
+      return;
+    }
+    const exported = exportCsv<MaintenanceRequest>(filteredRequests, [
+      { header: t('mtColReference'), value: (request) => formatReference(request.referenceNumber, 'en') },
+      { header: t('colRoom'), value: (request) => request.roomNumber },
+      { header: t('mtFormIssueType'), value: (request) => t(ISSUE_TYPE_LABEL_KEY[request.issueType]) },
+      { header: t('mtColIssue'), value: (request) => request.title },
+      { header: t('priorityLabel'), value: (request) => t(PRIORITY_LABEL_KEY[request.priority]) },
+      { header: t('statusLabel'), value: (request) => t(STATUS_LABEL_KEY[request.status]) },
+      { header: t('mtColReportedAt'), value: (request) => formatRequestTime(request.reportedAt, language) },
+      { header: t('mtColLastUpdate'), value: (request) => formatTimeAgo(request.updatedAt, language) },
+      { header: t('mtDescription'), value: (request) => request.notes ?? '' },
+    ], `maintenance-${new Date().toISOString().slice(0, 10)}.csv`);
+    if (exported) {
+      toast.notify(t('mtToastExported').replace('{count}', formatNumber(filteredRequests.length, language)), 'success');
+    }
+  }
+
+  const hero = (actions?: boolean) => (
+    <PageHero eyebrow={t('maintenance')} title={t('mtHeroTitle')} description={t('mtHeroDesc')} className="maintenance-page__hero">
+      {actions && (
+        <div className="maintenance-page__hero-actions">
+          <Button variant="ghost" className="maintenance-page__hero-export" onClick={exportRequests}>
+            <FileText aria-hidden="true" />
+            {t('export')}
+          </Button>
+          <Button className="maintenance-page__hero-add" onClick={openForm}>
+            <Plus aria-hidden="true" />
+            {t('mtNewRequest')}
+          </Button>
+        </div>
+      )}
+    </PageHero>
+  );
+
+  if (requestsQuery.isPending) {
+    return <div className="feature-page maintenance-page">{hero()}<LoadingState label={t('mtLoading')} /></div>;
+  }
+
+  if (requestsQuery.isError) {
+    return (
+      <div className="feature-page maintenance-page">
+        {hero()}
+        <ErrorState
+          title={t('mtLoadError')}
+          message={t('mtLoadError')}
+          action={<Button onClick={() => { void requestsQuery.refetch(); }}>{t('mtRetry')}</Button>}
+        />
+      </div>
+    );
+  }
 
   return (
-    <div className="feature-page">
-      <PageHero title={t('mtHeroTitle')} description={t('mtHeroDesc')}>
-        <Button onClick={() => setFormOpen(true)}>{t('mtNewRequest')}</Button>
-      </PageHero>
+    <div className="feature-page maintenance-page">
+      {hero(true)}
 
-      <div className="maintenance-stats">
-        <StatCard label={t('mtStatTotal')} value={rows.length} icon="🔧" tone="amber" />
-        <StatCard label={t('mtStatCritical')} value={rows.filter((row) => row.priority === 'critical').length} icon="!" tone="rose" />
-        <StatCard label={t('mtStatPending')} value={rows.filter((row) => row.status === 'pending').length} icon="◷" tone="amber" />
-        <StatCard label={t('mtStatResolved')} value={rows.filter((row) => row.status === 'resolved').length} icon="✓" tone="teal" />
-        <StatCard label={t('mtStatToday')} value={rows.length} icon="▦" tone="teal" />
-        <StatCard label={t('mtStatAverage')} value={AVERAGE_RESOLUTION} icon="⏱" tone="amber" />
+      <div className="stat-grid maintenance-page__stats">
+        <StatCard label={t('mtStatTotal')} value={stats.total} icon={<Wrench size={20} aria-hidden="true" />} tone="amber" />
+        <StatCard label={t('mtStatCritical')} value={stats.critical} icon={<Bell size={20} aria-hidden="true" />} tone="amber" />
+        <StatCard label={t('mtStatPending')} value={stats.pending} icon={<Clock size={20} aria-hidden="true" />} tone="amber" />
+        <StatCard label={t('mtStatResolved')} value={stats.resolved} icon={<Check size={20} aria-hidden="true" />} tone="teal" />
+        <StatCard label={t('mtStatToday')} value={stats.today} icon={<CalendarDays size={20} aria-hidden="true" />} tone="teal" />
+        <StatCard label={t('mtStatAverage')} value={stats.average} icon={<Timer size={20} aria-hidden="true" />} tone="amber" />
       </div>
 
-      <MaintenanceFilters
-        query={query}
-        status={status}
-        priority={priority}
-        room={room}
-        roomOptions={roomOptions}
-        onQueryChange={changeFilter(setQuery)}
-        onStatusChange={changeFilter(setStatus)}
-        onPriorityChange={changeFilter(setPriority)}
-        onRoomChange={changeFilter(setRoom)}
-        onReset={resetFilters}
-      />
+      <Card className="maintenance-page__filters-card">
+        <MaintenanceFilters
+          language={language}
+          value={searchDraft}
+          onSearchChange={setSearchDraft}
+          filters={filters}
+          roomOptions={roomOptions}
+          onFilterChange={changeFilter}
+          onReset={resetFilters}
+        />
+      </Card>
 
-      <section className="maintenance-list__header">
-        <div>
-          <h2>{t('mtListTitle')}</h2>
-          <p>{t('mtListSubtitle')}</p>
+      {filteredRequests.length === 0 ? (
+        <EmptyState
+          title={t('mtEmpty')}
+          description={t('mtEmptyDesc')}
+          action={<Button variant="secondary" onClick={resetFilters}>{t('filterReset')}</Button>}
+        />
+      ) : (
+        <div ref={tableRef}>
+          <MaintenanceTable
+            requests={pageRequests}
+            totalRequests={filteredRequests.length}
+            language={language}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={changePage}
+            onOpenRequest={openRequest}
+          />
         </div>
-        <Badge tone="success">{filteredRows.length} {t('mtListCount')}</Badge>
-      </section>
+      )}
 
-      <Table
-        columns={[
-          { key: 'reference', label: t('mtColReference'), render: (row: unknown) => (row as MaintenanceDetails).reference ?? '' },
-          { key: 'roomNumber', label: t('colRoom'), render: (row: unknown) => (row as MaintenanceDetails).roomNumber },
-          { key: 'issue', label: t('mtColIssue'), render: (row: unknown) => (row as MaintenanceDetails).issue },
-          {
-            key: 'priority',
-            label: t('priorityLabel'),
-            render: (row: unknown) => {
-              const request = row as MaintenanceDetails;
-              return <Badge tone={PRIORITY_TONE[request.priority]}>{t(PRIORITY_LABEL_KEY[request.priority])}</Badge>;
-            },
-          },
-          {
-            key: 'status',
-            label: t('statusLabel'),
-            render: (row: unknown) => {
-              const request = row as MaintenanceDetails;
-              return <Badge tone={STATUS_TONE[request.status]}>{t(STATUS_LABEL_KEY[request.status])}</Badge>;
-            },
-          },
-          { key: 'reportedAt', label: t('mtColReportedAt'), render: (row: unknown) => (row as MaintenanceDetails).reportedAt ?? '' },
-          { key: 'lastUpdate', label: t('mtColLastUpdate'), render: (row: unknown) => (row as MaintenanceDetails).lastUpdate ?? '' },
-          {
-            key: 'actions',
-            label: t('colActions'),
-            render: (row: unknown) => {
-              const request = row as MaintenanceDetails;
-              return <Button variant="ghost" onClick={() => setSelectedId(request.id)}>›</Button>;
-            },
-          },
-        ]}
-        rows={visibleRows}
+      <MaintenanceDetailsDrawer
+        key={selectedRequest ? `${selectedRequest.id}-${selectedRequest.status}` : 'none'}
+        request={selectedRequest}
+        language={language}
+        onClose={closeDrawers}
+        onSave={(status) => { void saveStatus(status); }}
+        isSaving={updateStatus.isPending}
       />
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
-
-      <MaintenanceDetailsDrawer request={selectedRequest} onClose={() => setSelectedId(null)} />
-      {/* TODO: connect to the real service when it is ready */}
-      <MaintenanceFormDrawer open={formOpen} onClose={() => setFormOpen(false)} onSubmit={() => setFormOpen(false)} />
+      <MaintenanceFormDrawer
+        key={isFormOpen ? 'form-open' : 'form-closed'}
+        open={isFormOpen}
+        language={language}
+        onClose={closeDrawers}
+        onSubmit={(input) => { void submitRequest(input); }}
+        isSaving={createRequest.isPending}
+      />
     </div>
   );
 }
