@@ -1,0 +1,32 @@
+.maintenance-filters__field {
+  display: grid;
+  gap: 6px;
+  min-width: 140px;
+}
+
+.maintenance-filters__field span {
+  color: #7d827e;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.maintenance-filters__field select {
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid #ebe8e0;
+  border-radius: 14px;
+  background: #fff;
+  color: #2f2f2f;
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+[data-theme="dark"] .maintenance-filters__field span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .maintenance-filters__field select {
+  background: #1a222c;
+  border-color: #2a3441;
+  color: #f8fafc;
+}

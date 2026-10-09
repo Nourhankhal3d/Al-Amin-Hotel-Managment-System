@@ -1,0 +1,135 @@
+.maintenance-details {
+  display: grid;
+  gap: 24px;
+}
+
+.maintenance-details__summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #ebe8e0;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.maintenance-details__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #f8f0df;
+  font-size: 1.4rem;
+}
+
+.maintenance-details__summary-text {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+}
+
+.maintenance-details__summary-text span {
+  color: #7d827e;
+  font-size: 0.8rem;
+}
+
+.maintenance-details__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.maintenance-details__info {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border: 1px solid #ebe8e0;
+  border-radius: 18px;
+  background: #fff;
+}
+
+.maintenance-details__info span {
+  color: #7d827e;
+  font-size: 0.78rem;
+}
+
+.maintenance-details__heading {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+
+.maintenance-details__box {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid #ebe8e0;
+  border-radius: 18px;
+  background: #fff;
+  color: #5b6169;
+  font-size: 0.85rem;
+}
+
+.maintenance-details__actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.maintenance-details__action {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid #ebe8e0;
+  border-radius: 18px;
+  background: #fff;
+  color: #41c06a;
+  font-size: 0.8rem;
+}
+
+.maintenance-details__action span {
+  font-size: 1.3rem;
+}
+
+/* Dark theme */
+[data-theme="dark"] .maintenance-details__summary,
+[data-theme="dark"] .maintenance-details__info,
+[data-theme="dark"] .maintenance-details__box,
+[data-theme="dark"] .maintenance-details__action {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .maintenance-details__summary {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .maintenance-details__icon {
+  background: rgba(201, 167, 104, 0.18);
+}
+
+[data-theme="dark"] .maintenance-details__summary-text strong,
+[data-theme="dark"] .maintenance-details__info strong,
+[data-theme="dark"] .maintenance-details__heading {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .maintenance-details__summary-text span,
+[data-theme="dark"] .maintenance-details__info span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .maintenance-details__box {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .maintenance-details__action {
+  color: #41c06a;
+}
+
+[data-theme="dark"] .maintenance-details__action:hover {
+  background: rgba(65, 192, 106, 0.15);
+  border-color: #41c06a;
+}

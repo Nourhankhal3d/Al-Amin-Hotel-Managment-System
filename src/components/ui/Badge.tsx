@@ -1,12 +1,14 @@
+import './Badge.css';
 import type { ReactNode } from 'react';
 import './Badge.css';
 
+export type BadgeTone = 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple';
+
 interface BadgeProps {
   children: ReactNode;
-  tone?: 'neutral' | 'success' | 'warning' | 'danger' | 'info';
-  className?: string;
+  tone?: BadgeTone;
 }
 
-export function Badge({ children, tone = 'neutral', className = '' }: BadgeProps) {
-  return <span className={`ui-badge ui-badge--${tone} ${className}`.trim()}>{children}</span>;
+export function Badge({ children, tone = 'neutral' }: BadgeProps) {
+  return <span className={`badge badge--${tone}`}>{children}</span>;
 }

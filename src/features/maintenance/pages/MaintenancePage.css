@@ -1,0 +1,31 @@
+.maintenance-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+}
+
+.maintenance-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.maintenance-list__header h2 {
+  margin: 0 0 4px;
+  font-size: 1.2rem;
+}
+
+.maintenance-list__header p {
+  margin: 0;
+  color: #7d827e;
+  font-size: 0.82rem;
+}
+
+[data-theme="dark"] .maintenance-list__header h2 {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .maintenance-list__header p {
+  color: #94a3b8;
+}
