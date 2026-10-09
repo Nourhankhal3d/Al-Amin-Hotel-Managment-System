@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
-import { AuthLayout } from '../../../layouts/AuthLayout/AuthLayout';
-import { validateLogin } from '../schemas/login.schema';
 import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
 import { login } from '../services/auth.api';
 import { setAuthSession } from '../../../core/auth/authManager';
