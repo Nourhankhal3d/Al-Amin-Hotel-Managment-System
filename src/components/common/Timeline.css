@@ -39,6 +39,16 @@
   box-shadow: 0 0 0 4px #f3e8cf;
 }
 
+.timeline__marker--gold {
+  background: #c0933f;
+  box-shadow: 0 0 0 4px #f3e8cf;
+}
+
+.timeline__marker--primary {
+  background: var(--color-primary, #1f6f5c);
+  box-shadow: 0 0 0 4px rgba(31, 111, 92, 0.15);
+}
+
 .timeline__title {
   display: block;
   font-size: 0.9rem;
@@ -55,12 +65,17 @@
   font-size: 0.78rem;
   white-space: nowrap;
 }
+
 [data-theme="dark"] .timeline__item:not(:last-child)::before {
   background: #2a3441;
 }
 
 [data-theme="dark"] .timeline__marker {
   box-shadow: 0 0 0 4px rgba(201, 167, 104, 0.2);
+}
+
+[data-theme="dark"] .timeline__marker--primary {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
 }
 
 [data-theme="dark"] .timeline__description,
