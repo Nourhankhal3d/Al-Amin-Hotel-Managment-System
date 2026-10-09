@@ -11,12 +11,20 @@ interface DrawerProps {
   footer?: ReactNode;
   children: ReactNode;
   side?: 'start' | 'end';
-  closeLabel?: string;
   className?: string;
-  footer?: ReactNode;
 }
 
-export function Drawer({ open, title, eyebrow, closeLabel = 'Close', onClose, footer, children }: DrawerProps) {
+export function Drawer({
+  open,
+  title,
+  eyebrow,
+  closeLabel = 'Close',
+  onClose,
+  footer,
+  children,
+  side,
+  className,
+}: DrawerProps) {
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -28,10 +36,18 @@ export function Drawer({ open, title, eyebrow, closeLabel = 'Close', onClose, fo
 
   if (!open) return null;
 
+  const panelClass = [
+    'drawer__panel',
+    side ? `drawer__panel--${side}` : '',
+    className ?? '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <div className="drawer__backdrop" role="presentation" onMouseDown={onClose}>
       <aside
-        className="drawer__panel"
+        className={panelClass}
         role="dialog"
         aria-modal="true"
         aria-label={title}

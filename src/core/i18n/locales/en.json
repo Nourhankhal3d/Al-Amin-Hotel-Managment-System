@@ -1,7 +1,5 @@
 {
   "appName": "Al-Amin Hotel",
-  "dashboard": "Dashboard",
-  "rooms": "Rooms",
   "housekeeping": "Housekeeping",
   "maintenance": "Maintenance",
   "payments": "Payments",
@@ -20,8 +18,14 @@
   "loading": "Loading...",
   "notFound": "Page not found",
   "back": "Back",
-  "toast": { "dismiss": "Dismiss notification" },
-  "pagination": { "label": "Pagination", "previous": "Previous page", "next": "Next page" },
+  "toast": {
+    "dismiss": "Dismiss notification"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page"
+  },
   "sidebar": {
     "brand": "Al-Amin",
     "location": "Hotel · Aswan",
@@ -62,14 +66,38 @@
     "stats": {
       "open": "Open",
       "warning": "Warning",
-      "roomsPrepared": { "label": "Rooms prepared", "caption": "2 more than usual" },
-      "cleaning": { "label": "Cleaning requests", "caption": "Requests awaiting an update" },
-      "maintenance": { "label": "Maintenance reports", "caption": "1 report needs attention" },
-      "revenue": { "label": "Today's revenue", "caption": "Total income today" },
-      "checkouts": { "label": "Check-outs", "caption": "Departures completed so far" },
-      "checkins": { "label": "Check-ins", "caption": "Expected arrivals this shift" },
-      "completed": { "label": "Tasks completed", "caption": "Completed during this shift" },
-      "pending": { "label": "Pending tasks", "caption": "Tasks that need follow-up" }
+      "roomsPrepared": {
+        "label": "Rooms prepared",
+        "caption": "2 more than usual"
+      },
+      "cleaning": {
+        "label": "Cleaning requests",
+        "caption": "Requests awaiting an update"
+      },
+      "maintenance": {
+        "label": "Maintenance reports",
+        "caption": "1 report needs attention"
+      },
+      "revenue": {
+        "label": "Today's revenue",
+        "caption": "Total income today"
+      },
+      "checkouts": {
+        "label": "Check-outs",
+        "caption": "Departures completed so far"
+      },
+      "checkins": {
+        "label": "Check-ins",
+        "caption": "Expected arrivals this shift"
+      },
+      "completed": {
+        "label": "Tasks completed",
+        "caption": "Completed during this shift"
+      },
+      "pending": {
+        "label": "Pending tasks",
+        "caption": "Tasks that need follow-up"
+      }
     },
     "revenue": {
       "title": "Revenue overview",
@@ -94,10 +122,22 @@
       "viewAll": "View all activity",
       "agoMinutes": "{value} min ago",
       "items": {
-        "checkin": { "title": "Guest checked in", "description": "Room 204 · Ahmed Al Nuaimi" },
-        "checkout": { "title": "Guest checked out", "description": "Room 118 · Mariam Al Qahtani" },
-        "maintenance": { "title": "Maintenance reported", "description": "Air conditioning in room 305" },
-        "cleaning": { "title": "Room cleaning completed", "description": "Room 412 is ready for its guest" }
+        "checkin": {
+          "title": "Guest checked in",
+          "description": "Room 204 · Ahmed Al Nuaimi"
+        },
+        "checkout": {
+          "title": "Guest checked out",
+          "description": "Room 118 · Mariam Al Qahtani"
+        },
+        "maintenance": {
+          "title": "Maintenance reported",
+          "description": "Air conditioning in room 305"
+        },
+        "cleaning": {
+          "title": "Room cleaning completed",
+          "description": "Room 412 is ready for its guest"
+        }
       }
     },
     "quickActions": {
@@ -118,9 +158,18 @@
       "high": "High",
       "normal": "Normal",
       "items": {
-        "critical": { "title": "Air conditioning in room 305", "detail": "Needs an urgent technical inspection" },
-        "high": { "title": "Prepare room for arrival", "detail": "Room 412 before 12:00" },
-        "normal": { "title": "Overdue maintenance request", "detail": "Bathroom tap in room 112" }
+        "critical": {
+          "title": "Air conditioning in room 305",
+          "detail": "Needs an urgent technical inspection"
+        },
+        "high": {
+          "title": "Prepare room for arrival",
+          "detail": "Room 412 before 12:00"
+        },
+        "normal": {
+          "title": "Overdue maintenance request",
+          "detail": "Bathroom tap in room 112"
+        }
       },
       "legend": "Priority level",
       "maintenance": "Maintenance",
@@ -163,10 +212,26 @@
     },
     "options": {
       "all": "All",
-      "type": { "standard": "Standard", "vip": "VIP" },
-      "status": { "available": "Available", "reserved": "Reserved", "occupied": "Occupied", "cleaning": "Cleaning", "maintenance": "Maintenance" },
-      "floor": { "1": "First", "2": "Second", "3": "Third" },
-      "availability": { "available": "Available now", "unavailable": "Unavailable" }
+      "type": {
+        "standard": "Standard",
+        "vip": "VIP"
+      },
+      "status": {
+        "available": "Available",
+        "reserved": "Reserved",
+        "occupied": "Occupied",
+        "cleaning": "Cleaning",
+        "maintenance": "Maintenance"
+      },
+      "floor": {
+        "1": "First",
+        "2": "Second",
+        "3": "Third"
+      },
+      "availability": {
+        "available": "Available now",
+        "unavailable": "Unavailable"
+      }
     },
     "status": {
       "available": "Available",
@@ -175,9 +240,20 @@
       "cleaning": "Cleaning",
       "maintenance": "Maintenance"
     },
-    "type": { "standard": "Standard", "vip": "VIP" },
-    "floor": { "1": "First", "2": "Second", "3": "Third" },
-    "views": { "nile": "Nile", "garden": "Garden", "city": "City" },
+    "type": {
+      "standard": "Standard",
+      "vip": "VIP"
+    },
+    "floor": {
+      "1": "First",
+      "2": "Second",
+      "3": "Third"
+    },
+    "views": {
+      "nile": "Nile",
+      "garden": "Garden",
+      "city": "City"
+    },
     "table": {
       "title": "Room register",
       "summary": "Showing {rows} of {total} rooms",
@@ -291,8 +367,7 @@
       "notes": "Notes",
       "updatedAt": "Last updated"
     }
-  }
-}
+  },
   "save": "Save Changes",
   "cancel": "Cancel",
   "success": "Operation completed successfully",
@@ -496,5 +571,9 @@
   "mtType_furniture": "Furniture",
   "mtType_other": "Other",
   "pendingTasks": "Pending Tasks",
-  "reports": "Reports"
+  "reports": "Reports",
+  "floorLabel": "Floor",
+  "hkListTitle": "Housekeeping tasks",
+  "hkListSubtitle": "Cleaning tasks logged during today's shift",
+  "hkListCount": "tasks shown"
 }

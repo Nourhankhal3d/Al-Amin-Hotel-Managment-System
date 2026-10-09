@@ -13,9 +13,12 @@ interface HousekeepingFiltersProps {
   query: string;
   status: string;
   priority: string;
+  floor: string;
+  floorOptions: string[];
   onQueryChange: (value: string) => void;
   onStatusChange: (value: string) => void;
   onPriorityChange: (value: string) => void;
+  onFloorChange: (value: string) => void;
   onReset: () => void;
 }
 
@@ -23,15 +26,23 @@ export function HousekeepingFilters({
   query,
   status,
   priority,
+  floor,
+  floorOptions,
   onQueryChange,
   onStatusChange,
   onPriorityChange,
+  onFloorChange,
   onReset,
 }: HousekeepingFiltersProps) {
   const { t } = useLanguage();
 
   return (
-    <FilterBar value={query} onChange={onQueryChange} placeholder={t('hkSearch')}>
+    <FilterBar
+      className="housekeeping-filters"
+      value={query}
+      onChange={onQueryChange}
+      placeholder={t('hkSearch')}
+    >
       <label className="housekeeping-filters__field">
         <span>{t('statusLabel')}</span>
         <select value={status} onChange={(event) => onStatusChange(event.target.value)}>
@@ -48,6 +59,13 @@ export function HousekeepingFilters({
           {PRIORITY_OPTIONS.map((option) => (
             <option key={option} value={option}>{t(PRIORITY_LABEL_KEY[option])}</option>
           ))}
+        </select>
+      </label>
+      <label className="housekeeping-filters__field">
+        <span>{t('floorLabel')}</span>
+        <select value={floor} onChange={(event) => onFloorChange(event.target.value)}>
+          <option value="">{t('filterAll')}</option>
+          {floorOptions.map((option) => <option key={option} value={option}>{option}</option>)}
         </select>
       </label>
       <Button variant="ghost" onClick={onReset}>{t('filterReset')}</Button>

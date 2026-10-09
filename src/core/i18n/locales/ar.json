@@ -1,7 +1,5 @@
 {
   "appName": "فندق الأمين | Al-Amin Hotel",
-  "dashboard": "لوحة التحكم",
-  "rooms": "الغرف",
   "housekeeping": "التنظيف",
   "maintenance": "الصيانة",
   "payments": "المدفوعات",
@@ -20,8 +18,14 @@
   "loading": "جارٍ التحميل...",
   "notFound": "الصفحة غير موجودة",
   "back": "رجوع",
-  "toast": { "dismiss": "إخفاء الإشعار" },
-  "pagination": { "label": "التنقل بين الصفحات", "previous": "الصفحة السابقة", "next": "الصفحة التالية" },
+  "toast": {
+    "dismiss": "إخفاء الإشعار"
+  },
+  "pagination": {
+    "label": "التنقل بين الصفحات",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية"
+  },
   "sidebar": {
     "brand": "الأمين",
     "location": "فندق · أسوان",
@@ -62,14 +66,38 @@
     "stats": {
       "open": "مفتوح",
       "warning": "تنبيه",
-      "roomsPrepared": { "label": "غرف تم تجهيزها", "caption": "أكثر من المعتاد بـ ٢ غرفة" },
-      "cleaning": { "label": "طلبات النظافة", "caption": "طلبات بانتظار التحديث" },
-      "maintenance": { "label": "بلاغات الصيانة", "caption": "إبلاغ واحد يحتاج المتابعة" },
-      "revenue": { "label": "إيراد اليوم", "caption": "إجمالي الدخل اليوم" },
-      "checkouts": { "label": "تسجيل المغادرة", "caption": "مغادرات تمت حتى الآن" },
-      "checkins": { "label": "تسجيل الوصول", "caption": "وصول متوقع خلال الوردية" },
-      "completed": { "label": "مهام مكتملة", "caption": "أُنجزت خلال هذه الوردية" },
-      "pending": { "label": "مهام معلقة", "caption": "مهام تحتاج إلى متابعة" }
+      "roomsPrepared": {
+        "label": "غرف تم تجهيزها",
+        "caption": "أكثر من المعتاد بـ ٢ غرفة"
+      },
+      "cleaning": {
+        "label": "طلبات النظافة",
+        "caption": "طلبات بانتظار التحديث"
+      },
+      "maintenance": {
+        "label": "بلاغات الصيانة",
+        "caption": "إبلاغ واحد يحتاج المتابعة"
+      },
+      "revenue": {
+        "label": "إيراد اليوم",
+        "caption": "إجمالي الدخل اليوم"
+      },
+      "checkouts": {
+        "label": "تسجيل المغادرة",
+        "caption": "مغادرات تمت حتى الآن"
+      },
+      "checkins": {
+        "label": "تسجيل الوصول",
+        "caption": "وصول متوقع خلال الوردية"
+      },
+      "completed": {
+        "label": "مهام مكتملة",
+        "caption": "أُنجزت خلال هذه الوردية"
+      },
+      "pending": {
+        "label": "مهام معلقة",
+        "caption": "مهام تحتاج إلى متابعة"
+      }
     },
     "revenue": {
       "title": "نظرة على الإيرادات",
@@ -94,10 +122,22 @@
       "viewAll": "عرض كل الأنشطة",
       "agoMinutes": "منذ {value} دقيقة",
       "items": {
-        "checkin": { "title": "تم تسجيل دخول ضيف", "description": "غرفة ٢٠٤ · أحمد النعيمي" },
-        "checkout": { "title": "تم تسجيل مغادرة", "description": "غرفة ١١٨ · مريم القحطاني" },
-        "maintenance": { "title": "تم تسجيل بلاغ صيانة", "description": "تكييف الغرفة ٣٠٥" },
-        "cleaning": { "title": "اكتملت مهمة تنظيف", "description": "الغرفة ٤١٢ جاهزة للضيف" }
+        "checkin": {
+          "title": "تم تسجيل دخول ضيف",
+          "description": "غرفة ٢٠٤ · أحمد النعيمي"
+        },
+        "checkout": {
+          "title": "تم تسجيل مغادرة",
+          "description": "غرفة ١١٨ · مريم القحطاني"
+        },
+        "maintenance": {
+          "title": "تم تسجيل بلاغ صيانة",
+          "description": "تكييف الغرفة ٣٠٥"
+        },
+        "cleaning": {
+          "title": "اكتملت مهمة تنظيف",
+          "description": "الغرفة ٤١٢ جاهزة للضيف"
+        }
       }
     },
     "quickActions": {
@@ -118,9 +158,18 @@
       "high": "مرتفع",
       "normal": "متوسط",
       "items": {
-        "critical": { "title": "المكيف في الغرفة ٣٠٥", "detail": "بحاجة إلى فحص فني عاجل" },
-        "high": { "title": "تجهيز الغرفة للوصول", "detail": "الغرفة ٤١٢ قبل الساعة ١٢" },
-        "normal": { "title": "طلب صيانة متأخر", "detail": "صنبور الحمام في الغرفة ١١٢" }
+        "critical": {
+          "title": "المكيف في الغرفة ٣٠٥",
+          "detail": "بحاجة إلى فحص فني عاجل"
+        },
+        "high": {
+          "title": "تجهيز الغرفة للوصول",
+          "detail": "الغرفة ٤١٢ قبل الساعة ١٢"
+        },
+        "normal": {
+          "title": "طلب صيانة متأخر",
+          "detail": "صنبور الحمام في الغرفة ١١٢"
+        }
       },
       "legend": "مستوى الأولوية",
       "maintenance": "الصيانة",
@@ -163,10 +212,26 @@
     },
     "options": {
       "all": "الكل",
-      "type": { "standard": "عادية", "vip": "VIP" },
-      "status": { "available": "متاحة", "reserved": "محجوزة", "occupied": "مشغولة", "cleaning": "تنظيف", "maintenance": "صيانة" },
-      "floor": { "1": "الأول", "2": "الثاني", "3": "الثالث" },
-      "availability": { "available": "متاحة الآن", "unavailable": "غير متاحة" }
+      "type": {
+        "standard": "عادية",
+        "vip": "VIP"
+      },
+      "status": {
+        "available": "متاحة",
+        "reserved": "محجوزة",
+        "occupied": "مشغولة",
+        "cleaning": "تنظيف",
+        "maintenance": "صيانة"
+      },
+      "floor": {
+        "1": "الأول",
+        "2": "الثاني",
+        "3": "الثالث"
+      },
+      "availability": {
+        "available": "متاحة الآن",
+        "unavailable": "غير متاحة"
+      }
     },
     "status": {
       "available": "متاحة",
@@ -175,9 +240,20 @@
       "cleaning": "تنظيف",
       "maintenance": "صيانة"
     },
-    "type": { "standard": "عادية", "vip": "VIP" },
-    "floor": { "1": "الأول", "2": "الثاني", "3": "الثالث" },
-    "views": { "nile": "النيل", "garden": "الحديقة", "city": "المدينة" },
+    "type": {
+      "standard": "عادية",
+      "vip": "VIP"
+    },
+    "floor": {
+      "1": "الأول",
+      "2": "الثاني",
+      "3": "الثالث"
+    },
+    "views": {
+      "nile": "النيل",
+      "garden": "الحديقة",
+      "city": "المدينة"
+    },
     "table": {
       "title": "سجل الغرف",
       "summary": "عرض {rows} من أصل {total} غرفة",
@@ -291,8 +367,7 @@
       "notes": "ملاحظات",
       "updatedAt": "آخر تحديث"
     }
-  }
-}
+  },
   "save": "حفظ التغييرات",
   "cancel": "إلغاء",
   "success": "تمت العملية بنجاح",
@@ -496,5 +571,9 @@
   "mtType_furniture": "أثاث",
   "mtType_other": "أخرى",
   "pendingTasks": "المهام المعلّقة",
-  "reports": "التقارير"
+  "reports": "التقارير",
+  "floorLabel": "الطابق",
+  "hkListTitle": "مهام التنظيف",
+  "hkListSubtitle": "مهام النظافة المسجلة خلال وردية اليوم",
+  "hkListCount": "مهام ظاهرة"
 }
