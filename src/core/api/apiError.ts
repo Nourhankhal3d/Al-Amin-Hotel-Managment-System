@@ -1,11 +1,12 @@
 import { AppError } from '../errors/AppError';
+import type { ClientErrorCode, ErrorCode } from './api.types';
 
 export class ApiError extends AppError {
   constructor(
     message: string,
-    code: string,
-    public readonly statusCode?: number,
-    public readonly details?: unknown,
+    code: ErrorCode | ClientErrorCode,
+    statusCode?: number,
+    public readonly retryAfter?: number,
   ) {
     super(message, code, statusCode);
     this.name = 'ApiError';

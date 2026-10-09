@@ -1,21 +1,134 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
+import { appConfig } from '../../app/config/app.config';
+import { ApiError } from './apiError';
+import type { ApiErrorBody } from './api.types';
 
-export async function apiRequest<T>(
-  path: string,
-  options: RequestInit = {},
-): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+// ---------- التوكن: في الذاكرة بس (مش localStorage) ----------
+let accessToken: string | null = null;
 
-  if (!response.ok) {
-    const errorBody = await response.json().catch(() => undefined);
-    throw new Error(errorBody?.message ?? 'Request failed');
+export function setAccessToken(token: string | null): void {
+  accessToken = token;
+}
+
+export function getAccessToken(): string | null {
+  return accessToken;
+}
+
+// ---------- الـ axios instance الوحيد في المشروع ----------
+const http = axios.create({
+  baseURL: appConfig.apiBaseUrl,
+  withCredentials: true, // عشان الـ refresh cookie
+});
+
+http.interceptors.request.use((config) => {
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+  return config;
+});
+
+// ---------- تحويل أي خطأ لـ ApiError ----------
+function toApiError(error: unknown): ApiError {
+  if (error instanceof ApiError) return error;
+
+  if (axios.isAxiosError(error)) {
+    const err = error as AxiosError<ApiErrorBody>;
+    if (!err.response) {
+      return new ApiError('Network error', 'NETWORK_ERROR');
+    }
+    const body = err.response.data;
+    const retryAfter = Number(err.response.headers['retry-after']);
+    return new ApiError(
+      body?.error?.message ?? 'Request failed',
+      body?.error?.code ?? 'UNKNOWN_ERROR',
+      err.response.status,
+      Number.isFinite(retryAfter) ? retryAfter : undefined,
+    );
   }
 
-  return response.json() as Promise<T>;
+  return new ApiError('Unknown error', 'UNKNOWN_ERROR');
+}
+
+// ---------- الـ refresh (طلب واحد بس حتى لو فيه طلبات كتير فشلت) ----------
+let refreshPromise: Promise<string> | null = null;
+
+export function refreshAccessToken(): Promise<string> {
+  if (!refreshPromise) {
+    refreshPromise = axios
+      .post<{ access_token: string }>(
+        `${appConfig.apiBaseUrl}/auth/refresh`,
+        null,
+        { withCredentials: true },
+      )
+      .then((res) => {
+        setAccessToken(res.data.access_token);
+        return res.data.access_token;
+      })
+      .catch((e) => {
+        setAccessToken(null);
+        throw toApiError(e);
+      })
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+  return refreshPromise;
+}
+
+// ---------- الطلب الأساسي ----------
+type RequestOptions = {
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  body?: unknown;
+  params?: Record<string, unknown>;
+  idempotencyKey?: string;
+  responseType?: 'json' | 'blob';
+};
+
+export async function request<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T> {
+  const config: AxiosRequestConfig = {
+    url: path,
+    method: options.method ?? 'GET',
+    data: options.body,
+    params: options.params,
+    responseType: options.responseType ?? 'json',
+    headers: options.idempotencyKey
+      ? { 'Idempotency-Key': options.idempotencyKey }
+      : undefined,
+  };
+
+  const isAuthPath = path.startsWith('/auth/');
+
+  try {
+    const res = await http.request<T>(config);
+    return res.data;
+  } catch (error) {
+    const apiError = toApiError(error);
+
+    // 401 على طلب عادي: جرّبي refresh مرة واحدة وأعيدي الطلب
+    if (apiError.statusCode === 401 && !isAuthPath) {
+      try {
+        await refreshAccessToken();
+        const retry = await http.request<T>(config);
+        return retry.data;
+      } catch (retryError) {
+        throw toApiError(retryError);
+      }
+    }
+
+    throw apiError;
+  }
+}
+
+// ---------- للتوافق مع كود Member 1 (auth.api.ts) ----------
+export async function apiRequest<T>(
+  path: string,
+  options: { method?: string; body?: string } = {},
+): Promise<T> {
+  return request<T>(path, {
+    method: (options.method as RequestOptions['method']) ?? 'GET',
+    body: options.body ? JSON.parse(options.body) : undefined,
+  });
 }
