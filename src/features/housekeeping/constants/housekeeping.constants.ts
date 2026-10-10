@@ -1,59 +1,39 @@
 import type { BadgeTone } from '../../../components/ui/Badge';
-import type { TaskLogEvent, TaskPriority, TaskStatus, TaskType } from '../types/housekeeping.types';
+import type { CleaningTaskStatus, Priority } from '../types/housekeeping.types';
 
 export const HK_PAGE_SIZE = 5;
 export const HK_NOTES_MAX_LENGTH = 500;
+export const HK_CLEANER_MAX_LENGTH = 60;
+// The list endpoint pages its results; one shift never has more than this, so the page loads them in one call.
+// TODO: switch to server-side paging (page + meta.total) if a shift can exceed this.
+export const HK_FETCH_LIMIT = 100;
 
-export const STATUS_OPTIONS: TaskStatus[] = ['pending', 'in_progress', 'done'];
-export const PRIORITY_OPTIONS: TaskPriority[] = ['normal', 'high', 'critical'];
-export const TASK_TYPE_OPTIONS: TaskType[] = ['checkout', 'precheckin', 'daily', 'guest'];
+export const STATUS_OPTIONS: CleaningTaskStatus[] = ['pending', 'done'];
+export const PRIORITY_OPTIONS: Priority[] = ['low', 'medium', 'high', 'urgent'];
 
-// TEMP: until real rooms are connected. TODO: confirm with backend
-export const ROOM_OPTIONS = ['101', '102', '112', '207', '210', '214', '305', '308', '312'];
+// TEMP: until rooms come from the API. TODO: load from /rooms (101-103 exist in the team mocks)
+export const ROOM_OPTIONS = ['101', '102', '103', '112', '207', '210', '214', '305', '308', '312'];
 
-export const STATUS_TONE: Record<TaskStatus, BadgeTone> = {
+export const STATUS_TONE: Record<CleaningTaskStatus, BadgeTone> = {
   pending: 'warning',
-  in_progress: 'info',
   done: 'success',
 };
 
-export const PRIORITY_TONE: Record<TaskPriority, BadgeTone> = {
-  normal: 'neutral',
+export const PRIORITY_TONE: Record<Priority, BadgeTone> = {
+  low: 'success',
+  medium: 'neutral',
   high: 'warning',
-  critical: 'danger',
+  urgent: 'danger',
 };
 
-export const STATUS_LABEL_KEY: Record<TaskStatus, string> = {
+export const STATUS_LABEL_KEY: Record<CleaningTaskStatus, string> = {
   pending: 'hkStatus_pending',
-  in_progress: 'hkStatus_in_progress',
   done: 'hkStatus_done',
 };
 
-export const PRIORITY_LABEL_KEY: Record<TaskPriority, string> = {
-  normal: 'priorityNormal',
+export const PRIORITY_LABEL_KEY: Record<Priority, string> = {
+  low: 'priorityLow',
+  medium: 'priorityMedium',
   high: 'priorityHigh',
-  critical: 'priorityCritical',
-};
-
-export const TASK_TYPE_LABEL_KEY: Record<TaskType, string> = {
-  checkout: 'hkType_checkout',
-  precheckin: 'hkType_precheckin',
-  daily: 'hkType_daily',
-  guest: 'hkType_guest',
-};
-
-export const LOG_TITLE_KEY: Record<TaskLogEvent, string> = {
-  created: 'hkLog_created',
-  assigned: 'hkLog_assigned',
-  started: 'hkLog_started',
-  done: 'hkLog_done',
-  status_changed: 'hkLog_statusChanged',
-};
-
-export const LOG_DESCRIPTION_KEY: Record<TaskLogEvent, string> = {
-  created: 'hkLog_createdDesc',
-  assigned: 'hkLog_assignedDesc',
-  started: 'hkLog_startedDesc',
-  done: 'hkLog_doneDesc',
-  status_changed: 'hkLog_statusChangedDesc',
+  urgent: 'priorityUrgent',
 };

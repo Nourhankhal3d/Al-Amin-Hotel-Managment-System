@@ -6,8 +6,8 @@ import type { MaintenanceRequest } from '../types/maintenance.types';
 // TODO: remove once utils/format.ts formatClock uses timeZone 'Africa/Cairo', and use formatClock again.
 const HOTEL_TIME_ZONE = 'Africa/Cairo';
 
-export function formatReference(referenceNumber: number, language: Language): string {
-  return `MT-${formatNumber(referenceNumber, language)}`;
+export function formatReference(issueId: number, language: Language): string {
+  return `MT-${formatNumber(issueId, language)}`;
 }
 
 export function formatRequestTime(isoDate: string, language: Language): string {
@@ -17,6 +17,11 @@ export function formatRequestTime(isoDate: string, language: Language): string {
     hourCycle: 'h12',
     timeZone: HOTEL_TIME_ZONE,
   }).format(new Date(isoDate));
+}
+
+/** The API has no "updated at", so the last known change is the resolve time, else the report time */
+export function lastUpdateOf(request: MaintenanceRequest): string {
+  return request.resolved_date ?? request.created_date;
 }
 
 // "منذ ٨ د", "منذ ساعة", ... ; older than a day falls back to the clock time
@@ -34,8 +39,8 @@ export function formatTimeAgo(isoDate: string, language: Language, now = new Dat
 /** Average minutes from report to resolution, or null when nothing is resolved yet */
 export function averageResolutionMinutes(requests: MaintenanceRequest[]): number | null {
   const durations = requests
-    .filter((request) => request.status === 'resolved' && request.resolvedAt)
-    .map((request) => (new Date(request.resolvedAt as string).getTime() - new Date(request.reportedAt).getTime()) / 60_000);
+    .filter((request) => request.status === 'resolved' && request.resolved_date)
+    .map((request) => (new Date(request.resolved_date as string).getTime() - new Date(request.created_date).getTime()) / 60_000);
   if (durations.length === 0) return null;
   return Math.round(durations.reduce((sum, value) => sum + value, 0) / durations.length);
 }

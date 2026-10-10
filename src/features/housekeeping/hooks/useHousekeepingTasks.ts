@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { housekeepingApi } from '../services/housekeeping.api';
+import { createHousekeepingTask, getHousekeepingTasks, updateHousekeepingTask } from '../services/housekeeping.api';
 
 export const housekeepingKeys = {
   all: ['housekeeping'] as const,
@@ -7,21 +7,22 @@ export const housekeepingKeys = {
 };
 
 export function useHousekeepingTasks() {
-  return useQuery({ queryKey: housekeepingKeys.tasks(), queryFn: housekeepingApi.getTasks });
+  return useQuery({ queryKey: housekeepingKeys.tasks(), queryFn: getHousekeepingTasks });
 }
 
 export function useCreateHousekeepingTask() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: housekeepingApi.createTask,
+    mutationFn: createHousekeepingTask,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: housekeepingKeys.all }),
   });
 }
 
-export function useUpdateHousekeepingTaskStatus() {
+// The only status change the receptionist can make: pending -> done
+export function useCompleteHousekeepingTask() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: housekeepingApi.updateTaskStatus,
+    mutationFn: (taskId: number) => updateHousekeepingTask(taskId, { status: 'done' }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: housekeepingKeys.all }),
   });
 }

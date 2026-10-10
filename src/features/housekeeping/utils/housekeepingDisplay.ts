@@ -5,8 +5,8 @@ import type { Language } from '../../../core/i18n';
 const HOTEL_TIME_ZONE = 'Africa/Cairo';
 
 // TEMP: the floor is the first digit of the room number until the backend sends it
-export function getFloor(roomNumber: string): string {
-  return roomNumber.charAt(0);
+export function getFloor(roomId: number): string {
+  return String(roomId).charAt(0);
 }
 
 export function formatTaskTime(isoDate: string, language: Language): string {
@@ -16,4 +16,11 @@ export function formatTaskTime(isoDate: string, language: Language): string {
     hourCycle: 'h12',
     timeZone: HOTEL_TIME_ZONE,
   }).format(new Date(isoDate));
+}
+
+// "Today" means today in Cairo, not on the device
+const cairoDay = new Intl.DateTimeFormat('en-CA', { timeZone: HOTEL_TIME_ZONE, year: 'numeric', month: '2-digit', day: '2-digit' });
+
+export function isToday(isoDate: string, now = new Date()): boolean {
+  return cairoDay.format(new Date(isoDate)) === cairoDay.format(now);
 }

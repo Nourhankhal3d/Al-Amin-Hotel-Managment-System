@@ -10,7 +10,6 @@ import {
   PRIORITY_TONE,
   STATUS_LABEL_KEY,
   STATUS_TONE,
-  TASK_TYPE_LABEL_KEY,
 } from '../constants/housekeeping.constants';
 import type { HousekeepingTask } from '../types/housekeeping.types';
 import { formatTaskTime } from '../utils/housekeepingDisplay';
@@ -23,7 +22,7 @@ interface HousekeepingTableProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  onOpenTask: (taskId: string) => void;
+  onOpenTask: (taskId: number) => void;
 }
 
 export function HousekeepingTable({ tasks, totalTasks, language, page, totalPages, onPageChange, onOpenTask }: HousekeepingTableProps) {
@@ -38,10 +37,10 @@ export function HousekeepingTable({ tasks, totalTasks, language, page, totalPage
     .replace('{total}', formatNumber(totalPages, language));
 
   const columns = [
-    { key: 'roomNumber', label: t('colRoom'), render: (row: unknown) => (
-      <span className="housekeeping-table__room">{formatNumber(Number((row as HousekeepingTask).roomNumber), language)}</span>
+    { key: 'room_id', label: t('colRoom'), render: (row: unknown) => (
+      <span className="housekeeping-table__room">{formatNumber((row as HousekeepingTask).room_id, language)}</span>
     ) },
-    { key: 'taskType', label: t('hkColTaskType'), render: (row: unknown) => t(TASK_TYPE_LABEL_KEY[(row as HousekeepingTask).taskType]) },
+    { key: 'cleaner_name', label: t('hkCleaner'), render: (row: unknown) => (row as HousekeepingTask).cleaner_name || '—' },
     { key: 'priority', label: t('priorityLabel'), render: (row: unknown) => {
       const task = row as HousekeepingTask;
       return <Badge tone={PRIORITY_TONE[task.priority]}>{t(PRIORITY_LABEL_KEY[task.priority])}</Badge>;
@@ -50,15 +49,15 @@ export function HousekeepingTable({ tasks, totalTasks, language, page, totalPage
       const task = row as HousekeepingTask;
       return <Badge tone={STATUS_TONE[task.status]}>{t(STATUS_LABEL_KEY[task.status])}</Badge>;
     } },
-    { key: 'createdAt', label: t('hkColCreatedAt'), render: (row: unknown) => formatTaskTime((row as HousekeepingTask).createdAt, language) },
+    { key: 'assigned_date', label: t('hkColCreatedAt'), render: (row: unknown) => formatTaskTime((row as HousekeepingTask).assigned_date, language) },
     { key: 'actions', label: t('colActions'), render: (row: unknown) => {
       const task = row as HousekeepingTask;
       return (
         <button
           type="button"
           className="housekeeping-table__open"
-          aria-label={t('hkOpenTask').replace('{room}', formatNumber(Number(task.roomNumber), language))}
-          onClick={() => onOpenTask(task.id)}
+          aria-label={t('hkOpenTask').replace('{room}', formatNumber(task.room_id, language))}
+          onClick={() => onOpenTask(task.task_id)}
         >
           <OpenIcon aria-hidden="true" />
         </button>

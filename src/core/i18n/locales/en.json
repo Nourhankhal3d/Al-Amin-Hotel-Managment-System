@@ -648,5 +648,17 @@
   "mtAgoMinutes": "{n} min ago",
   "mtAgoHour": "1 hour ago",
   "mtAgoHours": "{n} h ago",
-  "mtDurationMinutes": "{n} min"
+  "mtDurationMinutes": "{n} min",
+  "priorityLow": "Low",
+  "priorityMedium": "Medium",
+  "priorityUrgent": "Urgent",
+  "hkTaskTitle": "Cleaning task",
+  "hkCleaner": "Cleaner",
+  "hkCleanerPh": "Cleaner name (optional)",
+  "hkErrCleanerTooLong": "The name must be {max} characters or fewer",
+  "hkMarkDone": "Mark as cleaned",
+  "hkConfirmDone": "Confirm task completed",
+  "hkSearchRoomCleaner": "Search by room or cleaner name",
+  "hkToastDone": "Task marked as completed",
+  "mtResolvedAt": "Resolved at"
 }

@@ -12,7 +12,7 @@ import {
   STATUS_TONE,
 } from '../constants/maintenance.constants';
 import type { MaintenanceRequest } from '../types/maintenance.types';
-import { formatReference, formatRequestTime, formatTimeAgo } from '../utils/maintenanceDisplay';
+import { formatReference, formatRequestTime, formatTimeAgo, lastUpdateOf } from '../utils/maintenanceDisplay';
 import './MaintenanceTable.css';
 
 interface MaintenanceTableProps {
@@ -22,7 +22,7 @@ interface MaintenanceTableProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  onOpenRequest: (requestId: string) => void;
+  onOpenRequest: (issueId: number) => void;
 }
 
 export function MaintenanceTable({ requests, totalRequests, language, page, totalPages, onPageChange, onOpenRequest }: MaintenanceTableProps) {
@@ -34,14 +34,14 @@ export function MaintenanceTable({ requests, totalRequests, language, page, tota
     .replace('{total}', formatNumber(totalRequests, language));
 
   const columns = [
-    { key: 'reference', label: t('mtColReference'), render: (row: unknown) => (
-      <span className="maintenance-table__reference">{formatReference((row as MaintenanceRequest).referenceNumber, language)}</span>
+    { key: 'issue_id', label: t('mtColReference'), render: (row: unknown) => (
+      <span className="maintenance-table__reference">{formatReference((row as MaintenanceRequest).issue_id, language)}</span>
     ) },
-    { key: 'roomNumber', label: t('colRoom'), render: (row: unknown) => (
-      <span className="maintenance-table__room">{formatNumber(Number((row as MaintenanceRequest).roomNumber), language)}</span>
+    { key: 'room_id', label: t('colRoom'), render: (row: unknown) => (
+      <span className="maintenance-table__room">{formatNumber((row as MaintenanceRequest).room_id, language)}</span>
     ) },
-    { key: 'title', label: t('mtColIssue'), render: (row: unknown) => (
-      <span className="maintenance-table__issue">{(row as MaintenanceRequest).title}</span>
+    { key: 'problem', label: t('mtColIssue'), render: (row: unknown) => (
+      <span className="maintenance-table__issue">{(row as MaintenanceRequest).problem}</span>
     ) },
     { key: 'priority', label: t('priorityLabel'), render: (row: unknown) => {
       const request = row as MaintenanceRequest;
@@ -51,16 +51,16 @@ export function MaintenanceTable({ requests, totalRequests, language, page, tota
       const request = row as MaintenanceRequest;
       return <Badge tone={STATUS_TONE[request.status]}>{t(STATUS_LABEL_KEY[request.status])}</Badge>;
     } },
-    { key: 'reportedAt', label: t('mtColReportedAt'), render: (row: unknown) => formatRequestTime((row as MaintenanceRequest).reportedAt, language) },
-    { key: 'updatedAt', label: t('mtColLastUpdate'), render: (row: unknown) => formatTimeAgo((row as MaintenanceRequest).updatedAt, language) },
+    { key: 'created_date', label: t('mtColReportedAt'), render: (row: unknown) => formatRequestTime((row as MaintenanceRequest).created_date, language) },
+    { key: 'last_update', label: t('mtColLastUpdate'), render: (row: unknown) => formatTimeAgo(lastUpdateOf(row as MaintenanceRequest), language) },
     { key: 'actions', label: t('colActions'), render: (row: unknown) => {
       const request = row as MaintenanceRequest;
       return (
         <button
           type="button"
           className="maintenance-table__open"
-          aria-label={t('mtOpenRequest').replace('{room}', formatNumber(Number(request.roomNumber), language))}
-          onClick={() => onOpenRequest(request.id)}
+          aria-label={t('mtOpenRequest').replace('{room}', formatNumber(request.room_id, language))}
+          onClick={() => onOpenRequest(request.issue_id)}
         >
           <OpenIcon aria-hidden="true" />
         </button>

@@ -8,33 +8,30 @@ import { Select } from '../../../components/ui/Select';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { formatNumber } from '../../../utils/format';
 import {
+  HK_CLEANER_MAX_LENGTH,
   HK_NOTES_MAX_LENGTH,
   PRIORITY_LABEL_KEY,
   PRIORITY_OPTIONS,
   ROOM_OPTIONS,
-  STATUS_LABEL_KEY,
-  STATUS_OPTIONS,
-  TASK_TYPE_LABEL_KEY,
-  TASK_TYPE_OPTIONS,
 } from '../constants/housekeeping.constants';
 import {
   EMPTY_NEW_TASK,
   hasErrors,
-  toCreateTaskInput,
+  toCreateTaskBody,
   validateNewTask,
 } from '../schemas/housekeepingTask.schema';
 import type { NewTaskFormErrors, NewTaskFormValues } from '../schemas/housekeepingTask.schema';
-import type { CreateHousekeepingTaskInput } from '../types/housekeeping.types';
+import type { CleaningTaskCreate } from '../types/housekeeping.types';
 import './TaskFormDrawer.css';
 
 const FORM_ID = 'housekeeping-task-form';
-const FIELD_ORDER: Array<keyof NewTaskFormValues> = ['roomNumber', 'taskType', 'priority', 'status', 'notes'];
+const FIELD_ORDER: Array<keyof NewTaskFormValues> = ['roomNumber', 'cleanerName', 'priority', 'notes'];
 
 interface TaskFormDrawerProps {
   open: boolean;
   language: Language;
   onClose: () => void;
-  onSubmit: (input: CreateHousekeepingTaskInput) => void;
+  onSubmit: (body: CleaningTaskCreate) => void;
   isSaving: boolean;
 }
 
@@ -57,7 +54,8 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: 
   const errorText = (field: keyof NewTaskFormValues) => {
     const key = errors[field];
     if (!key) return undefined;
-    return t(key).replace('{max}', formatNumber(HK_NOTES_MAX_LENGTH, language));
+    const max = field === 'cleanerName' ? HK_CLEANER_MAX_LENGTH : HK_NOTES_MAX_LENGTH;
+    return t(key).replace('{max}', formatNumber(max, language));
   };
 
   const handleSubmit = (event: FormEvent) => {
@@ -72,9 +70,10 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: 
       if (firstInvalid) document.getElementById(fieldId(firstInvalid))?.focus();
       return;
     }
-    onSubmit(toCreateTaskInput(values));
+    onSubmit(toCreateTaskBody(values));
   };
 
+  const cleanerError = errorText('cleanerName');
   const notesError = errorText('notes');
 
   return (
@@ -106,16 +105,22 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: 
             error={errorText('roomNumber')}
             disabled={isSaving}
           />
-          <Select
-            id={fieldId('taskType')}
-            label={t('hkColTaskType')}
-            value={values.taskType}
-            placeholder={t('hkFormTaskTypePh')}
-            options={TASK_TYPE_OPTIONS.map((type) => ({ value: type, label: t(TASK_TYPE_LABEL_KEY[type]) }))}
-            onChange={(next) => setField('taskType', next as NewTaskFormValues['taskType'])}
-            error={errorText('taskType')}
-            disabled={isSaving}
-          />
+          <label className="task-form__field">
+            <span>{t('hkCleaner')}</span>
+            <input
+              id={fieldId('cleanerName')}
+              type="text"
+              placeholder={t('hkCleanerPh')}
+              value={values.cleanerName}
+              maxLength={HK_CLEANER_MAX_LENGTH}
+              disabled={isSaving}
+              aria-invalid={cleanerError ? true : undefined}
+              aria-describedby={cleanerError ? `${fieldId('cleanerName')}-error` : undefined}
+              className={cleanerError ? 'task-form__control--error' : undefined}
+              onChange={(event) => setField('cleanerName', event.target.value)}
+            />
+            {cleanerError && <span id={`${fieldId('cleanerName')}-error`} className="task-form__error">{cleanerError}</span>}
+          </label>
         </div>
 
         <div className="task-form__row">
@@ -130,17 +135,6 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: 
             disabled={isSaving}
           />
         </div>
-
-        <Select
-          id={fieldId('status')}
-          label={t('statusLabel')}
-          value={values.status}
-          placeholder={t('hkChooseStatus')}
-          options={STATUS_OPTIONS.map((status) => ({ value: status, label: t(STATUS_LABEL_KEY[status]) }))}
-          onChange={(next) => setField('status', next as NewTaskFormValues['status'])}
-          error={errorText('status')}
-          disabled={isSaving}
-        />
 
         <label className="task-form__field">
           <span>{t('notesLabel')}</span>

@@ -3,7 +3,7 @@
   gap: var(--space-5);
 }
 
-/* Two equal columns; a row with one field (status) keeps it at half width, as in the prototype */
+/* Two equal columns (room and priority, as in the prototype) */
 .maintenance-form__row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

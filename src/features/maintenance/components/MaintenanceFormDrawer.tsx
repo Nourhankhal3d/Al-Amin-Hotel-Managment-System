@@ -8,35 +8,31 @@ import { Select } from '../../../components/ui/Select';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { formatNumber } from '../../../utils/format';
 import {
-  ISSUE_TYPE_LABEL_KEY,
-  ISSUE_TYPE_OPTIONS,
   MT_NOTES_MAX_LENGTH,
-  MT_TITLE_MAX_LENGTH,
-  MT_TITLE_MIN_LENGTH,
+  MT_PROBLEM_MAX_LENGTH,
+  MT_PROBLEM_MIN_LENGTH,
   PRIORITY_LABEL_KEY,
   PRIORITY_OPTIONS,
   ROOM_OPTIONS,
-  STATUS_LABEL_KEY,
-  STATUS_OPTIONS,
 } from '../constants/maintenance.constants';
 import {
   EMPTY_NEW_REQUEST,
   hasErrors,
-  toCreateRequestInput,
+  toCreateRequestBody,
   validateNewRequest,
 } from '../schemas/maintenanceRequest.schema';
 import type { NewRequestFormErrors, NewRequestFormValues } from '../schemas/maintenanceRequest.schema';
-import type { CreateMaintenanceRequestInput } from '../types/maintenance.types';
+import type { MaintenanceIssueCreate } from '../types/maintenance.types';
 import './MaintenanceFormDrawer.css';
 
 const FORM_ID = 'maintenance-request-form';
-const FIELD_ORDER: Array<keyof NewRequestFormValues> = ['roomNumber', 'priority', 'issueType', 'title', 'status', 'notes'];
+const FIELD_ORDER: Array<keyof NewRequestFormValues> = ['roomNumber', 'priority', 'problem', 'notes'];
 
 interface MaintenanceFormDrawerProps {
   open: boolean;
   language: Language;
   onClose: () => void;
-  onSubmit: (input: CreateMaintenanceRequestInput) => void;
+  onSubmit: (body: MaintenanceIssueCreate) => void;
   isSaving: boolean;
 }
 
@@ -59,9 +55,9 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
   const errorText = (field: keyof NewRequestFormValues) => {
     const key = errors[field];
     if (!key) return undefined;
-    const max = field === 'notes' ? MT_NOTES_MAX_LENGTH : MT_TITLE_MAX_LENGTH;
+    const max = field === 'notes' ? MT_NOTES_MAX_LENGTH : MT_PROBLEM_MAX_LENGTH;
     return t(key)
-      .replace('{min}', formatNumber(MT_TITLE_MIN_LENGTH, language))
+      .replace('{min}', formatNumber(MT_PROBLEM_MIN_LENGTH, language))
       .replace('{max}', formatNumber(max, language));
   };
 
@@ -77,10 +73,10 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
       if (firstInvalid) document.getElementById(fieldId(firstInvalid))?.focus();
       return;
     }
-    onSubmit(toCreateRequestInput(values));
+    onSubmit(toCreateRequestBody(values));
   };
 
-  const titleError = errorText('title');
+  const problemError = errorText('problem');
   const notesError = errorText('notes');
 
   return (
@@ -124,47 +120,22 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
           />
         </div>
 
-        <div className="maintenance-form__row">
-          <Select
-            id={fieldId('issueType')}
-            label={t('mtFormIssueType')}
-            value={values.issueType}
-            placeholder={t('mtFormIssueTypePh')}
-            options={ISSUE_TYPE_OPTIONS.map((type) => ({ value: type, label: t(ISSUE_TYPE_LABEL_KEY[type]) }))}
-            onChange={(next) => setField('issueType', next as NewRequestFormValues['issueType'])}
-            error={errorText('issueType')}
+        <label className="maintenance-form__field">
+          <span>{t('mtFormDescription')}</span>
+          <input
+            id={fieldId('problem')}
+            type="text"
+            placeholder={t('mtFormDescriptionPh')}
+            value={values.problem}
+            maxLength={MT_PROBLEM_MAX_LENGTH}
             disabled={isSaving}
+            aria-invalid={problemError ? true : undefined}
+            aria-describedby={problemError ? `${fieldId('problem')}-error` : undefined}
+            className={problemError ? 'maintenance-form__control--error' : undefined}
+            onChange={(event) => setField('problem', event.target.value)}
           />
-          <label className="maintenance-form__field">
-            <span>{t('mtFormDescription')}</span>
-            <input
-              id={fieldId('title')}
-              type="text"
-              placeholder={t('mtFormDescriptionPh')}
-              value={values.title}
-              maxLength={MT_TITLE_MAX_LENGTH}
-              disabled={isSaving}
-              aria-invalid={titleError ? true : undefined}
-              aria-describedby={titleError ? `${fieldId('title')}-error` : undefined}
-              className={titleError ? 'maintenance-form__control--error' : undefined}
-              onChange={(event) => setField('title', event.target.value)}
-            />
-            {titleError && <span id={`${fieldId('title')}-error`} className="maintenance-form__error">{titleError}</span>}
-          </label>
-        </div>
-
-        <div className="maintenance-form__row">
-          <Select
-            id={fieldId('status')}
-            label={t('statusLabel')}
-            value={values.status}
-            placeholder={t('mtChooseStatus')}
-            options={STATUS_OPTIONS.map((status) => ({ value: status, label: t(STATUS_LABEL_KEY[status]) }))}
-            onChange={(next) => setField('status', next as NewRequestFormValues['status'])}
-            error={errorText('status')}
-            disabled={isSaving}
-          />
-        </div>
+          {problemError && <span id={`${fieldId('problem')}-error`} className="maintenance-form__error">{problemError}</span>}
+        </label>
 
         <label className="maintenance-form__field">
           <span>{t('notesLabel')}</span>

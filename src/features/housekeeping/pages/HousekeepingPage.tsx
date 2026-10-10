@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, Check, Clock, FileText, Flag, Plus, Sparkles } from 'lucide-react';
+import { CalendarDays, Check, Clock, FileText, Flag, Plus } from 'lucide-react';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { ErrorState } from '../../../components/common/ErrorState';
@@ -11,6 +11,7 @@ import { StatCard } from '../../../components/ui/StatCard';
 import { useToast } from '../../../components/ui/ToastContext';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { useDebounce } from '../../../hooks/useDebounce';
+import { normalizeDigits } from '../../../utils/digits';
 import { exportCsv } from '../../../utils/exportCsv';
 import { formatNumber } from '../../../utils/format';
 import { HousekeepingFilters } from '../components/HousekeepingFilters';
@@ -23,23 +24,21 @@ import {
   PRIORITY_OPTIONS,
   STATUS_LABEL_KEY,
   STATUS_OPTIONS,
-  TASK_TYPE_LABEL_KEY,
 } from '../constants/housekeeping.constants';
 import {
+  useCompleteHousekeepingTask,
   useCreateHousekeepingTask,
   useHousekeepingTasks,
-  useUpdateHousekeepingTaskStatus,
 } from '../hooks/useHousekeepingTasks';
 import type {
-  CreateHousekeepingTaskInput,
+  CleaningTaskCreate,
+  CleaningTaskStatus,
   HousekeepingFilterName,
   HousekeepingFilters as Filters,
   HousekeepingTask,
-  TaskPriority,
-  TaskStatus,
+  Priority,
 } from '../types/housekeeping.types';
-import { normalizeDigits } from '../../../utils/digits';
-import { formatTaskTime, getFloor } from '../utils/housekeepingDisplay';
+import { formatTaskTime, getFloor, isToday } from '../utils/housekeepingDisplay';
 import './HousekeepingPage.css';
 
 // URL params: q, status, priority, floor, page — plus id (details drawer) and task=new (form drawer)
@@ -49,8 +48,8 @@ function parseFilters(params: URLSearchParams): Filters {
   const page = Number.parseInt(params.get('page') ?? '1', 10);
   return {
     q: params.get('q') ?? '',
-    status: STATUS_OPTIONS.includes(status as TaskStatus) ? status as TaskStatus : '',
-    priority: PRIORITY_OPTIONS.includes(priority as TaskPriority) ? priority as TaskPriority : '',
+    status: STATUS_OPTIONS.includes(status as CleaningTaskStatus) ? status as CleaningTaskStatus : '',
+    priority: PRIORITY_OPTIONS.includes(priority as Priority) ? priority as Priority : '',
     floor: /^\d$/.test(params.get('floor') ?? '') ? params.get('floor') ?? '' : '',
     page: Number.isFinite(page) && page > 0 ? page : 1,
   };
@@ -68,11 +67,11 @@ export function HousekeepingPage() {
 
   const tasksQuery = useHousekeepingTasks();
   const createTask = useCreateHousekeepingTask();
-  const updateStatus = useUpdateHousekeepingTaskStatus();
+  const completeTask = useCompleteHousekeepingTask();
   const tasks = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
 
-  const selectedId = searchParams.get('id');
-  const selectedTask = tasks.find((task) => task.id === selectedId) ?? null;
+  const selectedId = Number(searchParams.get('id'));
+  const selectedTask = tasks.find((task) => task.task_id === selectedId) ?? null;
   const isFormOpen = searchParams.get('task') === 'new';
 
   const updateParams = useCallback((changes: Record<string, string | null>, replace = false) => {
@@ -98,31 +97,32 @@ export function HousekeepingPage() {
   }, [debouncedSearch, filters.q, searchDraft, updateParams]);
 
   const floorOptions = useMemo(
-    () => Array.from(new Set(tasks.map((task) => getFloor(task.roomNumber)))).sort(),
+    () => Array.from(new Set(tasks.map((task) => getFloor(task.room_id)))).sort(),
     [tasks],
   );
 
+  // Search by room number or cleaner name
   const filteredTasks = useMemo(() => {
     const search = normalizeDigits(filters.q.trim()).toLocaleLowerCase();
     return tasks.filter((task) => {
-      const typeLabel = getTranslation(language, TASK_TYPE_LABEL_KEY[task.taskType]).toLocaleLowerCase();
-      const matchesQuery = !search || task.roomNumber.includes(search) || typeLabel.includes(search);
+      const matchesQuery = !search
+        || String(task.room_id).includes(search)
+        || (task.cleaner_name ?? '').toLocaleLowerCase().includes(search);
       const matchesStatus = !filters.status || task.status === filters.status;
       const matchesPriority = !filters.priority || task.priority === filters.priority;
-      const matchesFloor = !filters.floor || getFloor(task.roomNumber) === filters.floor;
+      const matchesFloor = !filters.floor || getFloor(task.room_id) === filters.floor;
       return matchesQuery && matchesStatus && matchesPriority && matchesFloor;
     });
-  }, [filters, language, tasks]);
+  }, [filters, tasks]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTasks.length / HK_PAGE_SIZE));
   const page = Math.min(filters.page, totalPages);
   const pageTasks = filteredTasks.slice((page - 1) * HK_PAGE_SIZE, page * HK_PAGE_SIZE);
 
   const stats = {
-    total: tasks.length,
-    urgent: tasks.filter((task) => task.priority === 'high' || task.priority === 'critical').length,
+    today: tasks.filter((task) => isToday(task.assigned_date)).length,
+    urgent: tasks.filter((task) => task.priority === 'high' || task.priority === 'urgent').length,
     done: tasks.filter((task) => task.status === 'done').length,
-    inProgress: tasks.filter((task) => task.status === 'in_progress').length,
     pending: tasks.filter((task) => task.status === 'pending').length,
   };
 
@@ -140,13 +140,14 @@ export function HousekeepingPage() {
     window.setTimeout(() => tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
   }
 
-  const openTask = (taskId: string) => updateParams({ id: taskId, task: null });
+  const openTask = (taskId: number) => updateParams({ id: String(taskId), task: null });
   const openForm = () => updateParams({ task: 'new', id: null });
   const closeDrawers = () => updateParams({ id: null, task: null });
 
-  async function submitTask(input: CreateHousekeepingTaskInput) {
+  // TODO(merge): show getErrorMessage(error, language) from core/errors instead of the generic message
+  async function submitTask(body: CleaningTaskCreate) {
     try {
-      await createTask.mutateAsync(input);
+      await createTask.mutateAsync(body);
       closeDrawers();
       toast.notify(t('hkToastCreated'), 'success');
     } catch {
@@ -154,12 +155,12 @@ export function HousekeepingPage() {
     }
   }
 
-  async function saveStatus(status: TaskStatus) {
+  async function markDone() {
     if (!selectedTask) return;
     try {
-      await updateStatus.mutateAsync({ id: selectedTask.id, status });
+      await completeTask.mutateAsync(selectedTask.task_id);
       closeDrawers();
-      toast.notify(t('hkToastUpdated'), 'success');
+      toast.notify(t('hkToastDone'), 'success');
     } catch {
       toast.notify(t('error'), 'error');
     }
@@ -171,11 +172,11 @@ export function HousekeepingPage() {
       return;
     }
     const exported = exportCsv<HousekeepingTask>(filteredTasks, [
-      { header: t('colRoom'), value: (task) => task.roomNumber },
-      { header: t('hkColTaskType'), value: (task) => t(TASK_TYPE_LABEL_KEY[task.taskType]) },
+      { header: t('colRoom'), value: (task) => task.room_id },
+      { header: t('hkCleaner'), value: (task) => task.cleaner_name ?? '' },
       { header: t('priorityLabel'), value: (task) => t(PRIORITY_LABEL_KEY[task.priority]) },
       { header: t('statusLabel'), value: (task) => t(STATUS_LABEL_KEY[task.status]) },
-      { header: t('hkColCreatedAt'), value: (task) => formatTaskTime(task.createdAt, language) },
+      { header: t('hkColCreatedAt'), value: (task) => formatTaskTime(task.assigned_date, language) },
       { header: t('notesLabel'), value: (task) => task.notes ?? '' },
     ], `housekeeping-${new Date().toISOString().slice(0, 10)}.csv`);
     if (exported) {
@@ -221,11 +222,10 @@ export function HousekeepingPage() {
     <div className="feature-page housekeeping-page">
       {hero(true)}
 
-      <div className="stat-grid">
-        <StatCard label={t('hkStatToday')} value={stats.total} icon={<CalendarDays size={20} aria-hidden="true" />} tone="amber" />
+      <div className="stat-grid housekeeping-page__stats">
+        <StatCard label={t('hkStatToday')} value={stats.today} icon={<CalendarDays size={20} aria-hidden="true" />} tone="amber" />
         <StatCard label={t('hkStatHigh')} value={stats.urgent} icon={<Flag size={20} aria-hidden="true" />} tone="rose" />
         <StatCard label={t('hkStatDone')} value={stats.done} icon={<Check size={20} aria-hidden="true" />} tone="teal" />
-        <StatCard label={t('hkStatInProgress')} value={stats.inProgress} icon={<Sparkles size={20} aria-hidden="true" />} tone="blue" />
         <StatCard label={t('hkStatPending')} value={stats.pending} icon={<Clock size={20} aria-hidden="true" />} tone="amber" />
       </div>
 
@@ -262,19 +262,19 @@ export function HousekeepingPage() {
       )}
 
       <TaskDetailsDrawer
-        key={selectedTask ? `${selectedTask.id}-${selectedTask.status}` : 'none'}
+        key={selectedTask ? `${selectedTask.task_id}-${selectedTask.status}` : 'none'}
         task={selectedTask}
         language={language}
         onClose={closeDrawers}
-        onSave={(status) => { void saveStatus(status); }}
-        isSaving={updateStatus.isPending}
+        onComplete={() => { void markDone(); }}
+        isSaving={completeTask.isPending}
       />
       <TaskFormDrawer
         key={isFormOpen ? 'form-open' : 'form-closed'}
         open={isFormOpen}
         language={language}
         onClose={closeDrawers}
-        onSubmit={(input) => { void submitTask(input); }}
+        onSubmit={(body) => { void submitTask(body); }}
         isSaving={createTask.isPending}
       />
     </div>

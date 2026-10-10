@@ -34,7 +34,7 @@ export function HousekeepingFilters({
   const all = { value: '', label: t('filterAll') };
 
   return (
-    <FilterBar className="housekeeping-filters" value={value} onChange={onSearchChange} placeholder={t('hkSearch')}>
+    <FilterBar className="housekeeping-filters" value={value} onChange={onSearchChange} placeholder={t('hkSearchRoomCleaner')}>
       <Select
         label={t('statusLabel')}
         value={filters.status}

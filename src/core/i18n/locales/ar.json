@@ -648,5 +648,17 @@
   "mtAgoMinutes": "منذ {n} د",
   "mtAgoHour": "منذ ساعة",
   "mtAgoHours": "منذ {n} س",
-  "mtDurationMinutes": "{n} د"
+  "mtDurationMinutes": "{n} د",
+  "priorityLow": "منخفض",
+  "priorityMedium": "متوسط",
+  "priorityUrgent": "عاجل",
+  "hkTaskTitle": "مهمة تنظيف",
+  "hkCleaner": "عامل النظافة",
+  "hkCleanerPh": "اسم عامل النظافة (اختياري)",
+  "hkErrCleanerTooLong": "الاسم يجب ألا يزيد عن {max} حرف",
+  "hkMarkDone": "تم التنظيف",
+  "hkConfirmDone": "تأكيد إتمام المهمة",
+  "hkSearchRoomCleaner": "ابحث بالغرفة أو اسم عامل النظافة",
+  "hkToastDone": "تم تسجيل إتمام المهمة",
+  "mtResolvedAt": "وقت الحل"
 }

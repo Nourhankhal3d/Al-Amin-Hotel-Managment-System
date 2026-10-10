@@ -92,6 +92,7 @@
 /* Green border on the field being used (search, dropdowns, textarea), on this page and its drawers */
 .housekeeping-page .ui-select__trigger,
 .housekeeping-page .common-search,
+.housekeeping-page .task-form__field input,
 .housekeeping-page textarea {
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
@@ -99,6 +100,7 @@
 .housekeeping-page .ui-select__trigger:focus,
 .housekeeping-page .ui-select__trigger[aria-expanded='true'],
 .housekeeping-page .common-search:focus-within,
+.housekeeping-page .task-form__field input:focus,
 .housekeeping-page textarea:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent);
@@ -108,7 +110,7 @@
 /* An error keeps its red border even while focused */
 .housekeeping-page .ui-select__trigger--error,
 .housekeeping-page .ui-select__trigger--error:focus,
-.housekeeping-page textarea.task-form__control--error:focus {
+.housekeeping-page .task-form__control--error:focus {
   border-color: var(--color-danger);
 }
 
@@ -123,4 +125,9 @@
   .housekeeping-page__hero-actions { width: 100%; }
   .housekeeping-page__hero-actions .ui-button { flex: 1; }
   .housekeeping-page__filters-card { padding: var(--space-3); }
+}
+
+/* Four cards share the row evenly */
+.housekeeping-page__stats {
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 }

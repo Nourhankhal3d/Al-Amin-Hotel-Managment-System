@@ -19,7 +19,6 @@ import { MaintenanceFilters } from '../components/MaintenanceFilters';
 import { MaintenanceFormDrawer } from '../components/MaintenanceFormDrawer';
 import { MaintenanceTable } from '../components/MaintenanceTable';
 import {
-  ISSUE_TYPE_LABEL_KEY,
   MT_PAGE_SIZE,
   PRIORITY_LABEL_KEY,
   PRIORITY_OPTIONS,
@@ -32,12 +31,13 @@ import {
   useUpdateMaintenanceStatus,
 } from '../hooks/useMaintenanceRequests';
 import type {
-  CreateMaintenanceRequestInput,
   MaintenanceFilterName,
   MaintenanceFilters as Filters,
+  MaintenanceIssueCreate,
+  MaintenanceIssueStatus,
+  MaintenanceIssueUpdate,
   MaintenanceRequest,
-  RequestPriority,
-  RequestStatus,
+  Priority,
 } from '../types/maintenance.types';
 import {
   averageResolutionMinutes,
@@ -45,6 +45,7 @@ import {
   formatRequestTime,
   formatTimeAgo,
   isToday,
+  lastUpdateOf,
 } from '../utils/maintenanceDisplay';
 import './MaintenancePage.css';
 
@@ -57,8 +58,8 @@ function parseFilters(params: URLSearchParams): Filters {
   return {
     q: params.get('q') ?? '',
     room: /^\d+$/.test(room) ? room : '',
-    priority: PRIORITY_OPTIONS.includes(priority as RequestPriority) ? priority as RequestPriority : '',
-    status: STATUS_OPTIONS.includes(status as RequestStatus) ? status as RequestStatus : '',
+    priority: PRIORITY_OPTIONS.includes(priority as Priority) ? priority as Priority : '',
+    status: STATUS_OPTIONS.includes(status as MaintenanceIssueStatus) ? status as MaintenanceIssueStatus : '',
     page: Number.isFinite(page) && page > 0 ? page : 1,
   };
 }
@@ -78,8 +79,8 @@ export function MaintenancePage() {
   const updateStatus = useUpdateMaintenanceStatus();
   const requests = useMemo(() => requestsQuery.data ?? [], [requestsQuery.data]);
 
-  const selectedId = searchParams.get('id');
-  const selectedRequest = requests.find((request) => request.id === selectedId) ?? null;
+  const selectedId = Number(searchParams.get('id'));
+  const selectedRequest = requests.find((request) => request.issue_id === selectedId) ?? null;
   const isFormOpen = searchParams.get('request') === 'new';
 
   const updateParams = useCallback((changes: Record<string, string | null>, replace = false) => {
@@ -105,7 +106,7 @@ export function MaintenancePage() {
   }, [debouncedSearch, filters.q, searchDraft, updateParams]);
 
   const roomOptions = useMemo(
-    () => Array.from(new Set(requests.map((request) => request.roomNumber))).sort((a, b) => Number(a) - Number(b)),
+    () => Array.from(new Set(requests.map((request) => String(request.room_id)))).sort((a, b) => Number(a) - Number(b)),
     [requests],
   );
 
@@ -114,15 +115,14 @@ export function MaintenancePage() {
     const search = normalizeDigits(filters.q.trim()).toLocaleLowerCase();
     return requests.filter((request) => {
       const matchesQuery = !search
-        || request.roomNumber.includes(search)
-        || request.title.toLocaleLowerCase().includes(search)
-        || getTranslation(language, ISSUE_TYPE_LABEL_KEY[request.issueType]).toLocaleLowerCase().includes(search);
-      const matchesRoom = !filters.room || request.roomNumber === filters.room;
+        || String(request.room_id).includes(search)
+        || request.problem.toLocaleLowerCase().includes(search);
+      const matchesRoom = !filters.room || String(request.room_id) === filters.room;
       const matchesPriority = !filters.priority || request.priority === filters.priority;
       const matchesStatus = !filters.status || request.status === filters.status;
       return matchesQuery && matchesRoom && matchesPriority && matchesStatus;
     });
-  }, [filters, language, requests]);
+  }, [filters, requests]);
 
   const totalPages = Math.max(1, Math.ceil(filteredRequests.length / MT_PAGE_SIZE));
   const page = Math.min(filters.page, totalPages);
@@ -131,10 +131,10 @@ export function MaintenancePage() {
   const averageMinutes = averageResolutionMinutes(requests);
   const stats = {
     total: requests.length,
-    critical: requests.filter((request) => request.priority === 'critical').length,
-    pending: requests.filter((request) => request.status === 'pending').length,
+    urgent: requests.filter((request) => request.priority === 'urgent').length,
+    open: requests.filter((request) => request.status === 'open').length,
     resolved: requests.filter((request) => request.status === 'resolved').length,
-    today: requests.filter((request) => isToday(request.reportedAt)).length,
+    today: requests.filter((request) => isToday(request.created_date)).length,
     average: averageMinutes === null ? '—' : t('mtDurationMinutes').replace('{n}', formatNumber(averageMinutes, language)),
   };
 
@@ -152,13 +152,14 @@ export function MaintenancePage() {
     window.setTimeout(() => tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
   }
 
-  const openRequest = (requestId: string) => updateParams({ id: requestId, request: null });
+  const openRequest = (issueId: number) => updateParams({ id: String(issueId), request: null });
   const openForm = () => updateParams({ request: 'new', id: null });
   const closeDrawers = () => updateParams({ id: null, request: null });
 
-  async function submitRequest(input: CreateMaintenanceRequestInput) {
+  // TODO(merge): show getErrorMessage(error, language) from core/errors instead of the generic message
+  async function submitRequest(body: MaintenanceIssueCreate) {
     try {
-      await createRequest.mutateAsync(input);
+      await createRequest.mutateAsync(body);
       closeDrawers();
       toast.notify(t('mtToastCreated'), 'success');
     } catch {
@@ -166,10 +167,10 @@ export function MaintenancePage() {
     }
   }
 
-  async function saveStatus(status: RequestStatus) {
+  async function saveStatus(status: NonNullable<MaintenanceIssueUpdate['status']>) {
     if (!selectedRequest) return;
     try {
-      await updateStatus.mutateAsync({ id: selectedRequest.id, status });
+      await updateStatus.mutateAsync({ issueId: selectedRequest.issue_id, status });
       closeDrawers();
       toast.notify(t('mtToastUpdated'), 'success');
     } catch {
@@ -183,14 +184,13 @@ export function MaintenancePage() {
       return;
     }
     const exported = exportCsv<MaintenanceRequest>(filteredRequests, [
-      { header: t('mtColReference'), value: (request) => formatReference(request.referenceNumber, 'en') },
-      { header: t('colRoom'), value: (request) => request.roomNumber },
-      { header: t('mtFormIssueType'), value: (request) => t(ISSUE_TYPE_LABEL_KEY[request.issueType]) },
-      { header: t('mtColIssue'), value: (request) => request.title },
+      { header: t('mtColReference'), value: (request) => formatReference(request.issue_id, 'en') },
+      { header: t('colRoom'), value: (request) => request.room_id },
+      { header: t('mtColIssue'), value: (request) => request.problem },
       { header: t('priorityLabel'), value: (request) => t(PRIORITY_LABEL_KEY[request.priority]) },
       { header: t('statusLabel'), value: (request) => t(STATUS_LABEL_KEY[request.status]) },
-      { header: t('mtColReportedAt'), value: (request) => formatRequestTime(request.reportedAt, language) },
-      { header: t('mtColLastUpdate'), value: (request) => formatTimeAgo(request.updatedAt, language) },
+      { header: t('mtColReportedAt'), value: (request) => formatRequestTime(request.created_date, language) },
+      { header: t('mtColLastUpdate'), value: (request) => formatTimeAgo(lastUpdateOf(request), language) },
       { header: t('mtDescription'), value: (request) => request.notes ?? '' },
     ], `maintenance-${new Date().toISOString().slice(0, 10)}.csv`);
     if (exported) {
@@ -238,8 +238,8 @@ export function MaintenancePage() {
 
       <div className="stat-grid maintenance-page__stats">
         <StatCard label={t('mtStatTotal')} value={stats.total} icon={<Wrench size={20} aria-hidden="true" />} tone="amber" />
-        <StatCard label={t('mtStatCritical')} value={stats.critical} icon={<Bell size={20} aria-hidden="true" />} tone="amber" />
-        <StatCard label={t('mtStatPending')} value={stats.pending} icon={<Clock size={20} aria-hidden="true" />} tone="amber" />
+        <StatCard label={t('mtStatCritical')} value={stats.urgent} icon={<Bell size={20} aria-hidden="true" />} tone="amber" />
+        <StatCard label={t('mtStatPending')} value={stats.open} icon={<Clock size={20} aria-hidden="true" />} tone="amber" />
         <StatCard label={t('mtStatResolved')} value={stats.resolved} icon={<Check size={20} aria-hidden="true" />} tone="teal" />
         <StatCard label={t('mtStatToday')} value={stats.today} icon={<CalendarDays size={20} aria-hidden="true" />} tone="teal" />
         <StatCard label={t('mtStatAverage')} value={stats.average} icon={<Timer size={20} aria-hidden="true" />} tone="amber" />
@@ -278,7 +278,7 @@ export function MaintenancePage() {
       )}
 
       <MaintenanceDetailsDrawer
-        key={selectedRequest ? `${selectedRequest.id}-${selectedRequest.status}` : 'none'}
+        key={selectedRequest ? `${selectedRequest.issue_id}-${selectedRequest.status}` : 'none'}
         request={selectedRequest}
         language={language}
         onClose={closeDrawers}
@@ -290,7 +290,7 @@ export function MaintenancePage() {
         open={isFormOpen}
         language={language}
         onClose={closeDrawers}
-        onSubmit={(input) => { void submitRequest(input); }}
+        onSubmit={(body) => { void submitRequest(body); }}
         isSaving={createRequest.isPending}
       />
     </div>
