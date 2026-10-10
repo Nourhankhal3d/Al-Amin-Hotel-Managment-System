@@ -1,4 +1,21 @@
-{
+{  "errors": {
+    "VALIDATION_ERROR": "The data entered is invalid. Please check the fields and try again",
+    "UNAUTHORIZED": "Your session expired or the credentials are wrong. Please enter your password again",
+    "FORBIDDEN": "This action is not allowed. The session is read-only until your shift starts",
+    "OUTSIDE_SHIFT_HOURS": "You cannot log in outside your shift hours",
+    "NOT_SCHEDULED": "You have no shift scheduled today",
+    "NOT_FOUND": "The requested item was not found",
+    "CONFLICT": "The request conflicts with existing data",
+    "INVALID_STATUS_TRANSITION": "The room status cannot be changed to this status",
+    "PAYMENT_REQUIRED": "Record at least one payment before check-in",
+    "BALANCE_DUE": "Check-out is blocked, there is a remaining balance",
+    "AMBIGUOUS_RESERVATION": "More than one reservation matches. Please choose the reservation",
+    "SHIFT_CLOSED": "This shift was already handed over. Go to the shift handover screen",
+    "SHIFT_HANDOVER_ONLY": "The next shift has started. You can only hand over this shift",
+    "TOO_MANY_REQUESTS": "Too many attempts. Please try again shortly",
+    "NETWORK_ERROR": "Cannot reach the server. Check your internet connection",
+    "UNKNOWN_ERROR": "An unexpected error occurred. Please try again"
+  },
   "appName": "Al-Amin | Hotel Management",
   "dashboard": "Dashboard",
   "rooms": "Rooms",

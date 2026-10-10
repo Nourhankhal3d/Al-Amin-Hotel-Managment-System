@@ -75,6 +75,19 @@ export function refreshAccessToken(): Promise<string> {
   return refreshPromise;
 }
 
+// لما الطلب blob والباك اند يرجّع خطأ، الـ body بيجي Blob، فنحوّله لـ JSON عشان نقرا الـ code
+async function normalizeBlobError(error: unknown): Promise<unknown> {
+  if (axios.isAxiosError(error) && error.response?.data instanceof Blob) {
+    try {
+      const text = await error.response.data.text();
+      error.response.data = JSON.parse(text);
+    } catch {
+      // سيبيه زي ما هو
+    }
+  }
+  return error;
+}
+
 // ---------- الطلب الأساسي ----------
 type RequestOptions = {
   method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
@@ -105,7 +118,7 @@ export async function request<T>(
     const res = await http.request<T>(config);
     return res.data;
   } catch (error) {
-    const apiError = toApiError(error);
+    const apiError = toApiError(await normalizeBlobError(error));
 
     // 401 على طلب عادي: جرّبي refresh مرة واحدة وأعيدي الطلب
     if (apiError.statusCode === 401 && !isAuthPath) {
@@ -114,7 +127,7 @@ export async function request<T>(
         const retry = await http.request<T>(config);
         return retry.data;
       } catch (retryError) {
-        throw toApiError(retryError);
+        throw toApiError(await normalizeBlobError(retryError));
       }
     }
 
