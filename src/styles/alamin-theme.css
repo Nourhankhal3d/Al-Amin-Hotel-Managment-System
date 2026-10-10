@@ -23,7 +23,7 @@
   --al-shadow: 0 1px 2px rgba(32, 48, 42, 0.04), 0 12px 30px rgba(32, 48, 42, 0.05);
   display: grid;
   gap: 22px;
-  font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+  font-family: inherit;
   color: var(--al-ink);
   padding-bottom: 8px;
 }
@@ -1329,7 +1329,7 @@
   margin-inline: auto;
   padding: 12px 0 24px;
   color: var(--sr-ink);
-  font-family: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+  font-family: inherit;
 }
 .app-content:has(.shift-report-page) { min-height: calc(100vh - 76px); background: #f8f7f3; }
 

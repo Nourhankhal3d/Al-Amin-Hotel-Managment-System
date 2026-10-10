@@ -5,7 +5,7 @@ import { ROUTES } from '../../core/constants/routes';
 
 // Temporary local testing bypass; DEV prevents it from affecting production builds.
 const TEMP_BYPASS_AUTH = import.meta.env.DEV;
-const TEMP_BYPASS_PATHS: readonly string[] = [ROUTES.payments, ROUTES.shiftReport];
+const TEMP_BYPASS_PATHS: readonly string[] = ['/', ROUTES.payments, ROUTES.shiftReport];
 
 function isTempBypassed(pathname: string): boolean {
   if (!TEMP_BYPASS_AUTH) return false;
