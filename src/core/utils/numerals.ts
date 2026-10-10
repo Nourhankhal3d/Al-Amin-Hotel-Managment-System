@@ -9,12 +9,12 @@ export function toArabicDigits(value: string | number): string {
     .replace(/\./g, '٫');
 }
 
-/** `1450` → `١٬٤٥٠ ر.س` — Arabic-Indic money formatting used across the redesigned pages. */
+/** `1450` → `١٬٤٥٠ ج.م` — Arabic-Indic money formatting used across the redesigned pages. */
 export function formatMoney(amount: number): string {
   if (!Number.isFinite(amount)) return '—';
 
   const formatted = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(amount);
-  return `${toArabicDigits(formatted)} ر.س`;
+  return `${toArabicDigits(formatted)} ج.م`;
 }
 
 /** `42800` → `٤٢٫٨ ألف` — compact scale used in the Figma stat cards. */
@@ -25,6 +25,12 @@ export function formatCompact(value: number): string {
   if (abs >= 1_000_000) return `${toArabicDigits((value / 1_000_000).toFixed(1))} مليون`;
   if (abs >= 1_000) return `${toArabicDigits((value / 1_000).toFixed(1))} ألف`;
   return toArabicDigits(Math.round(value));
+}
+
+/** Compact EGP amounts for payment summaries. */
+export function formatCompactMoney(amount: number): string {
+  const formatted = formatCompact(amount);
+  return formatted === '—' ? formatted : `${formatted} ج.م`;
 }
 
 /** `0.83` → `٨٣٪` — percentage labels. */

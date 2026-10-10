@@ -1,4 +1,5 @@
 import type { Payment } from '../types/payment.types';
+import { DEFAULT_CURRENCY } from '../../../core/utils/currency';
 
 const CSV_HEADERS = [
   'Invoice No',
@@ -28,7 +29,7 @@ export function buildPaymentsCsv(rows: Payment[]): string {
         row.guestName,
         row.roomNo,
         row.amount,
-        row.currency,
+        DEFAULT_CURRENCY,
         row.method,
         row.status,
         row.paidAt,

@@ -231,3 +231,26 @@ export const NoteIcon = (props: IconProps) =>
       <path d="M15 4v5h5M8 13h7M8 17h5" />
     </>
   ));
+
+export const WrenchIcon = (props: IconProps) =>
+  baseIcon(props, (
+    <>
+      <path d="M14.5 6.5a5 5 0 0 0-6.4 6.4L3 18l3 3 5.1-5.1a5 5 0 0 0 6.4-6.4L14 13l-3-3z" />
+    </>
+  ));
+
+export const SettingsIcon = (props: IconProps) =>
+  baseIcon(props, (
+    <>
+      <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z" />
+      <path d="m19.4 15 .1.1 1.2.9-1.2 2.1-1.4-.5a7.7 7.7 0 0 1-1.4.8l-.2 1.5h-2.4l-.3-1.5a7.7 7.7 0 0 1-1.5-.1l-1 .9-2-1.2.5-1.4a7.7 7.7 0 0 1-.8-1.4l-1.5-.2v-2.4l1.5-.3a7.7 7.7 0 0 1 .1-1.5l-.9-1 1.2-2 1.4.5a7.7 7.7 0 0 1 1.4-.8l.2-1.5h2.4l.3 1.5a7.7 7.7 0 0 1 1.5.1l1-.9 2 1.2-.5 1.4a7.7 7.7 0 0 1 .8 1.4l1.5.2v2.4l-1.5.3a7.7 7.7 0 0 1-.4 1.4z" />
+    </>
+  ));
+
+export const LogoutIcon = (props: IconProps) =>
+  baseIcon(props, (
+    <>
+      <path d="M10 17l5-5-5-5M15 12H3" />
+      <path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" />
+    </>
+  ));

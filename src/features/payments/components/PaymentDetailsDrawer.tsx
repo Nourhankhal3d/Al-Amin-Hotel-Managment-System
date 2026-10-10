@@ -89,7 +89,7 @@ export function PaymentDetailsDrawer({ payment, onClose }: PaymentDetailsDrawerP
         </div>
         <div className="al-drawer__field">
           <span>العملة</span>
-          <strong>ريال سعودي</strong>
+          <strong>جنيه مصري (EGP)</strong>
         </div>
         <div className="al-drawer__field">
           <span>رقم المرجع</span>

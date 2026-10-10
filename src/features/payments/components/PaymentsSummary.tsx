@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { CalcIcon, CardIcon, CashIcon, HashIcon, TransferIcon, WalletIcon } from '../../../components/ui/Icons';
 import { PAYMENT_METHODS } from '../../../core/constants/paymentMethods';
-import { formatCompact, formatMoney } from '../../../core/utils/numerals';
+import { formatCompactMoney, formatMoney } from '../../../core/utils/numerals';
 import type { Payment } from '../types/payment.types';
 
 interface PaymentsSummaryProps {
@@ -37,10 +37,10 @@ export function PaymentsSummary({ payments }: PaymentsSummaryProps) {
 
   return (
     <div className="al-stats">
-      <StatTile label="إجمالي القيمة" value={formatCompact(total)} icon={<WalletIcon />} />
-      <StatTile label="نقداً" value={formatCompact(totalOf(payments, PAYMENT_METHODS.cash))} icon={<CashIcon />} tone="gold" />
-      <StatTile label="بطاقات" value={formatCompact(totalOf(payments, PAYMENT_METHODS.card))} icon={<CardIcon />} />
-      <StatTile label="تحويلات" value={formatCompact(totalOf(payments, PAYMENT_METHODS.transfer))} icon={<TransferIcon />} tone="gold" />
+      <StatTile label="إجمالي القيمة" value={formatCompactMoney(total)} icon={<WalletIcon />} />
+      <StatTile label="نقداً" value={formatCompactMoney(totalOf(payments, PAYMENT_METHODS.cash))} icon={<CashIcon />} tone="gold" />
+      <StatTile label="بطاقات" value={formatCompactMoney(totalOf(payments, PAYMENT_METHODS.card))} icon={<CardIcon />} />
+      <StatTile label="تحويلات" value={formatCompactMoney(totalOf(payments, PAYMENT_METHODS.transfer))} icon={<TransferIcon />} tone="gold" />
       <StatTile label="عدد العمليات" value={String(payments.length)} icon={<HashIcon />} />
       <StatTile label="متوسط معاملة" value={formatMoney(average)} icon={<CalcIcon />} tone="rose" />
     </div>

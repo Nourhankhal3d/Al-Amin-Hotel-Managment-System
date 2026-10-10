@@ -16,15 +16,29 @@ button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .55; }
 
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 260px minmax(0, 1fr); }
-.sidebar { position: sticky; top: 0; height: 100vh; padding: 24px 16px; background: var(--al-green); color: var(--al-green-ink); display: flex; flex-direction: column; gap: 24px; }
-.sidebar__brand { display: grid; gap: 4px; padding: 0 10px; }
-.sidebar__brand strong { font-size: 1.6rem; }
-.sidebar__brand span { font-size: .8rem; color: var(--al-green-ink); }
-.sidebar nav { display: grid; gap: 6px; }
-.sidebar nav a { padding: 11px 14px; border-radius: 10px; color: var(--al-green-ink); text-decoration: none; }
-.sidebar nav a.active { background: #fff; color: #1d7137; font-weight: 700; }
-.sidebar nav a:hover:not(.active) { background: rgba(255,255,255,.28); }
-.sidebar__logout { margin-top: auto; border: 0; background: transparent; color: var(--al-green-ink); text-align: start; padding: 10px; }
+.sidebar { position: sticky; top: 0; height: 100vh; padding: 24px 16px; background: var(--al-green); color: var(--al-green-ink); display: flex; flex-direction: column; gap: 18px; overflow: hidden; }
+.sidebar__brand { display: grid; gap: 24px; padding: 0 8px; }
+.sidebar__brand-main { display: flex; align-items: center; justify-content: space-between; gap: 12px; direction: ltr; }
+.sidebar__logo-card { width: 88px; height: 88px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 22px; background: #fff; }
+.sidebar__logo { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; object-position: center; }
+.sidebar__brand-copy { display: grid; gap: 2px; direction: rtl; text-align: right; color: #fff; }
+.sidebar__brand-copy strong { font-size: 1.4rem; }
+.sidebar__brand-copy span { font-size: .86rem; color: #12351b; }
+.sidebar__workspace { color: #12351b; font-size: .9rem; }
+.sidebar nav { flex: 1 1 0; min-height: 0; display: grid; align-content: start; gap: 6px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.3) transparent; }
+.sidebar nav a, .sidebar__logout { min-height: 46px; display: flex; align-items: center; gap: 14px; border-radius: 12px; padding: 10px 14px; color: #12351b; text-decoration: none; font-size: .95rem; }
+.sidebar nav a, .sidebar__logout { direction: ltr; justify-content: flex-start; }
+.sidebar nav a span, .sidebar__logout span { direction: rtl; text-align: right; }
+.sidebar nav a.active { background: rgba(5,75,25,.48); color: #e4f4e9; font-weight: 700; }
+.sidebar nav a:hover:not(.active), .sidebar__logout:hover { background: rgba(255,255,255,.2); }
+.sidebar__nav-icon { width: 22px; height: 22px; flex: 0 0 auto; }
+.sidebar__shift-status { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 14px; background: rgba(255,255,255,.12); flex: 0 0 auto; }
+.sidebar__shift-status-icon { display: grid; place-items: center; color: #12351b; }
+.sidebar__shift-status-copy { display: grid; min-width: 0; gap: 3px; color: #12351b; }
+.sidebar__shift-status-copy strong { font-size: .85rem; }
+.sidebar__shift-status-copy span { color: #12351b; font-size: .72rem; white-space: nowrap; }
+.sidebar__shift-status-badge { width: 12px; height: 12px; margin-inline-start: auto; border: 3px solid rgba(255,255,255,.22); border-radius: 50%; background: #c6a15b; flex: 0 0 auto; }
+.sidebar__logout { min-height: 42px; width: 100%; border: 0; background: transparent; cursor: pointer; flex: 0 0 auto; }
 .app-main { min-width: 0; }
 .topbar { height: 76px; padding: 0 28px; background: #fff; border-bottom: 1px solid #dce5e7; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .topbar__search { width: min(420px, 50%); border: 1px solid #d5dfe2; border-radius: 10px; padding: 10px 14px; }
@@ -96,14 +110,18 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (max-width: 800px) {
   .app-shell { grid-template-columns: 1fr; }
-  .sidebar { position: static; height: auto; }
-  .sidebar nav { display: flex; overflow-x: auto; }
+  .sidebar { position: static; height: auto; min-height: 100vh; overflow: visible; }
+  .sidebar nav { display: flex; flex: none; overflow-x: auto; }
   .sidebar nav a { white-space: nowrap; }
   .topbar { height: auto; padding: 14px 18px; align-items: stretch; flex-direction: column; }
   .topbar__search { width: 100%; }
   .app-content { padding: 18px; }
   .auth-layout { grid-template-columns: 1fr; }
   .auth-layout__brand { min-height: 180px; }
+}
+@media (max-height: 650px) and (min-width: 801px) {
+  .sidebar { overflow-y: auto; }
+  .sidebar nav { flex: 0 0 auto; max-height: 45vh; }
 }
 
 /* ===== Member 4 — shared UI (Toast / dialog backdrop / danger button / note) ===== */

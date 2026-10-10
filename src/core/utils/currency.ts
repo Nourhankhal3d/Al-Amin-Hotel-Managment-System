@@ -1,9 +1,9 @@
-export const DEFAULT_CURRENCY = 'SAR';
-export const DEFAULT_LOCALE = 'en-US';
+export const DEFAULT_CURRENCY = 'EGP';
+export const DEFAULT_LOCALE = 'ar-EG';
 
 /**
  * Formats an amount as currency.
- * Currency defaults to SAR (flagged as "confirm with backend" in payment types),
+ * Currency defaults to EGP for the hotel's Egyptian locale,
  * so it can be switched with a single constant change later.
  */
 export function formatCurrency(

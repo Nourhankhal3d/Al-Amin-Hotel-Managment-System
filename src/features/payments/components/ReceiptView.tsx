@@ -33,7 +33,7 @@ export function ReceiptView({ payment }: ReceiptViewProps) {
 
       <p className="receipt__total">
         <span>المبلغ الإجمالي</span>
-        <strong>{formatCurrency(payment.amount, payment.currency ?? DEFAULT_CURRENCY)}</strong>
+        <strong>{formatCurrency(payment.amount, DEFAULT_CURRENCY)}</strong>
       </p>
 
       <footer className="receipt__footer">شكراً لإقامتكم معنا — {appConfig.name}</footer>
