@@ -1,25 +1,58 @@
-import type { RoomStatus } from '../../../types/common.types';
+export type RoomType = 'standard' | 'vip';
+export type RoomStatus = 'available' | 'occupied' | 'reserved' | 'cleaning' | 'maintenance';
+export type RoomFloor = 1 | 2 | 3;
+export type RoomAvailability = 'all' | 'available' | 'unavailable';
+
+export interface RoomLogEntry {
+  id: string;
+  titleKey: string;
+  descriptionKey: string;
+  time: string;
+}
 
 export interface Room {
-  room_id: number;
-  room_type: string;
-  status: RoomStatus;
-  description: string;
-  price_per_night: number;
-  half_day_price: number;
+  id: string;
+  number: string;
+  type: RoomType; // TODO: confirm with backend
+  status: RoomStatus; // TODO: confirm with backend
+  floor: RoomFloor; // TODO: confirm with backend
+  view: 'nile' | 'garden' | 'city'; // TODO: confirm with backend
+  guestName?: string;
+  guestNameKey?: string;
+  arrivalDate?: string;
+  notes: string;
+  notesKey?: string;
+  updatedAt: string;
+  log: RoomLogEntry[];
 }
 
-export interface RoomStatusHistory {
-  history_id: number;
-  room_id: number;
-  status: RoomStatus;
-  notes?: string | null;
-  changed_at: string;
-  shift_id: number;
+export interface RoomFilters {
+  q: string;
+  type: RoomType | '';
+  status: RoomStatus | '';
+  floor: RoomFloor | '';
+  availability: RoomAvailability;
+  page: number;
 }
 
-// الموظف يقدر يختار الحالات التلاتة دي بس
-export interface RoomStatusChange {
-  status: 'available' | 'cleaning' | 'maintenance';
-  notes?: string;
+export interface RoomStats {
+  total: number;
+  available: number;
+  occupied: number;
+  cleaning: number;
+  maintenance: number;
+  vip: number;
+}
+
+export interface UpdateRoomInput {
+  id: string;
+  status: RoomStatus;
+  notes: string;
+}
+
+export interface AddRoomActivityInput {
+  roomId: string;
+  status: RoomStatus;
+  guestName: string;
+  notes: string;
 }

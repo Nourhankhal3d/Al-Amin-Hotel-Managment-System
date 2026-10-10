@@ -1,5 +1,15 @@
 import { http, HttpResponse } from 'msw';
-import type { Room } from '../../features/rooms/types/room.types';
+import type { RoomStatus } from '../../types/common.types';
+
+// شكل الغرفة كما يرجعه الـ API (معرّف هنا عشان الـ mocks ماتعتمدش على types الـ features)
+interface Room {
+  room_id: number;
+  room_type: string;
+  status: RoomStatus;
+  description: string;
+  price_per_night: number;
+  half_day_price: number;
+}
 import type {
   CleaningTask,
   MaintenanceIssue,

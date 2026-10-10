@@ -1,4 +1,5 @@
 import { Button } from '../ui/Button';
+import './ConfirmDialog.css';
 
 interface ConfirmDialogProps {
   title: string;

@@ -1,0 +1,9 @@
+.feature-page {
+	display: grid;
+	gap: var(--space-5);
+}
+
+.page-hero { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+.page-hero h1 { margin: 0; font-size: var(--font-size-xl); }
+.page-hero p { margin: var(--space-2) 0 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.page-hero__eyebrow { display: block; margin-block-end: var(--space-2); color: var(--color-gold); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); }

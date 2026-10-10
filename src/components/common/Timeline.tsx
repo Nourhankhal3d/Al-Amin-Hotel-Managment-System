@@ -1,6 +1,7 @@
+import './Timeline.css';
 import type { ReactNode } from 'react';
 
-interface TimelineItem {
+export interface TimelineItem {
   id: string;
   title: string;
   description?: string;
@@ -10,15 +11,24 @@ interface TimelineItem {
 interface TimelineProps {
   items: TimelineItem[];
   renderItem?: (item: TimelineItem) => ReactNode;
+  markerTone?: 'primary' | 'gold';
 }
 
-export function Timeline({ items, renderItem }: TimelineProps) {
+export function Timeline({ items, renderItem, markerTone = 'gold' }: TimelineProps) {
   return (
-    <ol className="ui-timeline">
+    <ol className="timeline">
       {items.map((item) => (
-        <li key={item.id}>
-          <span className="ui-timeline__marker" />
-          <div>{renderItem ? renderItem(item) : <><strong>{item.title}</strong>{item.description && <p>{item.description}</p>}{item.time && <time>{item.time}</time>}</>}</div>
+        <li key={item.id} className="timeline__item">
+          <span className={`timeline__marker timeline__marker--${markerTone}`} />
+          <div className="timeline__content">
+            {renderItem ? renderItem(item) : (
+              <>
+                <strong className="timeline__title">{item.title}</strong>
+                {item.description && <p className="timeline__description">{item.description}</p>}
+              </>
+            )}
+          </div>
+          {item.time && <time className="timeline__time">{item.time}</time>}
         </li>
       ))}
     </ol>
