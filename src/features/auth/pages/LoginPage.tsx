@@ -2,26 +2,26 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
-import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
-import { login } from '../services/auth.api';
+import { setAccessToken } from '../../../core/api/apiClient';
+import { ROLES } from '../../../core/constants/roles';
+import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { setAuthSession } from '../../../core/auth/authManager';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
-
+import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
+import { login } from '../services/auth.api';
 import { EyeIcon, EyeOffIcon } from '../../../components/common/EyeIcons';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const { language, toggleLanguage, t } = useLanguage();
 
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<LoginValidationErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
-
-  // Forgot password modal state
   const [showForgotModal, setShowForgotModal] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotSent, setForgotSent] = useState(false);
@@ -30,9 +30,8 @@ export function LoginPage() {
     event.preventDefault();
     setApiError(null);
 
-    const input = { email, password };
+    const input = { username, password };
     const validationErrors = validateLogin(input, t);
-
     if (validationErrors) {
       setErrors(validationErrors);
       return;
@@ -40,25 +39,25 @@ export function LoginPage() {
 
     setErrors({});
     setLoading(true);
-
     try {
       const response = await login(input);
+      setAccessToken(response.access_token);
       setAuthSession({
-        token: response.token,
-        role: response.role,
-        userId: response.userId,
+        role: ROLES.receptionist,
+        userId: String(response.staff.staff_id),
+        staffName: response.staff.name,
+        readOnly: response.read_only,
       });
       navigate(ROUTES.dashboard, { replace: true });
-    } catch {
-      // User-friendly localized connection error alert
-      setApiError(t('errServerConnection'));
+    } catch (error) {
+      setApiError(getErrorMessage(error, language));
     } finally {
       setLoading(false);
     }
   }
 
-  function handleForgotSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function handleForgotSubmit(event: React.FormEvent) {
+    event.preventDefault();
     if (!forgotEmail) return;
     setForgotSent(true);
   }
@@ -66,7 +65,6 @@ export function LoginPage() {
   return (
     <div className="figma-auth-container">
       <div className="figma-auth-card">
-        {/* Top Card Controls: Language Switcher */}
         <div className="figma-auth-top-bar">
           <button
             type="button"
@@ -78,7 +76,6 @@ export function LoginPage() {
           </button>
         </div>
 
-        {/* Brand Header */}
         <div className="figma-auth-header">
           <div className="figma-auth-logo">
             <img src="/assets/logo.jpg" alt="Al-Amin Logo" />
@@ -91,21 +88,21 @@ export function LoginPage() {
 
         <form className="figma-auth-form" onSubmit={handleSubmit} noValidate>
           <div className="figma-form-group">
-            <label htmlFor="login-email">{t('emailLabel')}</label>
+            <label htmlFor="login-username">{t('usernameLabel')}</label>
             <Input
-              id="login-email"
-              name="email"
-              type="email"
+              id="login-username"
+              name="username"
+              type="text"
               className="figma-input"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (errors.email) setErrors((prev) => ({ ...prev, email: undefined }));
+              value={username}
+              onChange={(event) => {
+                setUsername(event.target.value);
+                if (errors.username) setErrors((previous) => ({ ...previous, username: undefined }));
               }}
-              placeholder={t('emailPlaceholder')}
+              placeholder={t('usernamePlaceholder')}
               disabled={loading}
             />
-            {errors.email && <span className="figma-field-error">{errors.email}</span>}
+            {errors.username && <span className="figma-field-error">{errors.username}</span>}
           </div>
 
           <div className="figma-form-group">
@@ -116,7 +113,7 @@ export function LoginPage() {
                 className="figma-link-btn"
                 onClick={() => {
                   setForgotSent(false);
-                  setForgotEmail(email);
+                  setForgotEmail('');
                   setShowForgotModal(true);
                 }}
               >
@@ -130,9 +127,9 @@ export function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 className="figma-input"
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (errors.password) setErrors((prev) => ({ ...prev, password: undefined }));
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  if (errors.password) setErrors((previous) => ({ ...previous, password: undefined }));
                 }}
                 placeholder={t('passwordPlaceholder')}
                 disabled={loading}
@@ -154,10 +151,9 @@ export function LoginPage() {
           </Button>
         </form>
 
-        {/* Forgot Password Modal */}
         {showForgotModal && (
           <div className="ui-drawer-backdrop" onClick={() => setShowForgotModal(false)}>
-            <div className="ui-dialog figma-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="ui-dialog figma-dialog" onClick={(event) => event.stopPropagation()}>
               <h2>{t('forgotPasswordTitle')}</h2>
               {!forgotSent ? (
                 <form onSubmit={handleForgotSubmit} className="figma-auth-form" style={{ marginTop: 12 }}>
@@ -166,7 +162,7 @@ export function LoginPage() {
                     type="email"
                     className="figma-input"
                     value={forgotEmail}
-                    onChange={(e) => setForgotEmail(e.target.value)}
+                    onChange={(event) => setForgotEmail(event.target.value)}
                     placeholder={t('emailPlaceholder')}
                     required
                   />

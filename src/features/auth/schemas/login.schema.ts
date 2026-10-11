@@ -1,7 +1,7 @@
 import type { LoginCredentials } from '../types/auth.types';
 
 export interface LoginValidationErrors {
-  email?: string;
+  username?: string;
   password?: string;
   general?: string;
 }
@@ -11,19 +11,10 @@ export function validateLogin(
   t: (key: string) => string,
 ): LoginValidationErrors | null {
   const errors: LoginValidationErrors = {};
-  const trimmedEmail = input.email.trim();
 
-  if (!trimmedEmail) {
-    errors.email = t('errEmailRequired');
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-    errors.email = t('errEmailInvalid');
-  }
+  if (!input.username.trim()) errors.username = t('errUsernameRequired');
 
-  if (!input.password) {
-    errors.password = t('errPasswordRequired');
-  } else if (input.password.length < 6) {
-    errors.password = t('errPasswordMinLength');
-  }
+  if (!input.password) errors.password = t('errPasswordRequired');
 
   return Object.keys(errors).length > 0 ? errors : null;
 }
