@@ -7,6 +7,7 @@ import '@fontsource/ibm-plex-sans-arabic/500.css';
 import '@fontsource/ibm-plex-sans-arabic/600.css';
 import '@fontsource/ibm-plex-sans-arabic/700.css';
 import './styles/globals.css';
+import './styles/alamin-theme.css';
 
 async function enableMocking() {
     if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS !== 'false') {

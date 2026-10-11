@@ -19,7 +19,7 @@ export function AppRouter() {
       <Routes>
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-          <Route index element={<Navigate to={ROUTES.dashboard} replace />} />
+          <Route index element={<Navigate to={import.meta.env.DEV ? ROUTES.shiftReport : ROUTES.dashboard} replace />} />
           <Route path={ROUTES.dashboard} element={<DashboardPage />} />
           <Route path={ROUTES.rooms} element={<RoomsPage />} />
           <Route path={ROUTES.housekeeping} element={<HousekeepingPage />} />
