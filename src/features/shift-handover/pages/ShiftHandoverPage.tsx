@@ -182,7 +182,7 @@ export function ShiftHandoverPage() {
       <Card className="shift-handover__shift-info">
         <div><span>تاريخ الوردية</span><strong>{formatDate(summary.shift.shift_date)}</strong></div>
         <div><span>نوع الوردية</span><strong>{summary.shift.shift_type === 'morning' ? 'صباحية' : summary.shift.shift_type === 'evening' ? 'مسائية' : 'ليلية'}</strong></div>
-        <div><span>وقت الوردية</span><strong>{summary.shift.start_time} - {summary.shift.end_time}</strong></div>
+        <div><span>وقت الوردية</span><strong dir="ltr">{summary.shift.start_time} - {summary.shift.end_time}</strong></div>
         <div className="shift-handover__shift-mark" aria-label={isHandedOver ? 'تم تسليم الوردية' : 'الوردية نشطة'}>
           <span aria-hidden="true">{isHandedOver ? '✓' : 'نشطة'}</span>
         </div>
