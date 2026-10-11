@@ -30,6 +30,11 @@ export function AppRouter() {
           <Route path={ROUTES.profile} element={<ProfilePage />} />
           <Route path={ROUTES.settings} element={<SettingsPage />} />
         </Route>
+          {import.meta.env.DEV && (
+            <Route path="/__dev/shift-handover" element={<DashboardLayout />}>
+              <Route index element={<ShiftHandoverPage />} />
+            </Route>
+          )}
         <Route path="*" element={<Navigate to={ROUTES.dashboard} replace />} />
       </Routes>
     </BrowserRouter>
