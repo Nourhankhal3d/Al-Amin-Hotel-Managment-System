@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
@@ -152,13 +152,6 @@ export function LoginPage() {
           <Button type="submit" disabled={loading} className="figma-btn-primary">
             {loading ? t('loading') : t('login')}
           </Button>
-
-          <div className="figma-auth-footer">
-            <span>{t('noAccountYet')}</span>{' '}
-            <Link to={ROUTES.register} className="figma-nav-link">
-              {t('registerTitle')}
-            </Link>
-          </div>
         </form>
 
         {/* Forgot Password Modal */}
