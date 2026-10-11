@@ -11,9 +11,6 @@ export const HK_FETCH_LIMIT = 100;
 export const STATUS_OPTIONS: CleaningTaskStatus[] = ['pending', 'done'];
 export const PRIORITY_OPTIONS: Priority[] = ['low', 'medium', 'high', 'urgent'];
 
-// TEMP: until rooms come from the API. TODO: load from /rooms (101-103 exist in the team mocks)
-export const ROOM_OPTIONS = ['101', '102', '103', '112', '207', '210', '214', '305', '308', '312'];
-
 export const STATUS_TONE: Record<CleaningTaskStatus, BadgeTone> = {
   pending: 'warning',
   done: 'success',

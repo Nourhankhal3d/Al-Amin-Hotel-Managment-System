@@ -610,7 +610,6 @@
 
 .dashboard-page__pulse {
   display: flex;
-  direction: ltr;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-6);
@@ -631,12 +630,21 @@
   display: grid;
   gap: var(--space-2);
   padding-inline: var(--space-4);
-  border-inline-end: 1px solid color-mix(in srgb, var(--color-surface) 12%, transparent);
+  border-inline-start: 1px solid color-mix(in srgb, var(--color-surface) 12%, transparent);
 }
 
-.dashboard-page__pulse-metrics > div:first-child {
-  padding-inline-start: 0;
+.dashboard-page__pulse-metrics > div:last-child {
+  border-inline-end: 0;
 }
+
+.dashboard-page__pulse-action {
+  flex: 0 0 auto;
+  min-height: 3rem;
+  padding-inline: var(--space-5);
+  text-decoration: none;
+}
+
+.dashboard-page__pulse-action svg { width: 1rem; height: 1rem; }
 
 .dashboard-page__pulse-metrics span,
 .dashboard-page__pulse-copy > span {
@@ -651,7 +659,6 @@
 
 .dashboard-page__pulse-copy {
   display: grid;
-  direction: rtl;
   flex: 0 0 28%;
   gap: var(--space-1);
   text-align: start;

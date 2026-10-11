@@ -6,8 +6,10 @@ import type { MaintenanceRequest } from '../types/maintenance.types';
 // TODO: remove once utils/format.ts formatClock uses timeZone 'Africa/Cairo', and use formatClock again.
 const HOTEL_TIME_ZONE = 'Africa/Cairo';
 
+// A reference is an ID, not a quantity, so it has no thousands separator (MT-1000, not MT-1,000)
 export function formatReference(issueId: number, language: Language): string {
-  return `MT-${formatNumber(issueId, language)}`;
+  const digits = new Intl.NumberFormat(language === 'ar' ? 'ar-EG' : 'en-EG', { useGrouping: false }).format(issueId);
+  return `MT-${digits}`;
 }
 
 export function formatRequestTime(isoDate: string, language: Language): string {

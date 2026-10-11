@@ -18,3 +18,10 @@
 .ui-button--secondary:hover { background: var(--color-primary-softer); }
 .ui-button--ghost { color: var(--color-primary-dark); background: transparent; }
 .ui-button--ghost:hover { background: var(--color-primary-soft); }
+/* hero buttons on the green banner */
+.ui-button--gold { color: var(--color-ink); background: var(--color-gold); box-shadow: 0 0.5rem 1.25rem color-mix(in srgb, var(--color-gold) 30%, transparent); }
+.ui-button--gold:hover { background: color-mix(in srgb, var(--color-gold) 88%, var(--color-surface)); }
+.ui-button--glass { border-color: var(--color-glass-border); color: var(--color-surface); background: var(--color-glass); }
+.ui-button--glass:hover { background: color-mix(in srgb, var(--color-surface) 26%, transparent); }
+
+.ui-button:focus-visible { outline: 2px solid color-mix(in srgb, var(--color-primary) 45%, transparent); outline-offset: 2px; }

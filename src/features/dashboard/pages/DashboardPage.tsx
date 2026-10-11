@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useOutletContext } from 'react-router-dom';
-import { ArrowLeft, ArrowLeftRight, ArrowUpRight, BedDouble, Check, CircleAlert, Clock, FileText, LogIn, MoreHorizontal, Sparkles, Wallet, Wrench, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, ArrowLeftRight, ChevronLeft, ChevronRight, ArrowUpRight, BedDouble, Check, CircleAlert, Clock, FileText, LogIn, MoreHorizontal, Sparkles, Wallet, Wrench, type LucideIcon } from 'lucide-react';
 import { Card } from '../../../components/ui/Card';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { ErrorState } from '../../../components/common/ErrorState';
@@ -224,13 +224,17 @@ export function DashboardPage() {
       </section>
 
       <footer className="dashboard-page__pulse">
-        <div className="dashboard-page__pulse-metrics">
-          <div><span>{t('dashboard.pulse.revenue')}</span><strong>{formatCurrency(data.pulse.revenue, language)}</strong></div>
-          <div><span>{t('dashboard.pulse.pending')}</span><strong>{formatNumber(data.pulse.pendingTasks, language)}</strong></div>
-          <div><span>{t('dashboard.pulse.completed')}</span><strong>{formatNumber(data.pulse.completedTasks, language)}</strong></div>
-          <div><span>{t('dashboard.pulse.arrivals')}</span><strong>{formatNumber(data.pulse.arrivals, language)}</strong></div>
-        </div>
         <div className="dashboard-page__pulse-copy"><span>{t('dashboard.pulse.title')}</span><strong>{t('dashboard.pulse.headline')}</strong><p>{t('dashboard.pulse.message')}</p></div>
+        <div className="dashboard-page__pulse-metrics">
+          <div><span>{t('dashboard.pulse.arrivals')}</span><strong>{formatNumber(data.pulse.arrivals, language)}</strong></div>
+          <div><span>{t('dashboard.pulse.completed')}</span><strong>{formatNumber(data.pulse.completedTasks, language)}</strong></div>
+          <div><span>{t('dashboard.pulse.pending')}</span><strong>{formatNumber(data.pulse.pendingTasks, language)}</strong></div>
+          <div><span>{t('dashboard.pulse.revenue')}</span><strong>{formatCurrency(data.pulse.revenue, language)}</strong></div>
+        </div>
+        <Link className="ui-button ui-button--gold dashboard-page__pulse-action" to={ROUTES.shiftReport}>
+          {t('dashboard.pulse.openSummary')}
+          {language === 'ar' ? <ChevronLeft aria-hidden="true" /> : <ChevronRight aria-hidden="true" />}
+        </Link>
       </footer>
     </div>
   );

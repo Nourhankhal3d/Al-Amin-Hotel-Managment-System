@@ -3,6 +3,7 @@ import { Check, TriangleAlert, X } from 'lucide-react';
 import { ToastContext } from './ToastContext';
 import type { ToastTone } from './ToastContext';
 import { getTranslation } from '../../core/i18n';
+import { useLanguage } from '../../core/i18n/useLanguage';
 import './Toast.css';
 
 interface ToastMessage {
@@ -14,7 +15,7 @@ interface ToastMessage {
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const timeoutIds = useRef<number[]>([]);
-  const language = document.documentElement.lang === 'en' ? 'en' : 'ar';
+  const { language } = useLanguage();
 
   useEffect(() => () => timeoutIds.current.forEach((timeoutId) => window.clearTimeout(timeoutId)), []);
 

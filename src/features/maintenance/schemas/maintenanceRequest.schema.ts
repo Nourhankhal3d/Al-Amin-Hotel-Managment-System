@@ -5,7 +5,6 @@ import {
   MT_PROBLEM_MIN_LENGTH,
   NEXT_STATUSES,
   PRIORITY_OPTIONS,
-  ROOM_OPTIONS,
 } from '../constants/maintenance.constants';
 import type { MaintenanceIssueCreate, MaintenanceIssueStatus, MaintenanceIssueUpdate, Priority } from '../types/maintenance.types';
 
@@ -23,12 +22,16 @@ export type NewRequestFormErrors = Partial<Record<keyof NewRequestFormValues, st
 // A new issue always starts as "open" on the server, so the form has no status field
 export const EMPTY_NEW_REQUEST: NewRequestFormValues = { roomNumber: '', priority: '', problem: '', notes: '' };
 
-export function validateNewRequest(values: NewRequestFormValues): NewRequestFormErrors {
+/**
+ * `roomOptions` are the room numbers from GET /rooms. While they are still loading the list is empty,
+ * so the "room not found" check is skipped and the server has the final word.
+ */
+export function validateNewRequest(values: NewRequestFormValues, roomOptions: string[]): NewRequestFormErrors {
   const errors: NewRequestFormErrors = {};
   const room = normalizeDigits(values.roomNumber.trim());
   const problem = values.problem.trim();
   if (!room) errors.roomNumber = 'mtErrRoomRequired';
-  else if (!ROOM_OPTIONS.includes(room)) errors.roomNumber = 'mtErrRoomNotFound';
+  else if (roomOptions.length > 0 && !roomOptions.includes(room)) errors.roomNumber = 'mtErrRoomNotFound';
   if (!values.priority || !PRIORITY_OPTIONS.includes(values.priority)) errors.priority = 'mtErrPriorityRequired';
   if (!problem) errors.problem = 'mtErrDescriptionRequired';
   else if (problem.length < MT_PROBLEM_MIN_LENGTH) errors.problem = 'mtErrDescriptionTooShort';

@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
-import { Card } from '../../../components/ui/Card';
+import { TableCard } from '../../../components/common/TableCard';
 import { Pagination } from '../../../components/ui/Pagination';
 import { Table } from '../../../components/ui/Table';
 import { getTranslation, type Language } from '../../../core/i18n';
@@ -13,7 +13,6 @@ import {
 } from '../constants/housekeeping.constants';
 import type { HousekeepingTask } from '../types/housekeeping.types';
 import { formatTaskTime } from '../utils/housekeepingDisplay';
-import './HousekeepingTable.css';
 
 interface HousekeepingTableProps {
   tasks: HousekeepingTask[];
@@ -38,7 +37,7 @@ export function HousekeepingTable({ tasks, totalTasks, language, page, totalPage
 
   const columns = [
     { key: 'room_id', label: t('colRoom'), render: (row: unknown) => (
-      <span className="housekeeping-table__room">{formatNumber((row as HousekeepingTask).room_id, language)}</span>
+      <span className="table-card__chip housekeeping-table__room">{formatNumber((row as HousekeepingTask).room_id, language)}</span>
     ) },
     { key: 'cleaner_name', label: t('hkCleaner'), render: (row: unknown) => (row as HousekeepingTask).cleaner_name || '—' },
     { key: 'priority', label: t('priorityLabel'), render: (row: unknown) => {
@@ -55,7 +54,7 @@ export function HousekeepingTable({ tasks, totalTasks, language, page, totalPage
       return (
         <button
           type="button"
-          className="housekeeping-table__open"
+          className="table-card__open housekeeping-table__open"
           aria-label={t('hkOpenTask').replace('{room}', formatNumber(task.room_id, language))}
           onClick={() => onOpenTask(task.task_id)}
         >
@@ -66,18 +65,12 @@ export function HousekeepingTable({ tasks, totalTasks, language, page, totalPage
   ];
 
   return (
-    <Card className="housekeeping-table-card">
-      <header className="housekeeping-table-card__header">
-        <div>
-          <h2>{t('hkListTitle')}</h2>
-          <p>{summary}</p>
-        </div>
-        <span className="housekeeping-table-card__count">
-          {formatNumber(totalTasks, language)} {t('hkListCount')}
-        </span>
-      </header>
-      <Table columns={columns} rows={tasks} emptyMessage={t('hkEmpty')} className="housekeeping-table" />
-      <footer className="housekeeping-table-card__footer">
+    <TableCard
+      className="housekeeping-table-card"
+      title={t('hkListTitle')}
+      subtitle={summary}
+      badge={`${formatNumber(totalTasks, language)} ${t('hkListCount')}`}
+      footer={(
         <Pagination
           page={page}
           totalPages={totalPages}
@@ -86,8 +79,10 @@ export function HousekeepingTable({ tasks, totalTasks, language, page, totalPage
           previousLabel={t('pagination.previous')}
           nextLabel={t('pagination.next')}
           navigationLabel={t('pagination.label')}
-        />
-      </footer>
-    </Card>
+          />
+      )}
+    >
+      <Table columns={columns} rows={tasks} emptyMessage={t('hkEmpty')} className="housekeeping-table" />
+    </TableCard>
   );
 }

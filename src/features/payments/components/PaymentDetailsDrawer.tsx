@@ -1,28 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
+import { FileText, Receipt, Upload } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
+import { Button } from '../../../components/ui/Button';
+import { Drawer } from '../../../components/ui/Drawer';
 import { useToast } from '../../../components/common/toast.context';
-import { ExportIcon, NoteIcon, ReceiptIcon } from '../../../components/ui/Icons';
-import { formatDateTime } from '../../../core/utils/date';
-import { formatMoney, toArabicDigits } from '../../../core/utils/numerals';
+import { getTranslation, type Language } from '../../../core/i18n';
+import { formatNumber } from '../../../utils/format';
 import { ReceiptView } from './ReceiptView';
 import type { Payment } from '../types/payment.types';
-import {
-  buildPaymentsCsv,
-  downloadCsv,
-  printReceipt,
-} from '../utils/paymentsExport';
-import { methodLabel, statusLabel, statusTone } from '../utils/paymentsLabels';
+import { buildPaymentsCsv, downloadCsv, printReceipt } from '../utils/paymentsExport';
+import { formatAmount, formatPaymentDate, formatPaymentTime } from '../utils/paymentsFormat';
+import { methodLabelKey, statusLabelKey, statusTone } from '../utils/paymentsLabels';
+import './PaymentDetailsDrawer.css';
+
+const EMPTY_VALUE = '—';
 
 interface PaymentDetailsDrawerProps {
-  payment: Payment;
+  payment: Payment | null;
+  language: Language;
   onClose: () => void;
 }
 
 /**
- * Figma-styled payment details panel rendered inside the shared `Drawer`.
- * Keeps the original receipt / CSV / print functionality fully wired.
+ * Payment details in the shared Drawer, same layout as the other details drawers.
+ * The receipt / CSV / print actions work exactly as before.
+ * The parent gives this component a `key` per payment, so the note and receipt reset when another payment opens.
  */
-export function PaymentDetailsDrawer({ payment, onClose }: PaymentDetailsDrawerProps) {
+export function PaymentDetailsDrawer({ payment, language, onClose }: PaymentDetailsDrawerProps) {
+  const t = (key: string) => getTranslation(language, key);
   const toast = useToast();
   const [note, setNote] = useState('');
   const [showReceipt, setShowReceipt] = useState(false);
@@ -35,20 +40,21 @@ export function PaymentDetailsDrawer({ payment, onClose }: PaymentDetailsDrawerP
     }
   }, [showReceipt]);
 
-  const reference = payment.invoiceNo ?? payment.id;
+  const reference = payment ? payment.invoiceNo ?? payment.id : '';
+  const statusKey = payment ? statusLabelKey(payment.status) : null;
+  const methodKey = payment ? methodLabelKey(payment.method) : null;
 
-  const handleCashierLog = () => {
-    setShowReceipt((visible) => !visible);
-  };
+  const handleCashierLog = () => setShowReceipt((visible) => !visible);
 
   const handleExport = () => {
+    if (!payment) return;
     downloadCsv(`payment-${payment.id}.csv`, buildPaymentsCsv([payment]));
-    toast.showToast('تم تصدير بيانات الدفعة بنجاح', 'success');
+    toast.showToast(t('paymentsPage.details.exported'), 'success');
   };
 
   const handleAddReceipt = () => {
     setShowReceipt(true);
-    toast.showToast('تم عرض الإيصال — جاهز للطباعة أو الإرسال', 'info');
+    toast.showToast(t('paymentsPage.details.receiptShown'), 'info');
   };
 
   const handleSendReceipt = () => {
@@ -61,82 +67,89 @@ export function PaymentDetailsDrawer({ payment, onClose }: PaymentDetailsDrawerP
   };
 
   return (
-    <div className="al-drawer-body">
-      <strong className="al-drawer__id">{reference}</strong>
+    <Drawer
+      open={payment !== null}
+      title={reference}
+      eyebrow={t('paymentsPage.details.eyebrow')}
+      closeLabel={t('drawerClose')}
+      onClose={onClose}
+      className="payment-details-drawer"
+      footer={payment ? (
+        <div className="drawer-details__footer">
+          <Button variant="secondary" onClick={onClose}>{t('paymentsPage.details.close')}</Button>
+          <Button onClick={handleSendReceipt}>{t('paymentsPage.details.send')}</Button>
+        </div>
+      ) : undefined}
+    >
+      {payment && (
+        <div className="drawer-details">
+          <section className="drawer-details__amount">
+            <span>{t('paymentsPage.details.amount')}</span>
+            <strong>{formatAmount(payment.amount, language)}</strong>
+            <Badge tone={statusTone(payment.status)}>{statusKey ? t(statusKey) : payment.status}</Badge>
+          </section>
 
-      <div className="al-drawer__total">
-        <span className="al-drawer__total-label">إجمالي الاستلام</span>
-        <h3 className="al-drawer__total-value">{formatMoney(payment.amount)}</h3>
-        <Badge tone={statusTone(payment.status)}>{statusLabel(payment.status)}</Badge>
-      </div>
+          <div className="drawer-details__grid">
+            <div className="drawer-details__info">
+              <span>{t('paymentsPage.details.room')}</span>
+              <strong>{payment.roomNo ? (/^\d+$/.test(payment.roomNo) ? formatNumber(Number(payment.roomNo), language) : payment.roomNo) : EMPTY_VALUE}</strong>
+            </div>
+            <div className="drawer-details__info">
+              <span>{t('paymentsPage.details.guest')}</span>
+              <strong>{payment.guestName ?? EMPTY_VALUE}</strong>
+            </div>
+            <div className="drawer-details__info">
+              <span>{t('paymentsPage.details.method')}</span>
+              <strong>{methodKey ? t(methodKey) : payment.method}</strong>
+            </div>
+            <div className="drawer-details__info">
+              <span>{t('paymentsPage.details.time')}</span>
+              <strong>{formatPaymentTime(payment.paidAt, language)} · {formatPaymentDate(payment.paidAt, language)}</strong>
+            </div>
+            <div className="drawer-details__info">
+              <span>{t('paymentsPage.details.reference')}</span>
+              <strong className="payment-details__mono">{reference}</strong>
+            </div>
+            <div className="drawer-details__info">
+              <span>{t('paymentsPage.details.staff')}</span>
+              <strong>{payment.recordedBy ?? EMPTY_VALUE}</strong>
+            </div>
+          </div>
 
-      <div className="al-drawer__grid">
-        <div className="al-drawer__field">
-          <span>اسم الصاحب</span>
-          <strong>{payment.guestName ?? '—'}</strong>
-        </div>
-        <div className="al-drawer__field">
-          <span>رقم الغرفة</span>
-          <strong>{payment.roomNo ? toArabicDigits(payment.roomNo) : '—'}</strong>
-        </div>
-        <div className="al-drawer__field">
-          <span>وقت الإنشاء</span>
-          <strong>{formatDateTime(payment.paidAt, 'ar')}</strong>
-        </div>
-        <div className="al-drawer__field">
-          <span>طريقة الدفع</span>
-          <strong>{methodLabel(payment.method)}</strong>
-        </div>
-        <div className="al-drawer__field">
-          <span>العملة</span>
-          <strong>جنيه مصري (EGP)</strong>
-        </div>
-        <div className="al-drawer__field">
-          <span>رقم المرجع</span>
-          <strong>{reference}</strong>
-        </div>
-      </div>
+          <section>
+            <h3 className="drawer-details__heading">{t('paymentsPage.details.notes')}</h3>
+            {payment.notes && <p className="drawer-details__box payment-details__saved-note">{payment.notes}</p>}
+            <textarea
+              className="drawer-details__textarea"
+              aria-label={t('paymentsPage.details.notes')}
+              placeholder={t('paymentsPage.details.notesPh')}
+              value={note}
+              onChange={(event) => setNote(event.target.value)}
+            />
+          </section>
 
-      <div className="al-drawer__notes">
-        <h3>ملاحظات</h3>
-        <textarea
-          aria-label="ملاحظات الدفعة"
-          placeholder="أضف ملاحظة حول هذه الدفعة…"
-          value={note}
-          onChange={(event) => setNote(event.target.value)}
-        />
-      </div>
+          <div className="drawer-details__actions drawer-details__actions--three">
+            <button type="button" className="drawer-details__action" onClick={handleAddReceipt}>
+              <FileText aria-hidden="true" />
+              {t('paymentsPage.details.receipt')}
+            </button>
+            <button type="button" className="drawer-details__action" onClick={handleExport}>
+              <Upload aria-hidden="true" />
+              {t('paymentsPage.details.export')}
+            </button>
+            <button type="button" className="drawer-details__action" onClick={handleCashierLog} aria-pressed={showReceipt}>
+              <Receipt aria-hidden="true" />
+              {t('paymentsPage.details.cashierLog')}
+            </button>
+          </div>
 
-      <div className="al-drawer__actions">
-        <button type="button" className="al-drawer__action" onClick={handleCashierLog}>
-          <ReceiptIcon />
-          سجل الكاشير
-        </button>
-        <button type="button" className="al-drawer__action" onClick={handleExport}>
-          <ExportIcon />
-          تصدير
-        </button>
-        <button type="button" className="al-drawer__action" onClick={handleAddReceipt}>
-          <NoteIcon />
-          إضافة إيصال
-        </button>
-      </div>
-
-      {showReceipt && (
-        <div className="al-drawer__receipt-slot">
-          <ReceiptView payment={payment} />
+          {showReceipt && (
+            <div className="payment-details__receipt">
+              <ReceiptView payment={payment} />
+            </div>
+          )}
         </div>
       )}
-
-      <div className="al-drawer__footer">
-        <button type="button" className="al-btn al-btn--white" onClick={onClose}>
-          إغلاق
-        </button>
-        <button type="button" className="al-btn al-btn--green" onClick={handleSendReceipt}>
-          <ReceiptIcon />
-          إرسال إيصال
-        </button>
-      </div>
-    </div>
+    </Drawer>
   );
 }

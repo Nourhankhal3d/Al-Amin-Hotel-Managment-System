@@ -199,7 +199,8 @@
       "revenue": "Revenue",
       "pending": "Pending tasks",
       "completed": "Tasks completed",
-      "arrivals": "Arrivals"
+      "arrivals": "Arrivals",
+      "openSummary": "Open shift summary"
     },
     "empty": "No data to display right now",
     "loadError": "Could not load dashboard data"
@@ -409,6 +410,7 @@
   "phonePlaceholder": "+20 100 000 0000",
   "roleLabel": "Job Role",
   "forgotPassword": "Forgot Password?",
+  "forgotPasswordSend": "Send",
   "forgotPasswordTitle": "Reset Password",
   "forgotPasswordDesc": "Enter your email to receive a password reset link",
   "forgotPasswordSuccess": "Password reset link sent to your email address",
@@ -680,5 +682,433 @@
   "hkConfirmDone": "Confirm task completed",
   "hkSearchRoomCleaner": "Search by room or cleaner name",
   "hkToastDone": "Task marked as completed",
-  "mtResolvedAt": "Resolved at"
+  "mtResolvedAt": "Resolved at",
+  "paymentsPage": {
+    "eyebrow": "Payments",
+    "title": "Payments log",
+    "description": "Record and track every payment received during the current shift.",
+    "export": "Export",
+    "add": "Add payment",
+    "addSoon": "Adding payments will be available through the server — coming soon",
+    "noExport": "There is no data to export",
+    "exported": "Exported {count} payments",
+    "loading": "Loading payments",
+    "loadError": "Could not load payments",
+    "retry": "Try again",
+    "stats": {
+      "today": "Today's revenue",
+      "cash": "Cash",
+      "instapay": "InstaPay",
+      "pending": "Pending payments",
+      "count": "Transactions",
+      "vodafone": "Vodafone Cash"
+    },
+    "revenue": {
+      "label": "Shift revenue",
+      "hint": "Includes every payment recorded during the current shift.",
+      "cash": "Cash",
+      "wallets": "InstaPay & Vodafone Cash",
+      "chartLabel": "Shift revenue chart"
+    },
+    "filters": {
+      "search": "Search by guest or transaction number",
+      "room": "Room",
+      "method": "Payment method",
+      "date": "Date",
+      "status": "Status",
+      "all": "All",
+      "today": "Today",
+      "week": "Last 7 days",
+      "month": "Last 30 days",
+      "reset": "Reset"
+    },
+    "table": {
+      "title": "Recent transactions",
+      "subtitle": "A clear financial log of every payment this shift",
+      "count": "{count} transactions",
+      "summary": "Showing {rows} of {total} transactions",
+      "empty": "No matching payments",
+      "emptyDesc": "Try changing the filters.",
+      "reference": "Transaction no.",
+      "room": "Room",
+      "guest": "Guest name",
+      "amount": "Amount",
+      "method": "Method",
+      "time": "Received at",
+      "status": "Status",
+      "actions": "Actions",
+      "open": "Open transaction {ref}"
+    },
+    "method": {
+      "cash": "Cash",
+      "instapay": "InstaPay",
+      "vodafone": "Vodafone Cash"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "inProgress": "In progress",
+      "cancelled": "Refunded"
+    },
+    "details": {
+      "eyebrow": "Payment details",
+      "amount": "Amount received",
+      "room": "Room",
+      "guest": "Guest name",
+      "method": "Payment method",
+      "time": "Received at",
+      "reference": "Reference",
+      "staff": "Staff",
+      "notes": "Notes",
+      "notesPh": "Add a note about this payment…",
+      "receipt": "Create receipt",
+      "export": "Export",
+      "cashierLog": "Cashier log",
+      "close": "Close",
+      "send": "Send receipt",
+      "exported": "Payment exported",
+      "receiptShown": "Receipt ready to print or send"
+    }
+  },
+  "handoverPage": {
+    "eyebrow": "Shift handover",
+    "title": "End shift",
+    "description": "Review today's activity before sending the handover report to the next receptionist.",
+    "export": "Export",
+    "preparing": "Preparing report...",
+    "submit": "Send handover",
+    "submitting": "Sending...",
+    "submitted": "Handover sent",
+    "loading": "Loading shift summary...",
+    "noShift": "No active shift",
+    "noShiftDesc": "Shift details will appear here once the shift starts.",
+    "loadError": "Could not load the shift",
+    "retry": "Try again",
+    "actionError": "Could not complete the action",
+    "info": {
+      "staff": "Receptionist",
+      "shift": "Current shift",
+      "hours": "Working hours",
+      "date": "Date",
+      "readiness": "Handover readiness",
+      "active": "Shift is active",
+      "handedOver": "Shift handed over"
+    },
+    "shiftType": {
+      "morning": "Morning",
+      "evening": "Evening",
+      "night": "Night"
+    },
+    "completed": {
+      "title": "Completed activity",
+      "subtitle": "What was done during this shift",
+      "badge": "Performance summary",
+      "arrivals": "Check-ins",
+      "departures": "Check-outs",
+      "rooms": "Rooms updated",
+      "cleaning": "Cleaning done",
+      "maintenance": "Maintenance resolved"
+    },
+    "pending": {
+      "title": "Pending items",
+      "subtitle": "Need follow-up in the next shift",
+      "count": "{count} items",
+      "cleaning": "Pending cleaning",
+      "maintenance": "Open maintenance",
+      "payments": "Pending payments",
+      "total": "Total pending items",
+      "allClear": "Nothing pending"
+    },
+    "finance": {
+      "title": "Financial summary",
+      "subtitle": "Total collected this shift",
+      "total": "Total revenue",
+      "cash": "Cash",
+      "instapay": "InstaPay",
+      "vodafone": "Vodafone Cash"
+    },
+    "timeline": {
+      "title": "Shift timeline",
+      "subtitle": "Every activity recorded automatically",
+      "cleaningDone": "Cleaning task completed",
+      "cleaningAssigned": "Cleaning task assigned",
+      "maintenanceResolved": "Maintenance issue resolved",
+      "maintenanceReported": "Maintenance issue reported",
+      "room": "Room {room}",
+      "empty": "No activity yet",
+      "emptyDesc": "Operations will appear here as they are recorded."
+    },
+    "notes": {
+      "title": "Notes for the next shift",
+      "subtitle": "Add anything the next receptionist should know",
+      "optional": "Optional",
+      "placeholder": "Write your notes for the next receptionist..."
+    },
+    "footer": {
+      "eyebrow": "Performance summary",
+      "progress": "{percent} of shift tasks completed",
+      "done": "Shift handed over successfully",
+      "message": "Check the pending items before sending; records can't be edited after the handover.",
+      "draft": "Save as draft",
+      "draftUnavailable": "Saving a draft is not available",
+      "report": "Create report"
+    },
+    "confirm": {
+      "title": "End the shift?",
+      "description": "Are you sure you want to send today's handover report? You won't be able to edit the records after sending.",
+      "confirm": "Confirm and send",
+      "cancel": "Cancel"
+    }
+  },
+  "reportPage": {
+    "eyebrow": "Official report · AL AMIN HOTEL",
+    "title": "Shift report",
+    "description": "Review the shift summary and create a professional report to save and share.",
+    "logoAlt": "Al-Amin Hotel logo",
+    "pdf": "Create PDF",
+    "print": "Print",
+    "export": "Export",
+    "share": "Share",
+    "savePdf": "Save PDF",
+    "back": "Back to dashboard",
+    "loading": "Loading shift report...",
+    "loadError": "Could not load the shift report.",
+    "shareTitle": "Shift report",
+    "shareText": "Shift report - {date} - Total collected: {total}",
+    "linkCopied": "Report link copied",
+    "shareUnavailable": "Sharing is not available in this browser",
+    "shareFailed": "Could not share the report",
+    "meta": {
+      "label": "Shift details",
+      "staff": "Staff",
+      "role": "Job title",
+      "shift": "Shift",
+      "date": "Date",
+      "start": "Shift start",
+      "end": "Shift end"
+    },
+    "highlight": {
+      "label": "Shift performance summary",
+      "eyebrow": "Executive summary",
+      "title": "An organized shift with great performance",
+      "message": "Operational tasks were completed and guest requests were followed up during the shift.",
+      "score": "Performance score",
+      "checkIns": "Check-ins",
+      "checkOuts": "Check-outs",
+      "tasks": "Tasks completed",
+      "requests": "Guest requests"
+    },
+    "activity": {
+      "title": "Shift indicators",
+      "subtitle": "Activities and services delivered",
+      "checkIns": "Check-ins",
+      "checkOuts": "Check-outs",
+      "housekeeping": "Housekeeping tasks",
+      "maintenance": "Maintenance requests",
+      "reservations": "New reservations"
+    },
+    "completion": {
+      "title": "Completion summary",
+      "subtitle": "Share of work completed during the shift",
+      "score": "Performance score",
+      "tasks": "Tasks completed",
+      "requests": "Requests followed up"
+    },
+    "finance": {
+      "title": "Financial summary",
+      "subtitle": "Total payments received during the shift",
+      "total": "Total collected",
+      "cash": "Cash",
+      "instapay": "InstaPay",
+      "vodafone": "Vodafone Cash",
+      "split": "Payment method split"
+    },
+    "operations": {
+      "title": "Operations summary",
+      "subtitle": "Key numbers recorded this shift",
+      "done": "Done",
+      "recorded": "Recorded",
+      "followUp": "Follow-up",
+      "completed": "Completed",
+      "tasks": "Tasks",
+      "reservations": "Reservations",
+      "requests": "Guest requests",
+      "checkOuts": "Check-outs"
+    },
+    "timeline": {
+      "title": "Shift activity timeline",
+      "subtitle": "The main events and actions of the day",
+      "empty": "No events recorded for this shift."
+    },
+    "performance": {
+      "title": "Performance overview",
+      "subtitle": "Operational completion indicators",
+      "guests": "Guest movement",
+      "housekeeping": "Housekeeping tasks",
+      "maintenance": "Maintenance requests",
+      "reservations": "New reservations"
+    },
+    "notes": {
+      "title": "Notes and handover",
+      "subtitle": "Work notes for the staff and the next shift",
+      "empty": "No additional notes for this shift."
+    },
+    "csv": {
+      "item": "Item",
+      "value": "Value",
+      "date": "Report date",
+      "staff": "Staff",
+      "shift": "Shift",
+      "checkIns": "Check-ins",
+      "checkOuts": "Check-outs",
+      "tasks": "Tasks completed",
+      "total": "Total collected (EGP)",
+      "cash": "Cash (EGP)",
+      "instapay": "InstaPay (EGP)",
+      "vodafone": "Vodafone Cash (EGP)"
+    },
+    "sample": {
+      "role": "Receptionist",
+      "shift": "Morning shift",
+      "notes": "All tasks were handed over and the room and payment logs were reviewed. No urgent notes for the next shift.",
+      "e1": "Shift started",
+      "e1d": "Took over the front desk and reviewed reservations",
+      "e2": "Check-in",
+      "e2d": "Guests checked in to rooms 102 and 204",
+      "e3": "Payment recorded",
+      "e3d": "Collected EGP 3,200 — room 304",
+      "e4": "Housekeeping completed",
+      "e4d": "12 rooms prepared for guests",
+      "e5": "Shift handover",
+      "e5d": "Reviewed the cash box and operating notes"
+    }
+  },
+  "profilePage": {
+    "eyebrow": "Operations account",
+    "title": "Receptionist account",
+    "subtitle": "Receptionist • Morning shift",
+    "location": "Al-Amin Hotel · Aswan, Egypt",
+    "logoAlt": "Al-Amin Hotel logo",
+    "preferences": "Personal preferences",
+    "edit": "Edit profile",
+    "saved": "Profile saved",
+    "stats": {
+      "shift": "Current shift",
+      "shiftValue": "Morning",
+      "shiftHint": "07:00 AM — 04:00 PM",
+      "tasks": "Tasks logged",
+      "tasksHint": "11 completed",
+      "rooms": "Rooms followed up",
+      "roomsHint": "During this shift",
+      "shifts": "Past shifts",
+      "shiftsHint": "Last 30 days"
+    },
+    "account": {
+      "title": "Account and contact",
+      "subtitle": "Personal details you can edit",
+      "active": "Active account",
+      "role": "Role",
+      "roleValue": "Receptionist",
+      "account": "Account",
+      "accountValue": "Receptionist account",
+      "email": "Email",
+      "phone": "Phone",
+      "shift": "Current shift",
+      "shiftValue": "Morning",
+      "lastLogin": "Last sign-in",
+      "lastLoginValue": "Today, 06:52 AM"
+    },
+    "activity": {
+      "title": "Recent activity",
+      "subtitle": "Latest actions recorded on this account",
+      "payment": "Payment received",
+      "paymentDesc": "Room 304 · EGP 3,200 · InstaPay",
+      "cleaning": "Cleaning task assigned",
+      "cleaningDesc": "Room 207 · Assigned to a cleaner",
+      "maintenance": "Maintenance issue reported",
+      "maintenanceDesc": "Room 112 · Air conditioning"
+    },
+    "tasks": {
+      "title": "Assigned operational tasks",
+      "subtitle": "Tasks for the current shift",
+      "count": "{count} tasks",
+      "arrival": "Follow up arrival for room 208",
+      "payment": "Confirm payment for room 304",
+      "maintenance": "Follow up issue in room 112",
+      "following": "In follow-up",
+      "done": "Completed",
+      "pending": "Pending"
+    },
+    "history": {
+      "title": "Shift history",
+      "subtitle": "Latest recorded shifts",
+      "morning": "Morning",
+      "evening": "Evening",
+      "night": "Night"
+    },
+    "actions": {
+      "password": "Change password",
+      "notifications": "Notification preferences",
+      "switch": "Switch account",
+      "logout": "Log out"
+    }
+  },
+  "settingsPage": {
+    "eyebrow": "Personal preferences",
+    "title": "Settings",
+    "description": "Manage your account, language, notifications and appearance without changing hotel settings.",
+    "save": "Save preferences",
+    "export": "Export",
+    "saved": "Preferences saved",
+    "exported": "Preferences exported",
+    "permission": {
+      "title": "Receptionist account permissions",
+      "message": "You can change your personal preferences only. Hotel, room and shift settings are managed by the manager account."
+    },
+    "nav": {
+      "label": "Settings sections",
+      "account": "Account",
+      "profile": "Profile",
+      "language": "Language",
+      "notifications": "Notifications",
+      "appearance": "Appearance",
+      "preferences": "Personal preferences",
+      "security": "Security",
+      "switch": "Switch account"
+    },
+    "account": {
+      "title": "Account",
+      "subtitle": "Personal account settings",
+      "badge": "Personal",
+      "name": "Display name",
+      "email": "Email",
+      "phone": "Phone number",
+      "role": "Role",
+      "roleValue": "Receptionist — view only"
+    },
+    "notifications": {
+      "title": "Operational notifications",
+      "subtitle": "Choose the alerts related to your shift tasks",
+      "hint": "Alert when there is a shift-related update",
+      "rooms": "Room updates",
+      "housekeeping": "Cleaning reports",
+      "maintenance": "Maintenance reports",
+      "payments": "Payments",
+      "pending": "Pending tasks",
+      "handover": "Shift handover"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "language": "Language"
+    },
+    "security": {
+      "title": "Password and security",
+      "subtitle": "Last changed 42 days ago",
+      "change": "Change password",
+      "soon": "Changing the password will be available through the server"
+    }
+  }
 }

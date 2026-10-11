@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useLanguage } from '../../core/i18n/useLanguage';
 import { formatNumber } from '../../utils/format';
 import './Table.css';
 
@@ -10,7 +11,7 @@ interface TableProps<T extends string> {
 }
 
 export function Table<T extends string>({ columns, rows, emptyMessage = 'No records found', className = '' }: TableProps<T>) {
-  const language = document.documentElement.lang === 'en' ? 'en' : 'ar';
+  const { language } = useLanguage();
   const formatCell = (value: unknown): ReactNode => {
     if (typeof value === 'number') return formatNumber(value, language);
     if (typeof value === 'string' && /^\d+(?:\.\d+)?$/.test(value)) return formatNumber(Number(value), language);

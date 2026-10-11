@@ -1,83 +1,77 @@
-import { SearchIcon } from '../../../components/ui/Icons';
+import { FilterBar } from '../../../components/common/FilterBar';
+import { Select } from '../../../components/ui/Select';
+import { getTranslation, type Language } from '../../../core/i18n';
 import { PAYMENT_METHODS } from '../../../core/constants/paymentMethods';
 import { STATUS } from '../../../core/constants/status';
+import { formatNumber } from '../../../utils/format';
+import { methodLabelKey, statusLabelKey } from '../utils/paymentsLabels';
+import { rangeToDates, type PaymentsDateRange } from '../utils/paymentsDateRange';
+
+export type { PaymentsDateRange } from '../utils/paymentsDateRange';
 
 export interface PaymentsFilterValues {
   query: string;
+  room: string;
   method: string;
   status: string;
+  /** Picked from the "date" dropdown; turned into from/to by the page */
+  range: PaymentsDateRange;
   from: string;
   to: string;
 }
 
 interface PaymentsFiltersProps {
+  language: Language;
   values: PaymentsFilterValues;
+  roomOptions: string[];
   onChange: (values: PaymentsFilterValues) => void;
   onReset: () => void;
 }
 
-export function PaymentsFilters({ values, onChange, onReset }: PaymentsFiltersProps) {
+export function PaymentsFilters({ language, values, roomOptions, onChange, onReset }: PaymentsFiltersProps) {
+  const t = (key: string) => getTranslation(language, key);
   const update = (patch: Partial<PaymentsFilterValues>) => onChange({ ...values, ...patch });
+  const all = { value: 'all', label: t('paymentsPage.filters.all') };
+  const label = (key: string | null, fallback: string) => (key ? t(key) : fallback);
 
   return (
-    <section className="al-card al-filters" aria-label="عوامل تصفية المدفوعات">
-      <div className="al-filters__search">
-        <SearchIcon />
-        <input
-          type="search"
-          className="al-input al-input--search"
-          aria-label="بحث"
-          placeholder="ابحث باسم الضيف أو رقم الفاتورة"
-          value={values.query}
-          onChange={(event) => update({ query: event.target.value })}
-        />
-      </div>
-
-      <div className="al-filters__row">
-        <select
-          className="al-select"
-          aria-label="طريقة الدفع"
-          value={values.method}
-          onChange={(event) => update({ method: event.target.value })}
-        >
-          <option value="all">كل الطرق</option>
-          {Object.values(PAYMENT_METHODS).map((method) => (
-            <option key={method} value={method}>{method}</option>
-          ))}
-        </select>
-
-        <select
-          className="al-select"
-          aria-label="حالة الدفع"
-          value={values.status}
-          onChange={(event) => update({ status: event.target.value })}
-        >
-          <option value="all">كل الحالات</option>
-          {Object.values(STATUS).map((status) => (
-            <option key={status} value={status}>{status}</option>
-          ))}
-        </select>
-
-        <input
-          type="date"
-          className="al-input al-input--date"
-          aria-label="من تاريخ"
-          value={values.from}
-          onChange={(event) => update({ from: event.target.value })}
-        />
-
-        <input
-          type="date"
-          className="al-input al-input--date"
-          aria-label="إلى تاريخ"
-          value={values.to}
-          onChange={(event) => update({ to: event.target.value })}
-        />
-
-        <button type="button" className="al-link-btn" onClick={onReset}>
-          عرض سريع
-        </button>
-      </div>
-    </section>
+    <FilterBar
+      columns={5}
+      value={values.query}
+      onChange={(query) => update({ query })}
+      placeholder={t('paymentsPage.filters.search')}
+      onReset={onReset}
+      resetLabel={t('paymentsPage.filters.reset')}
+    >
+      <Select
+        label={t('paymentsPage.filters.room')}
+        value={values.room}
+        options={[all, ...roomOptions.map((room) => ({ value: room, label: /^\d+$/.test(room) ? formatNumber(Number(room), language) : room }))]}
+        onChange={(room) => update({ room })}
+      />
+      <Select
+        label={t('paymentsPage.filters.method')}
+        value={values.method}
+        options={[all, ...Object.values(PAYMENT_METHODS).map((method) => ({ value: method, label: label(methodLabelKey(method), method) }))]}
+        onChange={(method) => update({ method })}
+      />
+      <Select
+        label={t('paymentsPage.filters.date')}
+        value={values.range}
+        options={[
+          all,
+          { value: 'today', label: t('paymentsPage.filters.today') },
+          { value: 'week', label: t('paymentsPage.filters.week') },
+          { value: 'month', label: t('paymentsPage.filters.month') },
+        ]}
+        onChange={(range) => update({ range: range as PaymentsDateRange, ...rangeToDates(range as PaymentsDateRange) })}
+      />
+      <Select
+        label={t('paymentsPage.filters.status')}
+        value={values.status}
+        options={[all, ...Object.values(STATUS).map((status) => ({ value: status, label: label(statusLabelKey(status), status) }))]}
+        onChange={(status) => update({ status })}
+      />
+    </FilterBar>
   );
 }

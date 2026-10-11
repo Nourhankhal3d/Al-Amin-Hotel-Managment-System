@@ -12,7 +12,6 @@ import {
   HK_NOTES_MAX_LENGTH,
   PRIORITY_LABEL_KEY,
   PRIORITY_OPTIONS,
-  ROOM_OPTIONS,
 } from '../constants/housekeeping.constants';
 import {
   EMPTY_NEW_TASK,
@@ -33,10 +32,12 @@ interface TaskFormDrawerProps {
   onClose: () => void;
   onSubmit: (body: CleaningTaskCreate) => void;
   isSaving: boolean;
+  /** Room numbers from GET /rooms (empty while loading) */
+  roomOptions: string[];
 }
 
 // The parent remounts this component (via `key`) every time it opens, so the form always starts empty.
-export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: TaskFormDrawerProps) {
+export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving, roomOptions }: TaskFormDrawerProps) {
   const t = (key: string) => getTranslation(language, key);
   const baseId = useId();
   const fieldId = (field: keyof NewTaskFormValues) => `${baseId}-${field}`;
@@ -48,7 +49,7 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: 
   const setField = <K extends keyof NewTaskFormValues>(field: K, value: NewTaskFormValues[K]) => {
     const next = { ...values, [field]: value };
     setValues(next);
-    if (submitted) setErrors(validateNewTask(next));
+    if (submitted) setErrors(validateNewTask(next, roomOptions));
   };
 
   const errorText = (field: keyof NewTaskFormValues) => {
@@ -62,7 +63,7 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: 
     event.preventDefault();
     if (isSaving) return;
     setSubmitted(true);
-    const nextErrors = validateNewTask(values);
+    const nextErrors = validateNewTask(values, roomOptions);
     setErrors(nextErrors);
     if (hasErrors(nextErrors)) {
       // Take the user to the first field that needs fixing
@@ -97,7 +98,7 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving }: 
             id={fieldId('roomNumber')}
             label={t('colRoom')}
             value={values.roomNumber}
-            options={ROOM_OPTIONS.map((room) => ({ value: room, label: formatNumber(Number(room), language) }))}
+            options={roomOptions.map((room) => ({ value: room, label: formatNumber(Number(room), language) }))}
             inputMode="numeric"
             placeholder={t('selectRoom')}
             noResultsLabel={t('hkRoomNoResults')}

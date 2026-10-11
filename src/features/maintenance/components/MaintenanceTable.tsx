@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
-import { Card } from '../../../components/ui/Card';
+import { TableCard } from '../../../components/common/TableCard';
 import { Pagination } from '../../../components/ui/Pagination';
 import { Table } from '../../../components/ui/Table';
 import { getTranslation, type Language } from '../../../core/i18n';
@@ -13,7 +13,6 @@ import {
 } from '../constants/maintenance.constants';
 import type { MaintenanceRequest } from '../types/maintenance.types';
 import { formatReference, formatRequestTime, formatTimeAgo, lastUpdateOf } from '../utils/maintenanceDisplay';
-import './MaintenanceTable.css';
 
 interface MaintenanceTableProps {
   requests: MaintenanceRequest[];
@@ -38,7 +37,7 @@ export function MaintenanceTable({ requests, totalRequests, language, page, tota
       <span className="maintenance-table__reference">{formatReference((row as MaintenanceRequest).issue_id, language)}</span>
     ) },
     { key: 'room_id', label: t('colRoom'), render: (row: unknown) => (
-      <span className="maintenance-table__room">{formatNumber((row as MaintenanceRequest).room_id, language)}</span>
+      <span className="table-card__chip maintenance-table__room">{formatNumber((row as MaintenanceRequest).room_id, language)}</span>
     ) },
     { key: 'problem', label: t('mtColIssue'), render: (row: unknown) => (
       <span className="maintenance-table__issue">{(row as MaintenanceRequest).problem}</span>
@@ -58,7 +57,7 @@ export function MaintenanceTable({ requests, totalRequests, language, page, tota
       return (
         <button
           type="button"
-          className="maintenance-table__open"
+          className="table-card__open maintenance-table__open"
           aria-label={t('mtOpenRequest').replace('{room}', formatNumber(request.room_id, language))}
           onClick={() => onOpenRequest(request.issue_id)}
         >
@@ -69,18 +68,12 @@ export function MaintenanceTable({ requests, totalRequests, language, page, tota
   ];
 
   return (
-    <Card className="maintenance-table-card">
-      <header className="maintenance-table-card__header">
-        <div>
-          <h2>{t('mtListTitle')}</h2>
-          <p>{t('mtListSubtitle')}</p>
-        </div>
-        <span className="maintenance-table-card__count">
-          {formatNumber(totalRequests, language)} {t('mtListCount')}
-        </span>
-      </header>
-      <Table columns={columns} rows={requests} emptyMessage={t('mtEmpty')} className="maintenance-table" />
-      <footer className="maintenance-table-card__footer">
+    <TableCard
+      className="maintenance-table-card"
+      title={t('mtListTitle')}
+      subtitle={t('mtListSubtitle')}
+      badge={`${formatNumber(totalRequests, language)} ${t('mtListCount')}`}
+      footer={(
         <Pagination
           page={page}
           totalPages={totalPages}
@@ -89,8 +82,10 @@ export function MaintenanceTable({ requests, totalRequests, language, page, tota
           previousLabel={t('pagination.previous')}
           nextLabel={t('pagination.next')}
           navigationLabel={t('pagination.label')}
-        />
-      </footer>
-    </Card>
+          />
+      )}
+    >
+      <Table columns={columns} rows={requests} emptyMessage={t('mtEmpty')} className="maintenance-table" />
+    </TableCard>
   );
 }

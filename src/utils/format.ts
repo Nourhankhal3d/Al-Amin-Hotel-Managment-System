@@ -16,8 +16,9 @@ export function formatCurrency(value: number, language: Language): string {
   }).format(value);
 }
 
+/** `68` -> `٦٨٪` / `68%` (Arabic uses the Arabic percent sign, as in the prototype) */
 export function formatPercent(value: number, language: Language): string {
-  return `${formatNumber(value, language, 1)}%`;
+  return `${formatNumber(value, language, 1)}${language === 'ar' ? '٪' : '%'}`;
 }
 
 export function formatClock(date: Date, language: Language): string {

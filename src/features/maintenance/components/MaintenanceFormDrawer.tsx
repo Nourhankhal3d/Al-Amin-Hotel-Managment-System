@@ -13,7 +13,6 @@ import {
   MT_PROBLEM_MIN_LENGTH,
   PRIORITY_LABEL_KEY,
   PRIORITY_OPTIONS,
-  ROOM_OPTIONS,
 } from '../constants/maintenance.constants';
 import {
   EMPTY_NEW_REQUEST,
@@ -34,10 +33,12 @@ interface MaintenanceFormDrawerProps {
   onClose: () => void;
   onSubmit: (body: MaintenanceIssueCreate) => void;
   isSaving: boolean;
+  /** Room numbers from GET /rooms (empty while loading) */
+  roomOptions: string[];
 }
 
 // The parent remounts this component (via `key`) every time it opens, so the form always starts empty.
-export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSaving }: MaintenanceFormDrawerProps) {
+export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSaving, roomOptions }: MaintenanceFormDrawerProps) {
   const t = (key: string) => getTranslation(language, key);
   const baseId = useId();
   const fieldId = (field: keyof NewRequestFormValues) => `${baseId}-${field}`;
@@ -49,7 +50,7 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
   const setField = <K extends keyof NewRequestFormValues>(field: K, value: NewRequestFormValues[K]) => {
     const next = { ...values, [field]: value };
     setValues(next);
-    if (submitted) setErrors(validateNewRequest(next));
+    if (submitted) setErrors(validateNewRequest(next, roomOptions));
   };
 
   const errorText = (field: keyof NewRequestFormValues) => {
@@ -65,7 +66,7 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
     event.preventDefault();
     if (isSaving) return;
     setSubmitted(true);
-    const nextErrors = validateNewRequest(values);
+    const nextErrors = validateNewRequest(values, roomOptions);
     setErrors(nextErrors);
     if (hasErrors(nextErrors)) {
       // Take the user to the first field that needs fixing
@@ -100,7 +101,7 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
             id={fieldId('roomNumber')}
             label={t('roomNumberLabel')}
             value={values.roomNumber}
-            options={ROOM_OPTIONS.map((room) => ({ value: room, label: formatNumber(Number(room), language) }))}
+            options={roomOptions.map((room) => ({ value: room, label: formatNumber(Number(room), language) }))}
             inputMode="numeric"
             placeholder={t('selectRoom')}
             noResultsLabel={t('mtRoomNoResults')}

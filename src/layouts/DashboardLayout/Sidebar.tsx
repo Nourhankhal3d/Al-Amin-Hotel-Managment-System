@@ -1,6 +1,7 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import { ArrowLeftRight, BedDouble, Clock, FileText, LayoutGrid, LogOut, Settings, Sparkles, User, Wallet, Wrench } from 'lucide-react';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { ArrowLeftRight, BedDouble, FileText, LayoutGrid, LogOut, Settings, Sparkles, User, Wallet, Wrench } from 'lucide-react';
 import { Logo } from '../../components/common/Logo';
+import { clearAuthSession } from '../../core/auth/authManager';
 import { ROUTES } from '../../core/constants/routes';
 import type { Language } from '../../core/i18n';
 import { getTranslation } from '../../core/i18n';
@@ -26,10 +27,16 @@ interface SidebarProps {
 
 export function Sidebar({ language }: SidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const t = (key: string) => getTranslation(language, key);
   const shiftEnds = t('sidebar.shiftEnds')
     .replace('{hours}', formatNumber(mockShiftSummary.remainingHours, language))
     .replace('{minutes}', formatNumber(mockShiftSummary.remainingMinutes, language));
+
+  function handleLogout() {
+    clearAuthSession();
+    navigate(ROUTES.login, { replace: true });
+  }
 
   return (
     <aside className="sidebar">
@@ -56,16 +63,14 @@ export function Sidebar({ language }: SidebarProps) {
       </nav>
 
       <section className="sidebar__shift-card" aria-label={t('sidebar.shiftTitle')}>
-        <div className="sidebar__shift-heading">
-          <span className="sidebar__shift-indicator" />
-          <span>{t('sidebar.shiftTitle')}</span>
-          <Clock aria-hidden="true" />
-        </div>
-        <strong>{shiftEnds}</strong>
-        <div className="sidebar__shift-track"><span style={{ width: `${mockShiftSummary.progressPercent}%` }} /></div>
+        <span className="sidebar__shift-copy">
+          <strong>{t('sidebar.shiftTitle')}</strong>
+          <span>{shiftEnds}</span>
+        </span>
+        <span className="sidebar__shift-indicator" aria-hidden="true" />
       </section>
 
-      <button type="button" className="sidebar__logout">
+      <button type="button" className="sidebar__logout" onClick={handleLogout}>
         <LogOut aria-hidden="true" />
         <span>{t('sidebar.logout')}</span>
       </button>

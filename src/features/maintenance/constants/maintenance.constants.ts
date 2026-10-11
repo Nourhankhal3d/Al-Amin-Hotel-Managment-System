@@ -19,9 +19,6 @@ export const NEXT_STATUSES: Record<MaintenanceIssueStatus, NonNullable<Maintenan
   resolved: [],
 };
 
-// TEMP: until rooms come from the API. TODO: load from /rooms (101-103 exist in the team mocks)
-export const ROOM_OPTIONS = ['101', '102', '103', '112', '202', '206', '207', '210', '305', '308', '312'];
-
 export const STATUS_TONE: Record<MaintenanceIssueStatus, BadgeTone> = {
   open: 'warning',
   in_progress: 'info',

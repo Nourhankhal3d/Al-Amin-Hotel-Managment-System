@@ -1,8 +1,7 @@
 // Same shape as the backend API (snake_case), as agreed with the data layer (Member 5).
-// TODO(merge): Priority and MaintenanceIssueStatus live in src/types/common.types.ts on the
-// data-layer branch; after the merge, import them from there and delete the two lines below.
-export type Priority = 'low' | 'medium' | 'high' | 'urgent';
-export type MaintenanceIssueStatus = 'open' | 'in_progress' | 'resolved';
+import type { MaintenanceIssueStatus, Priority } from '../../../types/common.types';
+
+export type { MaintenanceIssueStatus, Priority };
 
 export interface MaintenanceRequest {
   issue_id: number;
@@ -39,4 +38,9 @@ export interface MaintenanceFilters {
   priority: Priority | '';
   status: MaintenanceIssueStatus | '';
   page: number;
+}
+
+/** The only room field this page needs from GET /rooms */
+export interface RoomRef {
+  room_id: number;
 }

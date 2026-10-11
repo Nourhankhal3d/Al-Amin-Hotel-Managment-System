@@ -209,14 +209,14 @@ export function RoomsPage() {
   }
 
   if (roomsQuery.isPending || allRoomsQuery.isPending || statsQuery.isPending) {
-    return <div className="feature-page rooms-page"><PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')} className="rooms-page__hero" /><LoadingState label={t('rooms.table.loading')} /></div>;
+    return <div className="feature-page rooms-page"><PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')} /><LoadingState label={t('rooms.table.loading')} /></div>;
   }
 
   if (roomsQuery.isError || allRoomsQuery.isError || statsQuery.isError || !stats) {
     const queryError = roomsQuery.error ?? allRoomsQuery.error ?? statsQuery.error;
     return (
       <div className="feature-page rooms-page">
-        <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')} className="rooms-page__hero" />
+        <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')} />
         <ErrorState
           title={t('rooms.table.error')}
           message={queryError ? getErrorMessage(queryError, language) : t('rooms.table.error')}
@@ -239,16 +239,14 @@ export function RoomsPage() {
 
   return (
     <div className="feature-page rooms-page">
-      <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')} className="rooms-page__hero">
-        <div className="rooms-page__hero-actions">
-          <Button type="button" className="rooms-page__hero-add" onClick={openActivity}><Plus aria-hidden="true" />{t('rooms.addActivity')}</Button>
-          <Button variant="ghost" type="button" className="rooms-page__hero-export" onClick={downloadCsv}><FileText aria-hidden="true" />{t('rooms.export')}</Button>
-        </div>
+      <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')}>
+        <Button variant="glass" type="button" className="rooms-page__hero-export" onClick={downloadCsv}><FileText aria-hidden="true" />{t('rooms.export')}</Button>
+        <Button variant="gold" type="button" className="rooms-page__hero-add" onClick={openActivity}><Plus aria-hidden="true" />{t('rooms.addActivity')}</Button>
       </PageHero>
 
       <RoomsStatsRow stats={stats} language={language} />
 
-      <Card className="rooms-page__filters-card">
+      <Card className="filters-card">
         <RoomsFilters language={language} value={searchDraft} onSearchChange={setSearchDraft} filters={filters} onFilterChange={changeFilter} onReset={resetFilters} />
       </Card>
 

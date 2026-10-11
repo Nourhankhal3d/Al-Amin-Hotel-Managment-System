@@ -1,11 +1,15 @@
-import type { ReactNode } from 'react';
-import { CalcIcon, CardIcon, CashIcon, HashIcon, TransferIcon, WalletIcon } from '../../../components/ui/Icons';
+import { ArrowLeftRight, Clock, FileText, Smartphone, Wallet } from 'lucide-react';
+import { StatCard } from '../../../components/ui/StatCard';
+import { getTranslation, type Language } from '../../../core/i18n';
 import { PAYMENT_METHODS } from '../../../core/constants/paymentMethods';
-import { formatCompactMoney, formatMoney } from '../../../core/utils/numerals';
+import { STATUS } from '../../../core/constants/status';
+import { formatCompactAmount } from '../utils/paymentsFormat';
 import type { Payment } from '../types/payment.types';
+import './PaymentsSummary.css';
 
 interface PaymentsSummaryProps {
   payments: Payment[];
+  language: Language;
 }
 
 function totalOf(payments: Payment[], method?: string): number {
@@ -14,35 +18,19 @@ function totalOf(payments: Payment[], method?: string): number {
     .reduce((sum, payment) => sum + (Number.isFinite(payment.amount) ? payment.amount : 0), 0);
 }
 
-function StatTile({ label, value, icon, tone }: {
-  label: string;
-  value: string;
-  icon: ReactNode;
-  tone?: 'gold' | 'rose';
-}) {
-  return (
-    <div className="al-stat">
-      <div className="al-stat__body">
-        <span className="al-stat__label">{label}</span>
-        <strong className="al-stat__value">{value}</strong>
-      </div>
-      <span className={`al-stat__icon${tone ? ` al-stat__icon--${tone}` : ''}`}>{icon}</span>
-    </div>
-  );
-}
-
-export function PaymentsSummary({ payments }: PaymentsSummaryProps) {
-  const total = totalOf(payments);
-  const average = payments.length > 0 ? total / payments.length : 0;
+// Six cards in one row, in the order of the prototype
+export function PaymentsSummary({ payments, language }: PaymentsSummaryProps) {
+  const t = (key: string) => getTranslation(language, key);
+  const pending = payments.filter((payment) => payment.status === STATUS.pending).length;
 
   return (
-    <div className="al-stats">
-      <StatTile label="إجمالي القيمة" value={formatCompactMoney(total)} icon={<WalletIcon />} />
-      <StatTile label="نقداً" value={formatCompactMoney(totalOf(payments, PAYMENT_METHODS.cash))} icon={<CashIcon />} tone="gold" />
-      <StatTile label="بطاقات" value={formatCompactMoney(totalOf(payments, PAYMENT_METHODS.card))} icon={<CardIcon />} />
-      <StatTile label="تحويلات" value={formatCompactMoney(totalOf(payments, PAYMENT_METHODS.transfer))} icon={<TransferIcon />} tone="gold" />
-      <StatTile label="عدد العمليات" value={String(payments.length)} icon={<HashIcon />} />
-      <StatTile label="متوسط معاملة" value={formatMoney(average)} icon={<CalcIcon />} tone="rose" />
-    </div>
+    <section className="payments-summary" aria-label={t('paymentsPage.stats.today')}>
+      <StatCard label={t('paymentsPage.stats.today')} value={formatCompactAmount(totalOf(payments), language)} icon={<Wallet />} tone="green" />
+      <StatCard label={t('paymentsPage.stats.cash')} value={formatCompactAmount(totalOf(payments, PAYMENT_METHODS.cash), language)} icon={<Wallet />} tone="green" />
+      <StatCard label={t('paymentsPage.stats.instapay')} value={formatCompactAmount(totalOf(payments, PAYMENT_METHODS.card), language)} icon={<Smartphone />} tone="gold" />
+      <StatCard label={t('paymentsPage.stats.pending')} value={pending} icon={<Clock />} tone="gold" />
+      <StatCard label={t('paymentsPage.stats.count')} value={payments.length} icon={<ArrowLeftRight />} tone="green" />
+      <StatCard label={t('paymentsPage.stats.vodafone')} value={formatCompactAmount(totalOf(payments, PAYMENT_METHODS.transfer), language)} icon={<FileText />} tone="gold" />
+    </section>
   );
 }

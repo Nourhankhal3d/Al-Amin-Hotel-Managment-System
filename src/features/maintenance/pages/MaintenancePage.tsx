@@ -29,6 +29,7 @@ import {
 import {
   useCreateMaintenanceRequest,
   useMaintenanceRequests,
+  useRoomNumbers,
   useUpdateMaintenanceStatus,
 } from '../hooks/useMaintenanceRequests';
 import type {
@@ -78,6 +79,7 @@ export function MaintenancePage() {
   const requestsQuery = useMaintenanceRequests();
   const createRequest = useCreateMaintenanceRequest();
   const updateStatus = useUpdateMaintenanceStatus();
+  const roomsQuery = useRoomNumbers();
   const requests = useMemo(() => requestsQuery.data ?? [], [requestsQuery.data]);
 
   const selectedId = Number(searchParams.get('id'));
@@ -199,18 +201,18 @@ export function MaintenancePage() {
   }
 
   const hero = (actions?: boolean) => (
-    <PageHero eyebrow={t('maintenance')} title={t('mtHeroTitle')} description={t('mtHeroDesc')} className="maintenance-page__hero">
+    <PageHero eyebrow={t('maintenance')} title={t('mtHeroTitle')} description={t('mtHeroDesc')}>
       {actions && (
-        <div className="maintenance-page__hero-actions">
-          <Button variant="ghost" className="maintenance-page__hero-export" onClick={exportRequests}>
+        <>
+          <Button variant="glass" className="maintenance-page__hero-export" onClick={exportRequests}>
             <FileText aria-hidden="true" />
             {t('export')}
           </Button>
-          <Button className="maintenance-page__hero-add" onClick={openForm}>
+          <Button variant="gold" className="maintenance-page__hero-add" onClick={openForm}>
             <Plus aria-hidden="true" />
             {t('mtNewRequest')}
           </Button>
-        </div>
+        </>
       )}
     </PageHero>
   );
@@ -245,7 +247,7 @@ export function MaintenancePage() {
         <StatCard label={t('mtStatAverage')} value={stats.average} icon={<Timer size={20} aria-hidden="true" />} tone="amber" />
       </div>
 
-      <Card className="maintenance-page__filters-card">
+      <Card className="filters-card">
         <MaintenanceFilters
           language={language}
           value={searchDraft}
@@ -292,6 +294,7 @@ export function MaintenancePage() {
         onClose={closeDrawers}
         onSubmit={(body) => { void submitRequest(body); }}
         isSaving={createRequest.isPending}
+        roomOptions={roomsQuery.data ?? []}
       />
     </div>
   );

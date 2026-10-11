@@ -1,14 +1,13 @@
-import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import type { Language } from '../../core/i18n';
-import { useDirection } from '../../core/hooks/useDirection';
+import { useLanguage } from '../../core/i18n/useLanguage';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import './DashboardLayout.css';
 
+// The language lives in the shared LanguageProvider (saved in the browser), so the whole app,
+// including pages that read useLanguage() directly, switches together and keeps the choice after a refresh.
 export function DashboardLayout() {
-  const [language, setLanguage] = useState<Language>('ar');
-  useDirection(language);
+  const { language, setLanguage } = useLanguage();
 
   return (
     <div className="app-shell" lang={language} dir={language === 'ar' ? 'rtl' : 'ltr'}>

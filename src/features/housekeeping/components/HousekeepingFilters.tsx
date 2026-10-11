@@ -9,7 +9,6 @@ import {
   STATUS_OPTIONS,
 } from '../constants/housekeeping.constants';
 import type { HousekeepingFilterName, HousekeepingFilters as Filters } from '../types/housekeeping.types';
-import './HousekeepingFilters.css';
 
 interface HousekeepingFiltersProps {
   language: Language;
@@ -34,7 +33,14 @@ export function HousekeepingFilters({
   const all = { value: '', label: t('filterAll') };
 
   return (
-    <FilterBar className="housekeeping-filters" value={value} onChange={onSearchChange} placeholder={t('hkSearchRoomCleaner')}>
+    <FilterBar
+      columns={4}
+      value={value}
+      onChange={onSearchChange}
+      placeholder={t('hkSearchRoomCleaner')}
+      onReset={onReset}
+      resetLabel={t('filterReset')}
+    >
       <Select
         label={t('statusLabel')}
         value={filters.status}
@@ -53,9 +59,6 @@ export function HousekeepingFilters({
         options={[all, ...floorOptions.map((option) => ({ value: option, label: formatNumber(Number(option), language) }))]}
         onChange={(next) => onFilterChange('floor', next)}
       />
-      <button type="button" className="housekeeping-filters__reset" onClick={onReset}>
-        {t('filterReset')}
-      </button>
     </FilterBar>
   );
 }

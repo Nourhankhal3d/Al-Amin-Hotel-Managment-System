@@ -3,7 +3,8 @@ import './Button.css';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'ghost';
+  /** `gold` and `glass` are the two hero buttons (main action / secondary action on the green banner). */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'gold' | 'glass';
 }
 
 export function Button({ children, variant = 'primary', className = '', type = 'button', ...props }: ButtonProps) {

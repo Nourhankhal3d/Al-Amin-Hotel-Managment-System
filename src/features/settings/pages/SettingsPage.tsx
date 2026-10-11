@@ -1,338 +1,205 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  ArrowLeftRight,
+  Bell,
+  Check,
+  FileText,
+  Globe,
+  KeyRound,
+  Palette,
+  ShieldCheck,
+  SlidersHorizontal,
+  User,
+  UserCircle,
+  type LucideIcon,
+} from 'lucide-react';
+import { PageHero } from '../../../components/common/PageHero';
+import { Button } from '../../../components/ui/Button';
+import { Card } from '../../../components/ui/Card';
 import { Input } from '../../../components/ui/Input';
+import { useToast } from '../../../components/ui/ToastContext';
+import { getAuthSession } from '../../../core/auth/authManager';
+import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { useTheme } from '../../../core/theme/useTheme';
+import './SettingsPage.css';
+
+type SectionId = 'account' | 'notifications' | 'appearance' | 'security';
+type NotificationKey = 'rooms' | 'housekeeping' | 'maintenance' | 'payments' | 'pending' | 'handover';
+
+const NOTIFICATION_KEYS: NotificationKey[] = ['rooms', 'housekeeping', 'maintenance', 'payments', 'pending', 'handover'];
 
 export function SettingsPage() {
+  const navigate = useNavigate();
+  const toast = useToast();
   const { language, setLanguage, t } = useLanguage();
   const { themeMode, setThemeMode } = useTheme();
+  const session = getAuthSession();
 
-  const [activeTab, setActiveTab] = useState<'hotel' | 'shifts' | 'notifications' | 'account'>('hotel');
-  const [hotelName, setHotelName] = useState('فندق الأمين');
-  const [location, setLocation] = useState('أسوان، مصر');
-  const [floors, setFloors] = useState('3');
-  const [totalRooms, setTotalRooms] = useState('36');
-
-  // Notification states
-  const [notifs, setNotifs] = useState({
-    maintenance: true,
+  const [activeNav, setActiveNav] = useState('account');
+  const [account, setAccount] = useState({
+    name: session?.staffName || t('topbar.userName'),
+    email: 'reception@alaminhotel.com',
+    phone: '+20 100 000 0000',
+  });
+  const [notifications, setNotifications] = useState<Record<NotificationKey, boolean>>({
+    rooms: true,
     housekeeping: true,
+    maintenance: true,
     payments: true,
-    pendingTasks: true,
-    shiftHandover: true,
-    reports: false,
+    pending: true,
+    handover: true,
   });
 
-  const [savedSuccess, setSavedSuccess] = useState(false);
+  // Each nav item scrolls to its card; the profile and switch-account items go to their pages
+  const navItems: Array<{ id: string; label: string; icon: LucideIcon; target?: SectionId; onSelect?: () => void }> = [
+    { id: 'account', label: t('settingsPage.nav.account'), icon: User, target: 'account' },
+    { id: 'profile', label: t('settingsPage.nav.profile'), icon: UserCircle, onSelect: () => navigate(ROUTES.profile) },
+    { id: 'language', label: t('settingsPage.nav.language'), icon: Globe, target: 'appearance' },
+    { id: 'notifications', label: t('settingsPage.nav.notifications'), icon: Bell, target: 'notifications' },
+    { id: 'appearance', label: t('settingsPage.nav.appearance'), icon: Palette, target: 'appearance' },
+    { id: 'preferences', label: t('settingsPage.nav.preferences'), icon: SlidersHorizontal, target: 'notifications' },
+    { id: 'security', label: t('settingsPage.nav.security'), icon: ShieldCheck, target: 'security' },
+    { id: 'switch', label: t('settingsPage.nav.switch'), icon: ArrowLeftRight, onSelect: () => navigate(ROUTES.login) },
+  ];
 
-  function handleSave(e: React.FormEvent) {
-    e.preventDefault();
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+  function selectNav(item: (typeof navItems)[number]) {
+    setActiveNav(item.id);
+    if (item.onSelect) {
+      item.onSelect();
+      return;
+    }
+    if (item.target) document.getElementById(`settings-${item.target}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  function toggleNotifKey(key: keyof typeof notifs) {
-    setNotifs((prev) => ({ ...prev, [key]: !prev[key] }));
+  function handleSave() {
+    toast.notify(t('settingsPage.saved'), 'success');
   }
+
+  function handleExport() {
+    const content = JSON.stringify({ account, notifications, language, theme: themeMode }, null, 2);
+    const url = URL.createObjectURL(new Blob([content], { type: 'application/json' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'al-amin-preferences.json';
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.notify(t('settingsPage.exported'), 'success');
+  }
+
+  const pill = (active: boolean) => `settings-pills__option${active ? ' settings-pills__option--active' : ''}`;
 
   return (
-    <div className="figma-settings-page">
-      {/* Figma Header Banner */}
-      <div className="figma-settings-banner">
-        <div className="figma-banner__text">
-          <span className="figma-banner__tag">{t('systemPreferences')}</span>
-          <h1 className="figma-banner__title">{t('settings')}</h1>
-          <p className="figma-banner__desc">{t('settingsSubtitle')}</p>
-        </div>
-        <div className="figma-banner__actions">
-          <button type="button" className="figma-btn-export" onClick={() => alert(t('exportSettings'))}>
-            ⚡ {t('exportSettings')}
-          </button>
-          <button type="button" className="figma-btn-save-gold" onClick={handleSave}>
-            ✓ {t('save')}
-          </button>
+    <div className="feature-page settings-page">
+      <PageHero eyebrow={t('settingsPage.eyebrow')} title={t('settingsPage.title')} description={t('settingsPage.description')}>
+        <Button variant="glass" onClick={handleExport}><FileText aria-hidden="true" />{t('settingsPage.export')}</Button>
+        <Button variant="gold" onClick={handleSave}><Check aria-hidden="true" />{t('settingsPage.save')}</Button>
+      </PageHero>
+
+      <div className="settings-page__permission" role="note">
+        <Check aria-hidden="true" />
+        <div>
+          <strong>{t('settingsPage.permission.title')}</strong>
+          <span>{t('settingsPage.permission.message')}</span>
         </div>
       </div>
 
-      {savedSuccess && (
-        <div className="figma-alert figma-alert--success">
-          {t('settingsSaved')}
+      <div className="settings-page__layout">
+        <Card className="settings-nav">
+          <nav aria-label={t('settingsPage.nav.label')}>
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`settings-nav__item${activeNav === item.id ? ' settings-nav__item--active' : ''}`}
+                aria-current={activeNav === item.id ? 'true' : undefined}
+                onClick={() => selectNav(item)}
+              >
+                <item.icon aria-hidden="true" />
+                <span>{item.label}</span>
+              </button>
+            ))}
+          </nav>
+        </Card>
+
+        <div className="settings-page__content">
+          <Card className="settings-section" id="settings-account">
+            <header className="settings-section__heading">
+              <div><h2>{t('settingsPage.account.title')}</h2><p>{t('settingsPage.account.subtitle')}</p></div>
+              <span className="settings-section__pill">{t('settingsPage.account.badge')}</span>
+            </header>
+            <div className="settings-fields">
+              <label className="settings-field">
+                <span>{t('settingsPage.account.name')}</span>
+                <Input value={account.name} onChange={(event) => setAccount({ ...account, name: event.target.value })} />
+              </label>
+              <label className="settings-field">
+                <span>{t('settingsPage.account.email')}</span>
+                <Input type="email" value={account.email} onChange={(event) => setAccount({ ...account, email: event.target.value })} />
+              </label>
+              <label className="settings-field">
+                <span>{t('settingsPage.account.phone')}</span>
+                <Input type="tel" dir="ltr" value={account.phone} onChange={(event) => setAccount({ ...account, phone: event.target.value })} />
+              </label>
+              <label className="settings-field">
+                <span>{t('settingsPage.account.role')}</span>
+                <Input value={t('settingsPage.account.roleValue')} readOnly aria-readonly="true" />
+              </label>
+            </div>
+          </Card>
+
+          <Card className="settings-section" id="settings-notifications">
+            <header className="settings-section__heading">
+              <div><h2>{t('settingsPage.notifications.title')}</h2><p>{t('settingsPage.notifications.subtitle')}</p></div>
+            </header>
+            <div className="settings-toggles">
+              {NOTIFICATION_KEYS.map((key) => (
+                <label key={key} className="settings-toggle">
+                  <span className="settings-toggle__copy">
+                    <strong>{t(`settingsPage.notifications.${key}`)}</strong>
+                    <span>{t('settingsPage.notifications.hint')}</span>
+                  </span>
+                  <span className="settings-switch">
+                    <input
+                      type="checkbox"
+                      checked={notifications[key]}
+                      onChange={() => setNotifications((current) => ({ ...current, [key]: !current[key] }))}
+                    />
+                    <span aria-hidden="true" />
+                  </span>
+                </label>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="settings-section settings-section--bar" id="settings-appearance">
+            <div className="settings-bar-group">
+              <span>{t('settingsPage.appearance.title')}</span>
+              <div className="settings-pills" role="group" aria-label={t('settingsPage.appearance.title')}>
+                <button type="button" className={pill(themeMode === 'light')} aria-pressed={themeMode === 'light'} onClick={() => setThemeMode('light')}>{t('settingsPage.appearance.light')}</button>
+                <button type="button" className={pill(themeMode === 'dark')} aria-pressed={themeMode === 'dark'} onClick={() => setThemeMode('dark')}>{t('settingsPage.appearance.dark')}</button>
+                <button type="button" className={pill(themeMode === 'system')} aria-pressed={themeMode === 'system'} onClick={() => setThemeMode('system')}>{t('settingsPage.appearance.system')}</button>
+              </div>
+            </div>
+            <div className="settings-bar-group">
+              <span>{t('settingsPage.appearance.language')}</span>
+              <div className="settings-pills" role="group" aria-label={t('settingsPage.appearance.language')}>
+                <button type="button" className={pill(language === 'ar')} aria-pressed={language === 'ar'} onClick={() => setLanguage('ar')}>العربية</button>
+                <button type="button" className={pill(language === 'en')} aria-pressed={language === 'en'} onClick={() => setLanguage('en')}>English</button>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="settings-section settings-section--security" id="settings-security">
+            <span className="settings-section__icon"><KeyRound aria-hidden="true" /></span>
+            <div className="settings-section__security-copy">
+              <strong>{t('settingsPage.security.title')}</strong>
+              <span>{t('settingsPage.security.subtitle')}</span>
+            </div>
+            <Button variant="secondary" onClick={() => toast.notify(t('settingsPage.security.soon'), 'warning')}>{t('settingsPage.security.change')}</Button>
+          </Card>
         </div>
-      )}
-
-      {/* Settings Grid: Sidebar + Main Content */}
-      <div className="figma-settings-grid">
-        {/* Navigation Sidebar */}
-        <aside className="figma-settings-sidebar">
-          <button
-            type="button"
-            className={`figma-settings-nav-btn ${activeTab === 'account' ? 'active' : ''}`}
-            onClick={() => setActiveTab('account')}
-          >
-            <span className="nav-icon">👤</span> {t('account')}
-          </button>
-          <button
-            type="button"
-            className={`figma-settings-nav-btn ${activeTab === 'hotel' ? 'active' : ''}`}
-            onClick={() => setActiveTab('hotel')}
-          >
-            <span className="nav-icon">🏨</span> {t('hotelInfo')}
-          </button>
-          <button
-            type="button"
-            className={`figma-settings-nav-btn ${activeTab === 'shifts' ? 'active' : ''}`}
-            onClick={() => setActiveTab('shifts')}
-          >
-            <span className="nav-icon">🕒</span> {t('shiftConfig')}
-          </button>
-          <button
-            type="button"
-            className={`figma-settings-nav-btn ${activeTab === 'notifications' ? 'active' : ''}`}
-            onClick={() => setActiveTab('notifications')}
-          >
-            <span className="nav-icon">🔔</span> {t('notifications')}
-          </button>
-        </aside>
-
-        {/* Main Settings Sections */}
-        <main className="figma-settings-content">
-          {/* Section 1: Hotel Info */}
-          <section className="figma-section-card">
-            <div className="figma-section-header">
-              <div>
-                <h2>{t('hotelInfo')}</h2>
-                <p>{t('hotelInfoDesc')}</p>
-              </div>
-              <span className="figma-badge-auto">{t('autoSaved')}</span>
-            </div>
-
-            <form onSubmit={handleSave} className="figma-fields-grid">
-              <div className="figma-field-box">
-                <label>{t('hotelNameLabel')}</label>
-                <Input
-                  className="figma-input-style"
-                  value={hotelName}
-                  onChange={(e) => setHotelName(e.target.value)}
-                />
-              </div>
-
-              <div className="figma-field-box">
-                <label>{t('locationLabel')}</label>
-                <Input
-                  className="figma-input-style"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </div>
-
-              <div className="figma-field-box">
-                <label>{t('totalRoomsLabel')}</label>
-                <Input
-                  className="figma-input-style"
-                  value={totalRooms}
-                  onChange={(e) => setTotalRooms(e.target.value)}
-                />
-              </div>
-
-              <div className="figma-field-box">
-                <label>{t('floorsLabel')}</label>
-                <Input
-                  className="figma-input-style"
-                  value={floors}
-                  onChange={(e) => setFloors(e.target.value)}
-                />
-              </div>
-            </form>
-          </section>
-
-          {/* Section 2: Shift Configuration */}
-          <section className="figma-section-card">
-            <div className="figma-section-header">
-              <div>
-                <h2>{t('shiftConfig')}</h2>
-                <p>{t('shiftsDesc')}</p>
-              </div>
-            </div>
-
-            <div className="figma-shifts-list">
-              <div className="figma-shift-item">
-                <div className="shift-icon-box">🕥</div>
-                <div className="shift-details">
-                  <strong>{t('morningShift')}</strong>
-                  <span>٠٧:٠٠ ص — ٠٤:٠٠ م</span>
-                </div>
-              </div>
-
-              <div className="figma-shift-item">
-                <div className="shift-icon-box">🌆</div>
-                <div className="shift-details">
-                  <strong>{t('eveningShift')}</strong>
-                  <span>٠٤:٠٠ م — ١١:٠٠ م</span>
-                </div>
-              </div>
-
-              <div className="figma-shift-item">
-                <div className="shift-icon-box">🌙</div>
-                <div className="shift-details">
-                  <strong>{t('nightShift')}</strong>
-                  <span>١١:٠٠ م — ٠٧:٠٠ ص</span>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 3: Notification Toggles */}
-          <section className="figma-section-card">
-            <div className="figma-section-header">
-              <div>
-                <h2>{t('notifications')}</h2>
-                <p>{t('notifDesc')}</p>
-              </div>
-            </div>
-
-            <div className="figma-notif-grid">
-              <div className="figma-notif-box">
-                <div className="notif-info">
-                  <strong>{t('maintenance')}</strong>
-                  <span>{t('notifSubLabel')}</span>
-                </div>
-                <label className="figma-toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifs.maintenance}
-                    onChange={() => toggleNotifKey('maintenance')}
-                  />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-
-              <div className="figma-notif-box">
-                <div className="notif-info">
-                  <strong>{t('housekeeping')}</strong>
-                  <span>{t('notifSubLabel')}</span>
-                </div>
-                <label className="figma-toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifs.housekeeping}
-                    onChange={() => toggleNotifKey('housekeeping')}
-                  />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-
-              <div className="figma-notif-box">
-                <div className="notif-info">
-                  <strong>{t('payments')}</strong>
-                  <span>{t('notifSubLabel')}</span>
-                </div>
-                <label className="figma-toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifs.payments}
-                    onChange={() => toggleNotifKey('payments')}
-                  />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-
-              <div className="figma-notif-box">
-                <div className="notif-info">
-                  <strong>{t('pendingTasks')}</strong>
-                  <span>{t('notifSubLabel')}</span>
-                </div>
-                <label className="figma-toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifs.pendingTasks}
-                    onChange={() => toggleNotifKey('pendingTasks')}
-                  />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-
-              <div className="figma-notif-box">
-                <div className="notif-info">
-                  <strong>{t('shiftHandover')}</strong>
-                  <span>{t('notifSubLabel')}</span>
-                </div>
-                <label className="figma-toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifs.shiftHandover}
-                    onChange={() => toggleNotifKey('shiftHandover')}
-                  />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-
-              <div className="figma-notif-box">
-                <div className="notif-info">
-                  <strong>{t('reports')}</strong>
-                  <span>{t('notifSubLabel')}</span>
-                </div>
-                <label className="figma-toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={notifs.reports}
-                    onChange={() => toggleNotifKey('reports')}
-                  />
-                  <span className="toggle-slider" />
-                </label>
-              </div>
-            </div>
-          </section>
-
-          {/* Section 4: Theme & Language Controls Bar */}
-          <section className="figma-bottom-bar-card">
-            <div className="bottom-bar-group">
-              <span className="bar-label">{t('themeLabel')}</span>
-              <div className="figma-pill-selector">
-                <button
-                  type="button"
-                  className={`pill-btn ${themeMode === 'light' ? 'active' : ''}`}
-                  onClick={() => setThemeMode('light')}
-                >
-                  {t('themeLight')}
-                </button>
-                <button
-                  type="button"
-                  className={`pill-btn ${themeMode === 'dark' ? 'active' : ''}`}
-                  onClick={() => setThemeMode('dark')}
-                >
-                  {t('themeDark')}
-                </button>
-                <button
-                  type="button"
-                  className={`pill-btn ${themeMode === 'system' ? 'active' : ''}`}
-                  onClick={() => setThemeMode('system')}
-                >
-                  {t('themeSystem')}
-                </button>
-              </div>
-            </div>
-
-            <div className="bottom-bar-group">
-              <span className="bar-label">{t('language')}</span>
-              <div className="figma-pill-selector">
-                <button
-                  type="button"
-                  className={`pill-btn ${language === 'ar' ? 'active' : ''}`}
-                  onClick={() => setLanguage('ar')}
-                >
-                  العربية
-                </button>
-                <button
-                  type="button"
-                  className={`pill-btn ${language === 'en' ? 'active' : ''}`}
-                  onClick={() => setLanguage('en')}
-                >
-                  English
-                </button>
-              </div>
-            </div>
-          </section>
-        </main>
       </div>
     </div>
   );

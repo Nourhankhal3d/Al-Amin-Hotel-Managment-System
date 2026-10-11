@@ -24,7 +24,7 @@
   top: 17px;
   bottom: -5px;
   width: 2px;
-  background: #e8e2d6;
+  background: var(--color-border);
 }
 
 .timeline__marker {
@@ -35,18 +35,18 @@
   margin-top: 5px;
   margin-inline-start: 4px;
   border-radius: 50%;
-  background: #c0933f;
-  box-shadow: 0 0 0 4px #f3e8cf;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 4px var(--color-gold-softer);
 }
 
 .timeline__marker--gold {
-  background: #c0933f;
-  box-shadow: 0 0 0 4px #f3e8cf;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 4px var(--color-gold-softer);
 }
 
 .timeline__marker--primary {
-  background: var(--color-primary, #1f6f5c);
-  box-shadow: 0 0 0 4px rgba(31, 111, 92, 0.15);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-soft);
 }
 
 .timeline__title {
@@ -56,12 +56,12 @@
 
 .timeline__description {
   margin: 4px 0 0;
-  color: #7a8088;
+  color: var(--color-text-muted);
   font-size: 0.8rem;
 }
 
 .timeline__time {
-  color: #8a8f98;
+  color: var(--color-text-muted);
   font-size: 0.78rem;
   white-space: nowrap;
 }

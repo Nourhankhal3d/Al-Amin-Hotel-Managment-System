@@ -9,7 +9,6 @@ import {
   STATUS_OPTIONS,
 } from '../constants/maintenance.constants';
 import type { MaintenanceFilterName, MaintenanceFilters as Filters } from '../types/maintenance.types';
-import './MaintenanceFilters.css';
 
 interface MaintenanceFiltersProps {
   language: Language;
@@ -34,7 +33,14 @@ export function MaintenanceFilters({
   const all = { value: '', label: t('filterAll') };
 
   return (
-    <FilterBar className="maintenance-filters" value={value} onChange={onSearchChange} placeholder={t('mtSearch')}>
+    <FilterBar
+      columns={4}
+      value={value}
+      onChange={onSearchChange}
+      placeholder={t('mtSearch')}
+      onReset={onReset}
+      resetLabel={t('filterReset')}
+    >
       <Select
         label={t('roomNumberLabel')}
         value={filters.room}
@@ -53,9 +59,6 @@ export function MaintenanceFilters({
         options={[all, ...STATUS_OPTIONS.map((option) => ({ value: option, label: t(STATUS_LABEL_KEY[option]) }))]}
         onChange={(next) => onFilterChange('status', next)}
       />
-      <button type="button" className="maintenance-filters__reset" onClick={onReset}>
-        {t('filterReset')}
-      </button>
     </FilterBar>
   );
 }

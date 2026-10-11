@@ -30,6 +30,7 @@ import {
   useCompleteHousekeepingTask,
   useCreateHousekeepingTask,
   useHousekeepingTasks,
+  useRoomNumbers,
 } from '../hooks/useHousekeepingTasks';
 import type {
   CleaningTaskCreate,
@@ -69,6 +70,7 @@ export function HousekeepingPage() {
   const tasksQuery = useHousekeepingTasks();
   const createTask = useCreateHousekeepingTask();
   const completeTask = useCompleteHousekeepingTask();
+  const roomsQuery = useRoomNumbers();
   const tasks = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
 
   const selectedId = Number(searchParams.get('id'));
@@ -185,18 +187,18 @@ export function HousekeepingPage() {
   }
 
   const hero = (actions?: boolean) => (
-    <PageHero eyebrow={t('housekeeping')} title={t('hkHeroTitle')} description={t('hkHeroDesc')} className="housekeeping-page__hero">
+    <PageHero eyebrow={t('housekeeping')} title={t('hkHeroTitle')} description={t('hkHeroDesc')}>
       {actions && (
-        <div className="housekeeping-page__hero-actions">
-          <Button variant="ghost" className="housekeeping-page__hero-export" onClick={exportTasks}>
+        <>
+          <Button variant="glass" className="housekeeping-page__hero-export" onClick={exportTasks}>
             <FileText aria-hidden="true" />
             {t('export')}
           </Button>
-          <Button className="housekeeping-page__hero-add" onClick={openForm}>
+          <Button variant="gold" className="housekeeping-page__hero-add" onClick={openForm}>
             <Plus aria-hidden="true" />
             {t('hkNewTask')}
           </Button>
-        </div>
+        </>
       )}
     </PageHero>
   );
@@ -229,7 +231,7 @@ export function HousekeepingPage() {
         <StatCard label={t('hkStatPending')} value={stats.pending} icon={<Clock size={20} aria-hidden="true" />} tone="amber" />
       </div>
 
-      <Card className="housekeeping-page__filters-card">
+      <Card className="filters-card">
         <HousekeepingFilters
           language={language}
           value={searchDraft}
@@ -276,6 +278,7 @@ export function HousekeepingPage() {
         onClose={closeDrawers}
         onSubmit={(body) => { void submitTask(body); }}
         isSaving={createTask.isPending}
+        roomOptions={roomsQuery.data ?? []}
       />
     </div>
   );

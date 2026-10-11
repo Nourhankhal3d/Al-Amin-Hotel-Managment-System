@@ -1,10 +1,14 @@
+import { Card } from '../../../components/ui/Card';
+import { getTranslation, type Language } from '../../../core/i18n';
 import { PAYMENT_METHODS } from '../../../core/constants/paymentMethods';
-import { formatDate, toDayKey } from '../../../core/utils/date';
-import { formatMoney, formatPercent } from '../../../core/utils/numerals';
+import { toDayKey } from '../../../core/utils/date';
+import { formatAmount, formatPaymentDate, formatShare } from '../utils/paymentsFormat';
 import type { Payment } from '../types/payment.types';
+import './PaymentsRevenueCard.css';
 
 interface PaymentsRevenueCardProps {
   payments: Payment[];
+  language: Language;
 }
 
 interface DayPoint {
@@ -60,63 +64,60 @@ function buildChartPaths(points: DayPoint[]) {
   return { line, area, last };
 }
 
-export function PaymentsRevenueCard({ payments }: PaymentsRevenueCardProps) {
+// Totals on the start side, the revenue line on the end side (as in the prototype)
+export function PaymentsRevenueCard({ payments, language }: PaymentsRevenueCardProps) {
+  const t = (key: string) => getTranslation(language, key);
   const total = totalOf(payments);
   const cash = totalOf(payments, PAYMENT_METHODS.cash);
-  const card = totalOf(payments, PAYMENT_METHODS.card);
-  const transfer = totalOf(payments, PAYMENT_METHODS.transfer);
+  const wallets = totalOf(payments, PAYMENT_METHODS.card) + totalOf(payments, PAYMENT_METHODS.transfer);
   const share = (value: number) => (total > 0 ? value / total : 0);
 
   const points = buildDayPoints(payments);
   const chart = points.length > 0 ? buildChartPaths(points) : null;
+  const dayLabel = (index: number) => formatPaymentDate(`${points[index].day}T12:00:00Z`, language);
 
   return (
-    <section className="al-card" aria-label="إيرادات الوردية">
-      <div className="al-revenue">
-        <div className="al-revenue__chart">
-          <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} preserveAspectRatio="none" role="img" aria-label="منحنى إيرادات الوردية">
-            <defs>
-              <linearGradient id="al-rev-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#2fa84f" stopOpacity="0.28" />
-                <stop offset="100%" stopColor="#2fa84f" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            {chart ? (
-              <>
-                <path d={chart.area} fill="url(#al-rev-fill)" />
-                <path d={chart.line} fill="none" stroke="#2fa84f" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx={chart.last.x} cy={chart.last.y} r="4.5" fill="#2fa84f" stroke="#fff" strokeWidth="2" />
-              </>
-            ) : (
-              <path
-                d={`M ${CHART_PAD} ${CHART_HEIGHT / 2} L ${CHART_WIDTH - CHART_PAD} ${CHART_HEIGHT / 2}`}
-                stroke="#c9cec5"
-                strokeWidth="2"
-                strokeDasharray="6 7"
-                strokeLinecap="round"
-              />
-            )}
-          </svg>
-          <div className="al-revenue__axis">
-            <span>{points.length > 0 ? formatDate(`${points[0].day}T00:00:00`, 'ar') : '—'}</span>
-            <span>{points.length > 1 ? formatDate(`${points[Math.floor(points.length / 2)].day}T00:00:00`, 'ar') : ''}</span>
-            <span>{points.length > 0 ? formatDate(`${points[points.length - 1].day}T00:00:00`, 'ar') : '—'}</span>
-          </div>
-        </div>
-
-        <div className="al-revenue__panel">
-          <span className="al-revenue__label">إيرادات الوردية</span>
-          <h2 className="al-revenue__total">{formatMoney(total)}</h2>
-          <p className="al-revenue__hint">
-            يشمل جميع المدفوعات المسجلة خلال الوردية الحالية — نقدي وبطاقات وتحويلات.
-          </p>
-          <div className="al-legend">
-            <span className="al-legend__item"><i className="al-legend__dot" />نقدي {formatPercent(share(cash))}</span>
-            <span className="al-legend__item"><i className="al-legend__dot al-legend__dot--gold" />بطاقات {formatPercent(share(card))}</span>
-            <span className="al-legend__item"><i className="al-legend__dot al-legend__dot--rose" />تحويلات {formatPercent(share(transfer))}</span>
-          </div>
+    <Card className="payments-revenue" aria-label={t('paymentsPage.revenue.label')}>
+      <div className="payments-revenue__panel">
+        <span className="payments-revenue__label">{t('paymentsPage.revenue.label')}</span>
+        <strong className="payments-revenue__total">{formatAmount(total, language)}</strong>
+        <p className="payments-revenue__hint">{t('paymentsPage.revenue.hint')}</p>
+        <div className="payments-revenue__legend">
+          <span><i className="payments-revenue__dot" />{t('paymentsPage.revenue.cash')} · {formatShare(share(cash), language)}</span>
+          <span><i className="payments-revenue__dot payments-revenue__dot--gold" />{t('paymentsPage.revenue.wallets')} · {formatShare(share(wallets), language)}</span>
         </div>
       </div>
-    </section>
+
+      <div className="payments-revenue__chart">
+        <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} preserveAspectRatio="none" role="img" aria-label={t('paymentsPage.revenue.chartLabel')}>
+          <defs>
+            <linearGradient id="payments-revenue-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" style={{ stopColor: 'var(--color-primary)', stopOpacity: 0.22 }} />
+              <stop offset="100%" style={{ stopColor: 'var(--color-primary)', stopOpacity: 0 }} />
+            </linearGradient>
+          </defs>
+          {chart ? (
+            <>
+              <path d={chart.area} fill="url(#payments-revenue-fill)" />
+              <path d={chart.line} fill="none" style={{ stroke: 'var(--color-primary)' }} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx={chart.last.x} cy={chart.last.y} r="4.5" style={{ fill: 'var(--color-primary)', stroke: 'var(--color-surface)' }} strokeWidth="2" />
+            </>
+          ) : (
+            <path
+              d={`M ${CHART_PAD} ${CHART_HEIGHT / 2} L ${CHART_WIDTH - CHART_PAD} ${CHART_HEIGHT / 2}`}
+              style={{ stroke: 'var(--color-border)' }}
+              strokeWidth="2"
+              strokeDasharray="6 7"
+              strokeLinecap="round"
+            />
+          )}
+        </svg>
+        <div className="payments-revenue__axis">
+          <span>{points.length > 0 ? dayLabel(0) : '—'}</span>
+          <span>{points.length > 2 ? dayLabel(Math.floor(points.length / 2)) : ''}</span>
+          <span>{points.length > 1 ? dayLabel(points.length - 1) : ''}</span>
+        </div>
+      </div>
+    </Card>
   );
 }

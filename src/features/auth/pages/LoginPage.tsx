@@ -1,3 +1,4 @@
+import { Eye, EyeOff, Globe } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
@@ -10,7 +11,6 @@ import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
 import { login } from '../services/auth.api';
-import { EyeIcon, EyeOffIcon } from '../../../components/common/EyeIcons';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -72,13 +72,13 @@ export function LoginPage() {
             onClick={toggleLanguage}
             aria-label="Switch Language"
           >
-            🌐 {language === 'ar' ? 'EN' : 'العربية'}
+            <Globe aria-hidden="true" /> {language === 'ar' ? 'EN' : 'العربية'}
           </button>
         </div>
 
         <div className="figma-auth-header">
           <div className="figma-auth-logo">
-            <img src="/assets/logo.jpg" alt="Al-Amin Logo" />
+            <img src="/al-amin-hotel-logo.png" alt="Al-Amin Logo" />
           </div>
           <h1 className="figma-auth-title">{t('loginTitle')}</h1>
           <p className="figma-auth-subtitle">{t('loginSubtitle')}</p>
@@ -140,7 +140,7 @@ export function LoginPage() {
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? t('hidePassword') : t('showPassword')}
               >
-                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
               </button>
             </div>
             {errors.password && <span className="figma-field-error">{errors.password}</span>}
@@ -171,7 +171,7 @@ export function LoginPage() {
                       {t('cancel')}
                     </Button>
                     <Button type="submit" className="figma-btn-primary" style={{ width: 'auto' }}>
-                      إرسال
+                      {t('forgotPasswordSend')}
                     </Button>
                   </div>
                 </form>

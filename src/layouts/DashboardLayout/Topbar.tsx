@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Bell, CalendarDays, Clock, Search } from 'lucide-react';
+import { Bell, CalendarDays, ChevronLeft, ChevronRight, Clock, Search } from 'lucide-react';
 import { getTranslation } from '../../core/i18n';
 import type { Language } from '../../core/i18n';
 import { formatClock, formatLongDate } from '../../utils/format';
@@ -47,8 +47,12 @@ export function Topbar({ language, onLanguageChange }: TopbarProps) {
         </button>
 
         <div className="topbar__user">
-          <span className="topbar__avatar">{t('topbar.userName')}</span>
-          <span className="topbar__user-role">{t('topbar.userRole')}</span>
+          <span className="topbar__avatar" aria-hidden="true">{t('topbar.userName')}</span>
+          <span className="topbar__user-copy">
+            <strong>{t('topbar.userName')}</strong>
+            <span className="topbar__user-role">{t('topbar.userRole')}</span>
+          </span>
+          {language === 'ar' ? <ChevronLeft className="topbar__user-chevron" aria-hidden="true" /> : <ChevronRight className="topbar__user-chevron" aria-hidden="true" />}
         </div>
       </div>
     </header>

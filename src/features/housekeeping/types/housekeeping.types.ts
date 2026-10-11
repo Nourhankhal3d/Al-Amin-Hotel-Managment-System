@@ -1,8 +1,7 @@
 // Same shape as the backend API (snake_case), as agreed with the data layer (Member 5).
-// TODO(merge): Priority and CleaningTaskStatus live in src/types/common.types.ts on the
-// data-layer branch; after the merge, import them from there and delete the two lines below.
-export type Priority = 'low' | 'medium' | 'high' | 'urgent';
-export type CleaningTaskStatus = 'pending' | 'done';
+import type { CleaningTaskStatus, Priority } from '../../../types/common.types';
+
+export type { CleaningTaskStatus, Priority };
 
 export interface HousekeepingTask {
   task_id: number;
@@ -41,4 +40,9 @@ export interface HousekeepingFilters {
   priority: Priority | '';
   floor: string;
   page: number;
+}
+
+/** The only room field this page needs from GET /rooms */
+export interface RoomRef {
+  room_id: number;
 }

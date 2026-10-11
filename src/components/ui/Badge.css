@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   padding: 5px 12px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-size: 0.78rem;
   font-weight: 600;
   line-height: 1.2;
@@ -11,32 +11,32 @@
 
 /* متوسط: بيج */
 .badge--neutral {
-  background: #f7f1e9;
-  color: #8a6d3b;
+  background: var(--color-gold-soft);
+  color: var(--color-gold-ink);
 }
 
 /* مكتملة / منخفض */
 .badge--success {
-  background: #eaf8ef;
-  color: #36a85a;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
 }
 
 /* معلّقة / مرتفع */
 .badge--warning {
-  background: #fff5dc;
-  color: #b7791f;
+  background: var(--color-amber-soft);
+  color: var(--color-amber-ink);
 }
 
 /* حرج */
 .badge--danger {
-  background: #fbe9e9;
-  color: #d45c5c;
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
 }
 
 /* قيد التنفيذ: أخضر مزرق */
 .badge--info {
-  background: #def3ef;
-  color: #2a7f72;
+  background: var(--color-info-soft);
+  color: var(--color-info);
 }
 [data-theme="dark"] .badge--neutral { background: #252f3d; color: #cbd5e1; }
 [data-theme="dark"] .badge--success { background: rgba(65, 192, 106, 0.18); color: #41c06a; }
@@ -45,8 +45,8 @@
 [data-theme="dark"] .badge--info { background: rgba(42, 127, 114, 0.25); color: #5cc2b2; }
 /* طرق دفع زي إنستابي */
 .badge--purple {
-  background: #eeedfa;
-  color: #6b64b8;
+  background: var(--color-purple-soft);
+  color: var(--color-purple);
 }
 
 [data-theme="dark"] .badge--purple {

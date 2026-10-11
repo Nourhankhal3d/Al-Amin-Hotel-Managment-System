@@ -1,7 +1,7 @@
 import { request } from '../../../core/api/apiClient';
 import type { Paginated } from '../../../core/api/api.types';
 import { MT_FETCH_LIMIT } from '../constants/maintenance.constants';
-import type { MaintenanceIssueCreate, MaintenanceIssueUpdate, MaintenanceRequest } from '../types/maintenance.types';
+import type { MaintenanceIssueCreate, MaintenanceIssueUpdate, MaintenanceRequest, RoomRef } from '../types/maintenance.types';
 
 export async function getMaintenanceRequests(): Promise<MaintenanceRequest[]> {
   const response = await request<Paginated<MaintenanceRequest>>('/maintenance-issues', {
@@ -22,4 +22,12 @@ export async function updateMaintenanceRequest(issueId: number, body: Maintenanc
     method: 'PATCH',
     body,
   });
+}
+
+/** Room numbers the receptionist can pick in the form, from GET /rooms */
+export async function getRoomNumbers(): Promise<string[]> {
+  const response = await request<Paginated<RoomRef>>('/rooms', {
+    params: { page: 1, limit: MT_FETCH_LIMIT },
+  });
+  return response.data.map((room) => String(room.room_id));
 }

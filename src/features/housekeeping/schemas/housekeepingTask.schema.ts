@@ -3,7 +3,6 @@ import {
   HK_CLEANER_MAX_LENGTH,
   HK_NOTES_MAX_LENGTH,
   PRIORITY_OPTIONS,
-  ROOM_OPTIONS,
 } from '../constants/housekeeping.constants';
 import type { CleaningTaskCreate, Priority } from '../types/housekeeping.types';
 
@@ -21,11 +20,15 @@ export type NewTaskFormErrors = Partial<Record<keyof NewTaskFormValues, string>>
 // A new task always starts as "pending" on the server, so the form has no status field
 export const EMPTY_NEW_TASK: NewTaskFormValues = { roomNumber: '', priority: '', cleanerName: '', notes: '' };
 
-export function validateNewTask(values: NewTaskFormValues): NewTaskFormErrors {
+/**
+ * `roomOptions` are the room numbers from GET /rooms. While they are still loading the list is empty,
+ * so the "room not found" check is skipped and the server has the final word.
+ */
+export function validateNewTask(values: NewTaskFormValues, roomOptions: string[]): NewTaskFormErrors {
   const errors: NewTaskFormErrors = {};
   const room = normalizeDigits(values.roomNumber.trim());
   if (!room) errors.roomNumber = 'hkErrRoomRequired';
-  else if (!ROOM_OPTIONS.includes(room)) errors.roomNumber = 'hkErrRoomNotFound';
+  else if (roomOptions.length > 0 && !roomOptions.includes(room)) errors.roomNumber = 'hkErrRoomNotFound';
   if (!values.priority || !PRIORITY_OPTIONS.includes(values.priority)) errors.priority = 'hkErrPriorityRequired';
   if (values.cleanerName.trim().length > HK_CLEANER_MAX_LENGTH) errors.cleanerName = 'hkErrCleanerTooLong';
   if (values.notes.trim().length > HK_NOTES_MAX_LENGTH) errors.notes = 'hkErrNotesTooLong';
