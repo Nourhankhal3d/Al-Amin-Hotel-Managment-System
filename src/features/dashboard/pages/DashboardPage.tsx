@@ -5,6 +5,7 @@ import { Card } from '../../../components/ui/Card';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { ErrorState } from '../../../components/common/ErrorState';
 import { LoadingState } from '../../../components/common/LoadingState';
+import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { formatCurrency, formatNumber, formatPercent } from '../../../utils/format';
 import { getDashboardSummary } from '../services/dashboard.api';
@@ -78,14 +79,15 @@ function RevenueChart({ values, language }: { values: RevenuePoint[]; language: 
 
 export function DashboardPage() {
   const { language } = useOutletContext<{ language: Language }>();
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ['dashboard-summary'],
     queryFn: getDashboardSummary,
+    staleTime: 0,
   });
   const t = (key: string) => translation(language, key);
 
   if (isPending) return <LoadingState label={t('loading')} />;
-  if (isError || !data) return <ErrorState title={t('dashboard.loadError')} message={t('dashboard.loadError')} />;
+  if (isError || !data) return <ErrorState title={t('dashboard.loadError')} message={getErrorMessage(error, language)} />;
   if (data.stats.length === 0) return <EmptyState title={t('dashboard.empty')} />;
 
   return (

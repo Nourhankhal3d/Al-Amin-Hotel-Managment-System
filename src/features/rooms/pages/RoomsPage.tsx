@@ -213,7 +213,28 @@ export function RoomsPage() {
   }
 
   if (roomsQuery.isError || allRoomsQuery.isError || statsQuery.isError || !stats) {
-    return <div className="feature-page rooms-page"><PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')} className="rooms-page__hero" /><ErrorState title={t('rooms.table.error')} message={t('rooms.table.error')} action={<Button type="button" onClick={() => { void roomsQuery.refetch(); void allRoomsQuery.refetch(); void statsQuery.refetch(); }}>{t('rooms.table.retry')}</Button>} /></div>;
+    const queryError = roomsQuery.error ?? allRoomsQuery.error ?? statsQuery.error;
+    return (
+      <div className="feature-page rooms-page">
+        <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')} className="rooms-page__hero" />
+        <ErrorState
+          title={t('rooms.table.error')}
+          message={queryError ? getErrorMessage(queryError, language) : t('rooms.table.error')}
+          action={
+            <Button
+              type="button"
+              onClick={() => {
+                void roomsQuery.refetch();
+                void allRoomsQuery.refetch();
+                void statsQuery.refetch();
+              }}
+            >
+              {t('rooms.table.retry')}
+            </Button>
+          }
+        />
+      </div>
+    );
   }
 
   return (

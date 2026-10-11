@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useOutletContext } from 'react-router-dom';
 import { EmptyState } from '../../../components/common/EmptyState';
+import { ErrorState } from '../../../components/common/ErrorState';
 import { LoadingState } from '../../../components/common/LoadingState';
 import { useToast } from '../../../components/common/toast.context';
 import { Badge } from '../../../components/ui/Badge';
@@ -12,7 +14,8 @@ import {
   PlusIcon,
   ReceiptIcon,
 } from '../../../components/ui/Icons';
-import { STATUS } from '../../../core/constants/status';
+import { getErrorMessage } from '../../../core/errors/getErrorMessage';
+import type { Language } from '../../../core/i18n';
 import { formatDate, formatTime, toDayKey } from '../../../core/utils/date';
 import { formatMoney, toArabicDigits } from '../../../core/utils/numerals';
 import { usePagination } from '../../../hooks/usePagination';
@@ -41,16 +44,6 @@ const emptyPaymentFilters: PaymentsFilterValues = {
   to: '',
 };
 
-/** Local fallback used when the payments API is unreachable (keeps the report usable). */
-const seedPayments: Payment[] = [
-  { id: 'p-1001', invoiceNo: 'INV-1001', guestName: 'عبدالرحمن محمد', roomNo: '101', amount: 250, method: 'Cash', status: STATUS.completed, paidAt: '2026-10-01T10:15:00', recordedBy: 'Reception' },
-  { id: 'p-1002', invoiceNo: 'INV-1002', guestName: 'سارة أحمد', roomNo: '204', amount: 480, method: 'Card', status: STATUS.completed, paidAt: '2026-10-03T14:05:00', recordedBy: 'Reception' },
-  { id: 'p-1003', invoiceNo: 'INV-1003', guestName: 'Omar Ali', roomNo: '305', amount: 620, method: 'Transfer', status: STATUS.pending, paidAt: '2026-10-05T09:40:00', recordedBy: 'Accounting' },
-  { id: 'p-1004', invoiceNo: 'INV-1004', guestName: 'فاطمة الزهراء', roomNo: '112', amount: 300, method: 'Cash', status: STATUS.completed, paidAt: '2026-10-07T18:20:00', recordedBy: 'Night Shift' },
-  { id: 'p-1005', invoiceNo: 'INV-1005', guestName: 'Hassan Karim', roomNo: '410', amount: 750, method: 'Card', status: STATUS.cancelled, paidAt: '2026-10-08T11:00:00', recordedBy: 'Reception' },
-  { id: 'p-1006', invoiceNo: 'INV-1006', guestName: 'خالد يوسف', roomNo: '208', amount: 190, method: 'Cash', status: STATUS.inProgress, paidAt: '2026-10-09T08:30:00', recordedBy: 'Reception' },
-];
-
 function filterPayments(payments: Payment[], values: PaymentsFilterValues): Payment[] {
   const query = values.query.trim().toLowerCase();
 
@@ -75,16 +68,18 @@ function filterPayments(payments: Payment[], values: PaymentsFilterValues): Paym
 }
 
 export function PaymentsPage() {
+  const outlet = useOutletContext<{ language?: Language } | undefined>();
+  const language: Language = outlet?.language ?? 'ar';
   const toast = useToast();
   const [filters, setFilters] = useState<PaymentsFilterValues>(emptyPaymentFilters);
   const [receiptId, setReceiptId] = useState<string | null>(null);
 
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: QUERY_KEY,
     queryFn: () => getPaymentsReport(),
   });
 
-  const payments = data ?? seedPayments;
+  const payments = useMemo(() => data ?? [], [data]);
   const filtered = useMemo(() => filterPayments(payments, filters), [payments, filters]);
   const { page, setPage, totalPages, items } = usePagination(filtered, PAGE_SIZE);
 
@@ -137,33 +132,40 @@ export function PaymentsPage() {
         </div>
       </section>
 
-      {isError && (
-        <div className="ui-note">
-          تعذر الاتصال بخادم البيانات — يتم عرض بيانات تجريبية.
-          <button type="button" className="al-link-btn" onClick={() => refetch()}>إعادة المحاولة</button>
+      {isPending ? (
+        <LoadingState label="جارٍ تحميل المدفوعات" />
+      ) : isError ? (
+        <div className="al-card" style={{ padding: '2rem' }}>
+          <ErrorState
+            title="تعذر تحميل المدفوعات"
+            message={getErrorMessage(error, language)}
+            action={
+              <button type="button" className="al-btn al-btn--gold" onClick={() => void refetch()}>
+                إعادة المحاولة
+              </button>
+            }
+          />
         </div>
-      )}
+      ) : (
+        <>
+          <PaymentsSummary payments={filtered} />
 
-      <PaymentsSummary payments={filtered} />
+          <PaymentsRevenueCard payments={filtered} />
 
-      <PaymentsRevenueCard payments={filtered} />
+          <PaymentsFilters values={filters} onChange={handleFiltersChange} onReset={handleReset} />
 
-      <PaymentsFilters values={filters} onChange={handleFiltersChange} onReset={handleReset} />
+          <section className="al-card al-table-card">
+            <div className="al-card__head">
+              <div>
+                <h2>المعاملات الأخيرة</h2>
+                <p className="al-card__sub">سجل مالي شامل لجميع مدفوعات الوردية</p>
+              </div>
+              <span className="al-section-badge">{toArabicDigits(filtered.length)} معاملة</span>
+            </div>
 
-      <section className="al-card al-table-card">
-        <div className="al-card__head">
-          <div>
-            <h2>المعاملات الأخيرة</h2>
-            <p className="al-card__sub">سجل مالي شامل لجميع مدفوعات الوردية</p>
-          </div>
-          <span className="al-section-badge">{toArabicDigits(filtered.length)} معاملة</span>
-        </div>
-
-        {isPending ? (
-          <LoadingState label="جارٍ تحميل المدفوعات" />
-        ) : filtered.length === 0 ? (
-          <EmptyState title="لا توجد مدفوعات مطابقة" description="جرّب تعديل عوامل التصفية." />
-        ) : (
+            {filtered.length === 0 ? (
+              <EmptyState title="لا توجد مدفوعات مطابقة" description="جرّب تعديل عوامل التصفية." />
+            ) : (
           <>
             <div className="al-table-wrap">
               <table className="al-table">
@@ -235,9 +237,11 @@ export function PaymentsPage() {
                 </button>
               </div>
             </nav>
-          </>
-        )}
+        </>
+      )}
       </section>
+      </>
+    )}
 
       <Drawer open={receipt !== undefined} title="تفاصيل الدفعة" onClose={() => setReceiptId(null)}>
         {receipt && <PaymentDetailsDrawer payment={receipt} onClose={() => setReceiptId(null)} />}

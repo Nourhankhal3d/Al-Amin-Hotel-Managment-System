@@ -12,6 +12,7 @@ export interface RoomListResult {
 
 export const roomQueryKeys = {
   all: ['rooms'] as const,
+  base: () => [...roomQueryKeys.all, 'base'] as const,
   lists: () => [...roomQueryKeys.all, 'list'] as const,
   list: (filters: RoomFilters, language: Language) => [...roomQueryKeys.lists(), filters, language] as const,
   stats: () => [...roomQueryKeys.all, 'stats'] as const,
@@ -109,25 +110,14 @@ export async function getRoomStats(): Promise<RoomStats> {
   };
 }
 
-export async function saveRoom(input: UpdateRoomInput): Promise<Room | undefined> {
-  const room = await getRoom(input.id);
-  if (!room) return undefined;
-
-  const result = await request<ApiRoomStatusHistory>(`/rooms/${room.id}/status`, {
+export async function saveRoom(input: UpdateRoomInput): Promise<ApiRoomStatusHistory> {
+  return request<ApiRoomStatusHistory>(`/rooms/${input.id}/status`, {
     method: 'PATCH',
     body: { status: input.status, notes: input.notes },
   });
-
-  return {
-    ...room,
-    status: result.status,
-    notes: result.notes ?? room.notes,
-    updatedAt: result.changed_at,
-    log: [mapStatusHistory(result), ...room.log],
-  };
 }
 
-export async function saveRoomActivity(input: AddRoomActivityInput): Promise<Room | undefined> {
+export async function saveRoomActivity(input: AddRoomActivityInput): Promise<ApiRoomStatusHistory> {
   // TODO: confirm with backend; guestName is not accepted by PATCH /rooms/{room_id}/status.
   return saveRoom({ id: input.roomId, status: input.status, notes: input.notes });
 }

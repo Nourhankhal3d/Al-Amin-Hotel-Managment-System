@@ -9,6 +9,7 @@ import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { StatCard } from '../../../components/ui/StatCard';
 import { useToast } from '../../../components/ui/ToastContext';
+import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { normalizeDigits } from '../../../utils/digits';
@@ -156,14 +157,13 @@ export function MaintenancePage() {
   const openForm = () => updateParams({ request: 'new', id: null });
   const closeDrawers = () => updateParams({ id: null, request: null });
 
-  // TODO(merge): show getErrorMessage(error, language) from core/errors instead of the generic message
   async function submitRequest(body: MaintenanceIssueCreate) {
     try {
       await createRequest.mutateAsync(body);
       closeDrawers();
       toast.notify(t('mtToastCreated'), 'success');
-    } catch {
-      toast.notify(t('error'), 'error');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
     }
   }
 
@@ -173,8 +173,8 @@ export function MaintenancePage() {
       await updateStatus.mutateAsync({ issueId: selectedRequest.issue_id, status });
       closeDrawers();
       toast.notify(t('mtToastUpdated'), 'success');
-    } catch {
-      toast.notify(t('error'), 'error');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
     }
   }
 
@@ -225,7 +225,7 @@ export function MaintenancePage() {
         {hero()}
         <ErrorState
           title={t('mtLoadError')}
-          message={t('mtLoadError')}
+          message={getErrorMessage(requestsQuery.error, language)}
           action={<Button onClick={() => { void requestsQuery.refetch(); }}>{t('mtRetry')}</Button>}
         />
       </div>

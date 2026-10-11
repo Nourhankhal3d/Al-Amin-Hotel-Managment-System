@@ -1,14 +1,43 @@
+export type ApiPaymentMethod = 'cash' | 'instapay' | 'vodafone_cash';
+
+export interface ApiPayment {
+  payment_id: number;
+  reservation_id: number;
+  staff_id: number;
+  shift_id: number;
+  amount: number;
+  payment_method: ApiPaymentMethod;
+  payment_datetime: string;
+  payment_verified: boolean;
+  notes?: string | null;
+  reversal_of_payment_id?: number | null;
+}
+
+export interface CreatePaymentInput {
+  reservation_id: number;
+  amount: number;
+  payment_method: ApiPaymentMethod;
+  notes?: string;
+}
+
+export interface CreatePaymentResponse {
+  payment: ApiPayment;
+  paid_amount: number;
+  remaining_amount: number;
+}
+
 export interface Payment {
   id: string;
   invoiceNo?: string;
-  guestName?: string; // TODO: confirm with backend
+  guestName?: string;
   roomNo?: string;
   amount: number;
   currency?: string;
   method: string;
   status: string;
-  paidAt?: string; // TODO: confirm with backend
+  paidAt?: string;
   recordedBy?: string;
+  notes?: string | null;
 }
 
 export interface PaymentsReportFilters {

@@ -9,6 +9,7 @@ import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { StatCard } from '../../../components/ui/StatCard';
 import { useToast } from '../../../components/ui/ToastContext';
+import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { normalizeDigits } from '../../../utils/digits';
@@ -144,14 +145,13 @@ export function HousekeepingPage() {
   const openForm = () => updateParams({ task: 'new', id: null });
   const closeDrawers = () => updateParams({ id: null, task: null });
 
-  // TODO(merge): show getErrorMessage(error, language) from core/errors instead of the generic message
   async function submitTask(body: CleaningTaskCreate) {
     try {
       await createTask.mutateAsync(body);
       closeDrawers();
       toast.notify(t('hkToastCreated'), 'success');
-    } catch {
-      toast.notify(t('error'), 'error');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
     }
   }
 
@@ -161,8 +161,8 @@ export function HousekeepingPage() {
       await completeTask.mutateAsync(selectedTask.task_id);
       closeDrawers();
       toast.notify(t('hkToastDone'), 'success');
-    } catch {
-      toast.notify(t('error'), 'error');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
     }
   }
 
@@ -211,7 +211,7 @@ export function HousekeepingPage() {
         {hero()}
         <ErrorState
           title={t('hkLoadError')}
-          message={t('hkLoadError')}
+          message={getErrorMessage(tasksQuery.error, language)}
           action={<Button onClick={() => { void tasksQuery.refetch(); }}>{t('hkRetry')}</Button>}
         />
       </div>
