@@ -7,7 +7,7 @@ import { Select } from '../../../components/ui/Select';
 import type { Language } from '../../../core/i18n';
 import { getTranslation } from '../../../core/i18n';
 import { formatNumber } from '../../../utils/format';
-import { ROOM_STATUS_OPTIONS } from '../constants/roomOptions';
+import { ROOM_STATUS_TRANSITIONS } from '../constants/roomOptions';
 import { validateRoomActivity } from '../schemas/roomActivity.schema';
 import type { AddRoomActivityInput, Room, RoomStatus } from '../types/room.types';
 import './AddRoomActivityDrawer.css';
@@ -41,7 +41,9 @@ export function AddRoomActivityDrawer({ open, rooms, language, onClose, onSave, 
   const roomOptions = [...rooms]
     .sort((left, right) => Number(left.number) - Number(right.number))
     .map((room) => ({ value: room.id, label: t('rooms.drawer.roomTitle').replace('{number}', formatNumber(Number(room.number), language)) }));
-  const statusOptions = ROOM_STATUS_OPTIONS.slice(1).map((option) => ({ value: String(option.value), label: t(option.labelKey) }));
+  const selectedRoom = rooms.find((room) => room.id === roomId);
+  const allowedStatuses = selectedRoom ? ROOM_STATUS_TRANSITIONS[selectedRoom.status] : [];
+  const statusOptions = allowedStatuses.map((nextStatus) => ({ value: nextStatus, label: t(`rooms.status.${nextStatus}`) }));
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -72,7 +74,7 @@ export function AddRoomActivityDrawer({ open, rooms, language, onClose, onSave, 
       <div className="add-room-activity-drawer__eyebrow">{t('rooms.drawer.activityEyebrow')}</div>
       <form id="add-room-activity-form" className="add-room-activity-drawer__form" onSubmit={submit} noValidate>
         <div className="add-room-activity-drawer__pair">
-          <Select label={t('rooms.drawer.roomNumber')} value={roomId} placeholder={t('rooms.drawer.chooseRoom')} options={roomOptions} onChange={(value) => { setRoomId(value); setErrors((current) => ({ ...current, roomId: undefined })); }} error={errors.roomId} />
+          <Select label={t('rooms.drawer.roomNumber')} value={roomId} placeholder={t('rooms.drawer.chooseRoom')} options={roomOptions} onChange={(value) => { setRoomId(value); setStatus(''); setErrors((current) => ({ ...current, roomId: undefined, status: undefined })); }} error={errors.roomId} />
           <Select label={t('rooms.drawer.newStatus')} value={status} placeholder={t('rooms.drawer.chooseStatus')} options={statusOptions} onChange={(value) => { setStatus(value as RoomStatus); setErrors((current) => ({ ...current, status: undefined, guestName: value === 'occupied' || value === 'reserved' ? current.guestName : undefined })); }} error={errors.status} />
         </div>
         <label className="add-room-activity-drawer__field">

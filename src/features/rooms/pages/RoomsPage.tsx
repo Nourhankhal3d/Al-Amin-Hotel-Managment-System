@@ -9,6 +9,7 @@ import { ErrorState } from '../../../components/common/ErrorState';
 import { LoadingState } from '../../../components/common/LoadingState';
 import { PageHero } from '../../../components/common/PageHero';
 import { getTranslation, type Language } from '../../../core/i18n';
+import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { useToast } from '../../../components/ui/ToastContext';
 import { exportCsv } from '../../../utils/exportCsv';
 import { formatDate } from '../../../utils/date';
@@ -165,15 +166,23 @@ export function RoomsPage() {
 
   async function saveDetails(status: RoomStatus, notes: string) {
     if (!selectedRoomId) return;
-    await updateRoom.mutateAsync({ id: selectedRoomId, status, notes });
-    closeDrawers();
-    toast.notify(t('rooms.toast.roomSaved'), 'success');
+    try {
+      await updateRoom.mutateAsync({ id: selectedRoomId, status, notes });
+      closeDrawers();
+      toast.notify(t('rooms.toast.roomSaved'), 'success');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
+    }
   }
 
   async function saveActivity(input: AddRoomActivityInput) {
-    await addRoomActivity.mutateAsync(input);
-    closeDrawers();
-    toast.notify(t('rooms.toast.activitySaved'), 'success');
+    try {
+      await addRoomActivity.mutateAsync(input);
+      closeDrawers();
+      toast.notify(t('rooms.toast.activitySaved'), 'success');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
+    }
   }
 
   function downloadCsv() {

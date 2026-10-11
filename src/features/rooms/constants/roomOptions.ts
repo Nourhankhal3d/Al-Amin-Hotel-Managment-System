@@ -20,6 +20,14 @@ export const ROOM_STATUS_OPTIONS: RoomOption<RoomStatus | ''>[] = [
   { value: 'maintenance', labelKey: 'rooms.options.status.maintenance' },
 ];
 
+export const ROOM_STATUS_TRANSITIONS: Record<RoomStatus, readonly RoomStatus[]> = {
+  available: ['cleaning', 'maintenance'],
+  cleaning: ['available', 'maintenance'],
+  maintenance: ['available', 'cleaning'],
+  reserved: [],
+  occupied: [],
+};
+
 export const ROOM_FLOOR_OPTIONS: RoomOption<RoomFloor | ''>[] = [
   { value: '', labelKey: 'rooms.options.all' },
   { value: 1 as RoomFloor, labelKey: 'rooms.options.floor.1' },
