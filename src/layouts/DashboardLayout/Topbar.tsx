@@ -1,66 +1,56 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useDirection } from '../../core/hooks/useDirection';
+import { useEffect, useState } from 'react';
+import { Bell, CalendarDays, Clock, Search } from 'lucide-react';
+import { getTranslation } from '../../core/i18n';
 import type { Language } from '../../core/i18n';
-import { ROUTES } from '../../core/constants/routes';
+import { formatClock, formatLongDate } from '../../utils/format';
+import './Topbar.css';
 
-export function Topbar() {
-  const [language, setLanguage] = useState<Language>('ar');
-  const location = useLocation();
-  const isHandoverView = location.pathname === ROUTES.shiftHandover
-    || location.pathname === '/__dev/shift-handover';
-  useDirection(language);
+interface TopbarProps {
+  language: Language;
+  onLanguageChange: (language: Language) => void;
+}
 
-  const currentTime = new Intl.DateTimeFormat('ar-EG', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date());
+export function Topbar({ language, onLanguageChange }: TopbarProps) {
+  const [now, setNow] = useState(() => new Date());
+  const t = (key: string) => getTranslation(language, key);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
-    <header className={`topbar${isHandoverView ? ' topbar--handover' : ''}`}>
-      {isHandoverView ? (
-        <div className="topbar__search-wrap">
-          <input className="topbar__search" aria-label="Search" placeholder="ابحث عن غرفة أو موظف..." />
-          <svg className="topbar__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
-            <circle cx="10.8" cy="10.8" r="6.3" /><path d="m16 16 4 4" />
-          </svg>
+    <header className="topbar">
+      <label className="topbar__search-wrap">
+        <Search className="topbar__search-icon" aria-hidden="true" />
+        <input className="topbar__search" aria-label={t('search')} placeholder={t('topbar.searchRooms')} />
+        <kbd className="topbar__shortcut">{t('topbar.searchShortcut')}</kbd>
+      </label>
+
+      <div className="topbar__actions">
+        <span className="topbar__date" aria-label={t('topbar.date')}>
+          <CalendarDays aria-hidden="true" />
+          <span>{formatLongDate(now, language)}</span>
+        </span>
+        <span className="topbar__time" aria-label={t('topbar.time')}>
+          <Clock aria-hidden="true" />
+          <span>{formatClock(now, language)}</span>
+        </span>
+
+        <button type="button" className="topbar__language" onClick={() => onLanguageChange(language === 'ar' ? 'en' : 'ar')}>
+          {language === 'ar' ? 'EN' : 'AR'}
+        </button>
+
+        <button type="button" aria-label={t('topbar.notifications')} className="topbar__notification">
+          <Bell aria-hidden="true" />
+          <span className="topbar__notification-dot" />
+        </button>
+
+        <div className="topbar__user">
+          <span className="topbar__avatar">{t('topbar.userName')}</span>
+          <span className="topbar__user-role">{t('topbar.userRole')}</span>
         </div>
-      ) : (
-        <input className="topbar__search" aria-label="Search" placeholder="ابحث عن غرفة أو موظف..." />
-      )}
-      {isHandoverView && (
-        <div className="topbar__handover-trailing">
-          <div className="topbar__shift-time">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-              <circle cx="12" cy="12" r="8.5" /><path d="M12 7v5l3 2" />
-            </svg>
-            <span>{currentTime}</span>
-          </div>
-          <div className="topbar__actions topbar__actions--handover">
-            <button type="button" onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}>{language === 'ar' ? 'EN' : 'العربية'}</button>
-            <button type="button" aria-label="Notifications">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4" />
-              </svg>
-            </button>
-            <div className="topbar__handover-user">
-              <span className="topbar__handover-avatar" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                  <circle cx="12" cy="8" r="3" /><path d="M6 20a6 6 0 0 1 12 0" />
-                </svg>
-              </span>
-              <div><strong>موظف الاستقبال</strong><span>الأمين</span></div>
-            </div>
-            <span className="topbar__back-mark" aria-hidden="true">‹</span>
-          </div>
-        </div>
-      )}
-      {!isHandoverView && (
-        <div className="topbar__actions">
-          <button type="button" onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}>{language === 'ar' ? 'EN' : 'العربية'}</button>
-          <button type="button" aria-label="Notifications">الإشعارات</button>
-          <div className="topbar__user"><strong> receptionist </strong><span>Receptionist</span></div>
-        </div>
-      )}
+      </div>
     </header>
   );
 }

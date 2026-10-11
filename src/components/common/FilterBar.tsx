@@ -1,17 +1,19 @@
 import type { ReactNode } from 'react';
-import { Input } from '../ui/Input';
+import { SearchBar } from './SearchBar';
+import './FilterBar.css';
 
 interface FilterBarProps {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
   children?: ReactNode;
+  className?: string;
 }
 
-export function FilterBar({ value, onChange, placeholder, children }: FilterBarProps) {
+export function FilterBar({ value, onChange, placeholder, children, className = '' }: FilterBarProps) {
   return (
-    <div className="filter-bar">
-      <Input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} />
+    <div className={`filter-bar ${className}`.trim()}>
+      <SearchBar value={value} onChange={onChange} placeholder={placeholder} />
       {children}
     </div>
   );

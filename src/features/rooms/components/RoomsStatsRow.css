@@ -1,0 +1,57 @@
+.rooms-stats-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.rooms-stats-row__card {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 5rem;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+}
+
+.rooms-stats-row__card > .ui-stat-card__icon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: var(--space-3);
+  width: 2.5rem;
+  height: 2.5rem;
+  transform: translateY(-50%);
+}
+
+.rooms-stats-row__card > .ui-stat-card__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 1.75;
+}
+
+.rooms-stats-row__card > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding-inline-end: 3rem;
+}
+
+.rooms-stats-row__card > div strong {
+  order: 2;
+  font-size: var(--font-size-xl);
+  line-height: 1.1;
+}
+
+.rooms-stats-row__card > div span {
+  order: 1;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+@media (max-width: 72rem) {
+  .rooms-stats-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 36rem) {
+  .rooms-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

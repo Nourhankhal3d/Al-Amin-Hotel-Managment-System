@@ -3,36 +3,3 @@
   display: block;
   object-fit: contain;
 }
-
-.sidebar__brand--with-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  direction: ltr;
-}
-
-.sidebar__brand--with-logo .sidebar__logo {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
-  padding: 3px;
-  border-radius: 12px;
-  background: #faf8f4;
-}
-
-.sidebar__brand-copy {
-  display: grid;
-  min-width: 0;
-  gap: 3px;
-  direction: rtl;
-}
-
-.sidebar__brand--with-logo .sidebar__brand-copy strong {
-  font-size: 1.2rem;
-  line-height: 1.2;
-}
-
-.sidebar__brand--with-logo .sidebar__brand-copy span {
-  color: #c9f6ef;
-  font-size: .72rem;
-}
