@@ -1,4 +1,5 @@
-{  "errors": {
+{
+  "errors": {
     "VALIDATION_ERROR": "The data entered is invalid. Please check the fields and try again",
     "UNAUTHORIZED": "Your session expired or the credentials are wrong. Please enter your password again",
     "FORBIDDEN": "This action is not allowed. The session is read-only until your shift starts",
@@ -333,7 +334,9 @@
       "activityNotesPlaceholder": "Add activity notes",
       "shiftInfo": "This activity will also be added to the shift log.",
       "saveActivity": "Save activity",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "chooseRoomFirst": "Choose a room first",
+      "noTransitions": "This room's status can't be changed here"
     },
     "validation": {
       "roomRequired": "Choose a room",
@@ -768,6 +771,34 @@
       "send": "Send receipt",
       "exported": "Payment exported",
       "receiptShown": "Receipt ready to print or send"
+    },
+    "addForm": {
+      "eyebrow": "New transaction",
+      "title": "Add payment",
+      "close": "Close",
+      "reservation": "Reservation number",
+      "reservationPlaceholder": "Enter reservation number",
+      "amount": "Amount",
+      "amountPlaceholder": "EGP 0",
+      "method": "Payment method",
+      "methodPlaceholder": "Choose payment method",
+      "time": "Received at",
+      "timeNow": "Now · {time}",
+      "notes": "Notes",
+      "notesPlaceholder": "Add notes about the payment",
+      "info": "The payment will be added to the shift revenue summary automatically.",
+      "submit": "Add payment",
+      "cancel": "Cancel",
+      "checking": "Checking reservation…",
+      "remaining": "Remaining on this reservation: {amount}",
+      "notFound": "Reservation not found",
+      "success": "Payment recorded — {amount} left on the reservation",
+      "errors": {
+        "reservation": "Enter a valid reservation number",
+        "amount": "Enter an amount greater than zero",
+        "amountTooHigh": "Amount is more than the remaining balance ({amount})",
+        "method": "Choose a payment method"
+      }
     }
   },
   "handoverPage": {

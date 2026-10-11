@@ -64,6 +64,7 @@ export function RoomDetailsDrawer({
     <Drawer
       open
       title={detailTitle}
+      eyebrow={t('rooms.drawer.detailsEyebrow')}
       onClose={onClose}
       closeLabel={t('rooms.drawer.close')}
       className="room-details-drawer"
@@ -87,10 +88,6 @@ export function RoomDetailsDrawer({
         </div>
       )}
     >
-      <div className="room-details-drawer__eyebrow">
-        {t('rooms.drawer.detailsEyebrow')}
-      </div>
-
       <section className="room-details-drawer__summary">
         <span className="room-details-drawer__bed-icon">
           <BedDouble aria-hidden="true" />
@@ -120,13 +117,28 @@ export function RoomDetailsDrawer({
         </div>
         <div>
           <span>{t('rooms.drawer.currentStatus')}</span>
-          <RoomStatusBadge status={currentStatus} language={language} />
+          <strong>{t(`rooms.status.${currentStatus}`)}</strong>
         </div>
         <div>
           <span>{t('rooms.drawer.lastUpdated')}</span>
           <strong>{formatRelativeTime(room.updatedAt, language)}</strong>
         </div>
       </section>
+
+      {showStatusSelect && (
+        <div className="room-details-drawer__status-select">
+          <Select
+            label={t('rooms.drawer.chooseStatus')}
+            value={allowedStatuses.includes(currentStatus) ? currentStatus : ''}
+            options={statusOptions}
+            onChange={(value) => {
+              setDraftStatus(value as RoomStatus);
+              setShowStatusSelect(false);
+            }}
+            autoOpen
+          />
+        </div>
+      )}
 
       <section className="room-details-drawer__section">
         <label
@@ -165,20 +177,6 @@ export function RoomDetailsDrawer({
         )}
       </section>
 
-      {showStatusSelect && (
-        <div className="room-details-drawer__status-select">
-          <Select
-            label={t('rooms.drawer.chooseStatus')}
-            value={allowedStatuses.includes(currentStatus) ? currentStatus : ''}
-            options={statusOptions}
-            onChange={(value) => {
-              setDraftStatus(value as RoomStatus);
-              setShowStatusSelect(false);
-            }}
-            autoOpen
-          />
-        </div>
-      )}
     </Drawer>
   );
 }

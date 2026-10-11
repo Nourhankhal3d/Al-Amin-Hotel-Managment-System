@@ -1,13 +1,7 @@
-.add-room-activity-drawer .ui-drawer__content {
+.add-room-activity-drawer .drawer__content {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-}
-
-.add-room-activity-drawer__eyebrow {
-  color: var(--color-gold);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
 }
 
 .add-room-activity-drawer__form {

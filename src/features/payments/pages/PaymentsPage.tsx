@@ -18,6 +18,7 @@ import { getTranslation, type Language } from '../../../core/i18n';
 import { toDayKey } from '../../../core/utils/date';
 import { usePagination } from '../../../hooks/usePagination';
 import { formatNumber } from '../../../utils/format';
+import { AddPaymentDrawer } from '../components/AddPaymentDrawer';
 import { PaymentDetailsDrawer } from '../components/PaymentDetailsDrawer';
 import { PaymentsFilters } from '../components/PaymentsFilters';
 import type { PaymentsFilterValues } from '../components/PaymentsFilters';
@@ -74,6 +75,8 @@ export function PaymentsPage() {
   const toast = useToast();
   const [filters, setFilters] = useState<PaymentsFilterValues>(emptyPaymentFilters);
   const [receiptId, setReceiptId] = useState<string | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [addFormKey, setAddFormKey] = useState(0);
 
   const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: QUERY_KEY,
@@ -111,7 +114,8 @@ export function PaymentsPage() {
   };
 
   const handleAddPayment = () => {
-    toast.showToast(t('paymentsPage.addSoon'), 'info');
+    setAddFormKey((current) => current + 1);
+    setAddOpen(true);
   };
 
   const label = (key: string | null, fallback: string) => (key ? t(key) : fallback);
@@ -226,6 +230,8 @@ export function PaymentsPage() {
         language={language}
         onClose={() => setReceiptId(null)}
       />
+
+      <AddPaymentDrawer key={addFormKey} open={addOpen} language={language} onClose={() => setAddOpen(false)} />
     </div>
   );
 }

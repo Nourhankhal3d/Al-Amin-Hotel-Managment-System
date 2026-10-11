@@ -1,13 +1,7 @@
-.room-details-drawer .ui-drawer__content {
+.room-details-drawer .drawer__content {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-}
-
-.room-details-drawer__eyebrow {
-  color: var(--color-gold);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
 }
 
 .room-details-drawer__summary {
@@ -62,11 +56,19 @@
 .room-details-drawer__section { display: grid; gap: var(--space-3); }
 .room-details-drawer__section h3 { margin: 0; font-size: var(--font-size-md); }
 .room-details-drawer__section-label { font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
-.room-details-drawer__notes { min-height: 5rem; resize: vertical; font-size: var(--font-size-sm); }
+.room-details-drawer__notes {
+  min-height: 4rem;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  resize: none;
+}
 .room-details-drawer__empty-log { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
 .room-details-drawer__status-select { padding-block-end: var(--space-2); }
 
-.ui-drawer__footer .room-details-drawer__footer {
+.drawer__footer .room-details-drawer__footer {
   display: flex;
   flex: 1;
   gap: var(--space-3);
@@ -75,6 +77,6 @@
 .room-details-drawer__footer .ui-button { flex: 1; }
 
 @media (max-width: 30rem) {
-  .room-details-drawer .ui-drawer__content { padding: var(--space-4); }
+  .room-details-drawer .drawer__content { padding: var(--space-4); }
   .room-details-drawer__info-grid { gap: var(--space-2); }
 }

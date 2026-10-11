@@ -4,6 +4,8 @@ import { formatNumber } from './format';
 
 export function formatRelativeTime(value: string | Date, language: Language, now = Date.now()): string {
   const timestamp = value instanceof Date ? value.getTime() : new Date(value).getTime();
+  // Missing or invalid dates (e.g. fields the API does not send yet) show a dash instead of a wrong value
+  if (!Number.isFinite(timestamp)) return '—';
   const elapsed = Math.max(0, now - timestamp);
   const minute = 60_000;
   const hour = 60 * minute;
@@ -20,6 +22,7 @@ export function formatRelativeTime(value: string | Date, language: Language, now
 
 export function formatDate(value: string | Date, language: Language): string {
   const date = value instanceof Date ? value : new Date(value);
+  if (!Number.isFinite(date.getTime())) return '';
   return new Intl.DateTimeFormat(language === 'ar' ? 'ar-EG' : 'en-EG', {
     day: 'numeric',
     month: 'long',

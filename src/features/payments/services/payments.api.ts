@@ -73,3 +73,21 @@ export async function createPayment(input: CreatePaymentInput): Promise<CreatePa
   });
 }
 
+
+export interface ReservationBalance {
+  totalAmount: number;
+  paidAmount: number;
+  remainingAmount: number;
+}
+
+/** GET /reservations/{id}/payments — used by the add-payment form to show what is left to pay */
+export async function getReservationBalance(reservationId: number): Promise<ReservationBalance> {
+  const response = await request<{ total_amount: number; paid_amount: number; remaining_amount: number }>(
+    `/reservations/${reservationId}/payments`,
+  );
+  return {
+    totalAmount: response.total_amount,
+    paidAmount: response.paid_amount,
+    remainingAmount: response.remaining_amount,
+  };
+}
