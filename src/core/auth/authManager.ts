@@ -11,8 +11,13 @@ export interface AuthSession {
 const sessionKey = 'al-amin-auth-session';
 
 export function getAuthSession(): AuthSession | null {
-  const value = window.localStorage.getItem(sessionKey);
-  return value ? (JSON.parse(value) as AuthSession) : null;
+  try {
+    const value = window.localStorage.getItem(sessionKey);
+    return value ? (JSON.parse(value) as AuthSession) : null;
+  } catch {
+    window.localStorage.removeItem(sessionKey);
+    return null;
+  }
 }
 
 export function setAuthSession(session: AuthSession): void {

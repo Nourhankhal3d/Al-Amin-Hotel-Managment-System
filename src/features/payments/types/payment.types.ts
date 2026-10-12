@@ -11,6 +11,8 @@ export interface ApiPayment {
   payment_verified: boolean;
   notes?: string | null;
   reversal_of_payment_id?: number | null;
+  guest_name?: string | null;
+  room_number?: string | null;
 }
 
 export interface CreatePaymentInput {

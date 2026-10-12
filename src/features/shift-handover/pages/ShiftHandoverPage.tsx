@@ -196,7 +196,7 @@ export function ShiftHandoverPage() {
   ];
 
   const timelineItems = getTimelineItems(summary, t, language);
-  const isHandedOver = handover.isSuccess;
+  const isHandedOver = handover.isSuccess || summary?.shift.status === 'handed_over';
   const shiftNotes = notes ?? summary.shift.shift_notes ?? '';
   const trackedTasks = [...summary.cleaning_tasks, ...summary.maintenance_issues];
   const completedTasks = summary.cleaning_tasks.filter((task) => task.status === 'done').length

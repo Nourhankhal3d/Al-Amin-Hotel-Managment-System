@@ -32,8 +32,8 @@ export function mapApiPaymentToPayment(api: ApiPayment): Payment {
   return {
     id: String(api.payment_id),
     invoiceNo: `INV-${api.payment_id}`,
-    guestName: undefined,
-    roomNo: '',
+    guestName: api.guest_name ?? (api.reservation_id ? `حجز #${api.reservation_id}` : undefined),
+    roomNo: api.room_number ?? '',
     amount: api.amount,
     currency: 'EGP',
     method,
@@ -55,7 +55,17 @@ export async function getPaymentsReport(filters: PaymentsReportFilters = {}): Pr
   const params: Record<string, unknown> = { page: 1, limit: PAYMENTS_FETCH_LIMIT };
   if (filters.from) params.from = filters.from;
   if (filters.to) params.to = filters.to;
-  if (filters.method && filters.method !== 'all') params.method = filters.method;
+  if (filters.method && filters.method !== 'all') {
+    let methodParam = filters.method;
+    if (filters.method === PAYMENT_METHODS.card || filters.method.toLowerCase() === 'card') {
+      methodParam = 'instapay';
+    } else if (filters.method === PAYMENT_METHODS.transfer || filters.method.toLowerCase() === 'transfer') {
+      methodParam = 'vodafone_cash';
+    } else if (filters.method === PAYMENT_METHODS.cash || filters.method.toLowerCase() === 'cash') {
+      methodParam = 'cash';
+    }
+    params.method = methodParam;
+  }
   if (filters.status && filters.status !== 'all') params.status = filters.status;
   if (filters.query) params.q = filters.query;
 

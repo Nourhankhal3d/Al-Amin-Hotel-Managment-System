@@ -1,12 +1,12 @@
 import { Eye, EyeOff, Globe } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { setAccessToken } from '../../../core/api/apiClient';
 import { ROLES } from '../../../core/constants/roles';
 import { getErrorMessage } from '../../../core/errors/getErrorMessage';
-import { setAuthSession } from '../../../core/auth/authManager';
+import { getAuthSession, setAuthSession } from '../../../core/auth/authManager';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
@@ -15,6 +15,12 @@ import { login } from '../services/auth.api';
 export function LoginPage() {
   const navigate = useNavigate();
   const { language, toggleLanguage, t } = useLanguage();
+
+  useEffect(() => {
+    if (getAuthSession()) {
+      navigate(ROUTES.dashboard, { replace: true });
+    }
+  }, [navigate]);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

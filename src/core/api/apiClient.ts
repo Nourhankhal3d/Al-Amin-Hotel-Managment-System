@@ -127,6 +127,12 @@ export async function request<T>(
         const retry = await http.request<T>(config);
         return retry.data;
       } catch (retryError) {
+        if (typeof window !== 'undefined') {
+          window.localStorage.removeItem('al-amin-auth-session');
+          if (!window.location.pathname.startsWith('/login')) {
+            window.location.href = '/login';
+          }
+        }
         throw toApiError(await normalizeBlobError(retryError));
       }
     }
@@ -138,10 +144,23 @@ export async function request<T>(
 // ---------- للتوافق مع كود Member 1 (auth.api.ts) ----------
 export async function apiRequest<T>(
   path: string,
-  options: { method?: string; body?: string } = {},
+  options: { method?: string; body?: unknown } = {},
 ): Promise<T> {
+  let parsedBody: unknown = undefined;
+  if (options.body !== undefined && options.body !== null) {
+    if (typeof options.body === 'string') {
+      try {
+        parsedBody = JSON.parse(options.body);
+      } catch {
+        parsedBody = options.body;
+      }
+    } else {
+      parsedBody = options.body;
+    }
+  }
+
   return request<T>(path, {
     method: (options.method as RequestOptions['method']) ?? 'GET',
-    body: options.body ? JSON.parse(options.body) : undefined,
+    body: parsedBody,
   });
 }

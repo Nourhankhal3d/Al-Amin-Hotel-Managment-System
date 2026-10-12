@@ -33,6 +33,7 @@
 
 .ui-toast--warning > svg { color: var(--color-amber); }
 .ui-toast--error > svg { color: var(--color-danger); }
+.ui-toast--info > svg { color: var(--color-info, var(--color-primary-dark)); }
 .ui-toast span { flex: 1; }
 
 .ui-toast button {

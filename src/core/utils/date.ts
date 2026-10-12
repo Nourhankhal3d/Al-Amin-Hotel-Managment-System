@@ -1,4 +1,11 @@
-const DEFAULT_LOCALE = 'en-GB';
+export function getDefaultLocale(): string {
+  if (typeof document !== 'undefined' && document.documentElement?.lang === 'en') {
+    return 'en-EG';
+  }
+  return 'ar-EG';
+}
+
+export const DEFAULT_LOCALE = 'en-GB';
 
 type DateInput = string | number | Date | null | undefined;
 
@@ -9,7 +16,7 @@ function toDate(value: DateInput): Date | null {
 }
 
 /** `8 Oct 2026` — returns `—` for missing/invalid values. */
-export function formatDate(value: DateInput, locale: string = DEFAULT_LOCALE): string {
+export function formatDate(value: DateInput, locale: string = getDefaultLocale()): string {
   const date = toDate(value);
   if (!date) return '—';
 
@@ -21,7 +28,7 @@ export function formatDate(value: DateInput, locale: string = DEFAULT_LOCALE): s
 }
 
 /** `8 Oct 2026, 10:15` — returns `—` for missing/invalid values. */
-export function formatDateTime(value: DateInput, locale: string = DEFAULT_LOCALE): string {
+export function formatDateTime(value: DateInput, locale: string = getDefaultLocale()): string {
   const date = toDate(value);
   if (!date) return '—';
 
@@ -35,7 +42,7 @@ export function formatDateTime(value: DateInput, locale: string = DEFAULT_LOCALE
 }
 
 /** `10:15` — returns `—` for missing/invalid values. */
-export function formatTime(value: DateInput, locale: string = DEFAULT_LOCALE): string {
+export function formatTime(value: DateInput, locale: string = getDefaultLocale()): string {
   const date = toDate(value);
   if (!date) return '—';
 

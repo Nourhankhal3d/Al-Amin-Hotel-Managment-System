@@ -59,7 +59,12 @@ export function AddPaymentDrawer({ open, language, onClose }: AddPaymentDrawerPr
 
   const mutation = useMutation({
     mutationFn: createPayment,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['payments'] }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['payments'] });
+      void queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
+      void queryClient.invalidateQueries({ queryKey: ['shift-handover'] });
+      void queryClient.invalidateQueries({ queryKey: ['shift-report'] });
+    },
   });
   const saving = mutation.isPending;
 

@@ -80,7 +80,7 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
   const stats = mockDashboardSummary.stats.map((stat) => {
     switch (stat.id) {
       case 'rooms-prepared':
-        return { ...stat, value: response.total_rooms };
+        return { ...stat, value: response.rooms_by_status?.available ?? response.total_rooms };
       case 'cleaning-requests':
         return { ...stat, value: response.rooms_needing_cleaning };
       case 'maintenance-reports':

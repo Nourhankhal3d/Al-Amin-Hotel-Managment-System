@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, TriangleAlert, X } from 'lucide-react';
+import { Check, Info, TriangleAlert, X } from 'lucide-react';
 import { ToastContext } from './ToastContext';
 import type { ToastTone } from './ToastContext';
 import { getTranslation } from '../../core/i18n';
@@ -27,12 +27,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ToastContext.Provider value={{ notify }}>
+    <ToastContext.Provider value={{ notify, showToast: notify }}>
       {children}
       <div className="ui-toast-region" aria-live="polite" aria-relevant="additions removals">
         {toasts.map((toast) => (
           <div className={`ui-toast ui-toast--${toast.tone}`} role={toast.tone === 'error' ? 'alert' : 'status'} key={toast.id}>
-            {toast.tone === 'success' ? <Check aria-hidden="true" /> : <TriangleAlert aria-hidden="true" />}
+            {toast.tone === 'success' ? (
+              <Check aria-hidden="true" />
+            ) : toast.tone === 'info' ? (
+              <Info aria-hidden="true" />
+            ) : (
+              <TriangleAlert aria-hidden="true" />
+            )}
             <span>{toast.message}</span>
             <button type="button" aria-label={getTranslation(language, 'toast.dismiss')} onClick={() => dismiss(toast.id)}><X aria-hidden="true" /></button>
           </div>

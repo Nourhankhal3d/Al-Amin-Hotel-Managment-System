@@ -221,7 +221,8 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 
 @media print {
   body * { visibility: hidden; }
-  .receipt-print, .receipt-print * { visibility: visible; }
+  .receipt-print, .receipt-print *,
+  .shift-report-page, .shift-report-page * { visibility: visible; }
   .receipt-print { position: absolute; top: 0; left: 0; width: 100%; margin: 0; border: 0; box-shadow: none; }
 }
 

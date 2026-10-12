@@ -1,6 +1,5 @@
 .topbar {
   display: flex;
-  direction: rtl;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-5);
@@ -54,7 +53,6 @@
 
 .topbar__actions {
   display: flex;
-  direction: rtl;
   align-items: center;
   gap: var(--space-2);
 }
@@ -160,10 +158,6 @@
   }
 }
 
-[dir='ltr'] .topbar__actions {
-  direction: ltr;
-}
-
 .topbar__date {
   display: inline-flex;
   align-items: center;
@@ -178,8 +172,4 @@
   width: 1rem;
   height: 1rem;
   stroke-width: 1.7;
-}
-
-[dir='ltr'] .topbar {
-  direction: ltr;
 }

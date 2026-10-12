@@ -13,8 +13,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// TODO: يوجد نظام Toast في components/ui (Member 3) وآخر في components/common (Member 4).
-// بنركّب الاتنين مؤقتًا لحد ما الفريق يوحّدهم في نظام واحد.
+// نظام الـ Toast موحد الآن عبر ToastProvider الأساسي، وCommonToastProvider يعمل كـ wrapper للتوافقية.
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
