@@ -22,46 +22,46 @@ export const roomQueryKeys = {
 const ROOM_FETCH_LIMIT = 100;
 
 interface ApiRoom {
-  room_id: number;
+  room_id: string;
+  room_number: string;
+  floor: number | null;
   room_type: string;
   status: RoomStatus;
   description: string;
   price_per_night: number;
   half_day_price: number;
+  current_guest_name: string | null;
+  view: Room['view'] | null;
+  updated_at: string | null;
 }
 
 interface ApiRoomStatusHistory {
-  history_id: number;
-  room_id: number;
+  history_id: string;
+  room_id: string;
   status: RoomStatus;
   notes: string | null;
   changed_at: string;
-  shift_id: number;
+  shift_id: string | null;
 }
 
 function mapApiRoom(room: ApiRoom): Room {
-  const number = String(room.room_id);
-  const firstDigit = Number(number[0]);
-  // TODO: confirm with backend; floor is not provided, so the first room-number digit is a guess.
-  const floor = (firstDigit >= 1 && firstDigit <= 3 ? firstDigit : 1) as RoomFloor;
+  // floor now comes from the backend; values outside 1-3 fall back to 1 until RoomFloor is widened.
+  const floor = (room.floor !== null && room.floor >= 1 && room.floor <= 3 ? room.floor : 1) as RoomFloor;
 
   return {
-    id: number,
-    number,
+    id: room.room_id,
+    number: room.room_number,
     // TODO: confirm with backend; single/double do not define VIP, so non-VIP is a safe guess.
     type: room.room_type.toLowerCase() === 'vip' ? 'vip' : 'standard',
     status: room.status,
     floor,
-    // TODO: confirm with backend; room view is not included in the API response.
-    view: 'city',
-    // TODO: confirm with backend; the API has no guest or arrival fields.
+    view: room.view ?? 'city',
+    guestName: room.current_guest_name ?? undefined,
     notes: room.description,
-    // TODO: confirm with backend; updatedAt and activity log are not part of GET /rooms.
-    updatedAt: '',
+    updatedAt: room.updated_at ?? '',
     log: [],
   };
 }
-
 function mapStatusHistory(row: ApiRoomStatusHistory) {
   return {
     id: String(row.history_id),
@@ -69,6 +69,7 @@ function mapStatusHistory(row: ApiRoomStatusHistory) {
     descriptionKey: row.notes ?? '—',
     time: row.changed_at,
   };
+  
 }
 
 export async function getRooms(): Promise<Room[]> {
@@ -108,6 +109,7 @@ export async function getRoomStats(): Promise<RoomStats> {
     maintenance: rooms.filter((room) => room.status === 'maintenance').length,
     vip: rooms.filter((room) => room.type === 'vip').length,
   };
+
 }
 
 export async function saveRoom(input: UpdateRoomInput): Promise<ApiRoomStatusHistory> {

@@ -283,7 +283,7 @@
       "guest": "Guest name",
       "floor": "Floor",
       "updatedAt": "Last updated",
-      "notes": "Notes",
+      "notes": "Description",
       "actions": "Actions",
       "empty": "No rooms match your search",
       "emptyDescription": "Try changing or resetting the filters.",
@@ -385,7 +385,7 @@
       "floor": "Floor",
       "view": "View",
       "arrival": "Arrival date",
-      "notes": "Notes",
+      "notes": "Description",
       "updatedAt": "Last updated"
     }
   },

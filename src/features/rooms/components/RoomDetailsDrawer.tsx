@@ -11,7 +11,7 @@ import { formatDate, formatRelativeTime } from '../../../utils/date';
 import { formatNumber } from '../../../utils/format';
 import { ROOM_STATUS_TRANSITIONS } from '../constants/roomOptions';
 import type { Room, RoomStatus } from '../types/room.types';
-import { getRoomGuestName, getRoomNotes } from '../utils/roomDisplay';
+import { getRoomGuestName } from '../utils/roomDisplay';
 import { RoomStatusBadge } from './RoomStatusBadge';
 import './RoomDetailsDrawer.css';
 
@@ -31,13 +31,13 @@ export function RoomDetailsDrawer({
   isSaving,
 }: RoomDetailsDrawerProps) {
   const [draftStatus, setDraftStatus] = useState<RoomStatus | undefined>(room?.status);
-  const [draftNotes, setDraftNotes] = useState(room ? getRoomNotes(room, language) : '');
+  const [draftNotes, setDraftNotes] = useState('');
   const [showStatusSelect, setShowStatusSelect] = useState(false);
   const t = (key: string) => getTranslation(language, key);
 
   useEffect(() => {
     setDraftStatus(room?.status);
-    setDraftNotes(room ? getRoomNotes(room, language) : '');
+    setDraftNotes('');
     setShowStatusSelect(false);
   }, [language, room]);
 
