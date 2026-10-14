@@ -21,6 +21,7 @@ import { LoadingState } from '../../../components/common/LoadingState';
 import { PageHero } from '../../../components/common/PageHero';
 import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { AppError } from '../../../core/errors/AppError';
+import { getAuthSession } from '../../../core/auth/authManager';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { formatNumber, formatPercent } from '../../../utils/format';
 import type { CleaningTask, MaintenanceIssue, ShiftSummary } from '../types/shift-handover.types';
@@ -99,7 +100,8 @@ export function ShiftHandoverPage() {
   const outlet = useOutletContext<{ language?: Language } | undefined>();
   const language: Language = outlet?.language ?? 'ar';
   const t = (key: string) => getTranslation(language, key);
-
+  const staffName = getAuthSession()?.staffName || t('topbar.userName');
+  const avatarLetter = Array.from(staffName)[0] ?? '';
   const handover = useHandoverShift();
   const { data: summary, isLoading, isError, error, refetch } = useShiftSummary(!handover.isSuccess);
   const [notes, setNotes] = useState<string | null>(null);
@@ -212,8 +214,8 @@ export function ShiftHandoverPage() {
 
       <Card className="shift-handover__info">
         <div className="shift-handover__info-staff">
-          <span className="shift-handover__avatar" aria-hidden="true">{t('topbar.userName')}</span>
-          <div><span>{t('handoverPage.info.staff')}</span><strong>{t('topbar.userName')}</strong></div>
+          <span className="shift-handover__avatar" aria-hidden="true">{avatarLetter}</span>
+          <div><span>{t('handoverPage.info.staff')}</span><strong>{staffName}</strong></div>
         </div>
         <div><span>{t('handoverPage.info.shift')}</span><strong>{shiftType}</strong></div>
         <div><span>{t('handoverPage.info.hours')}</span><strong>{shiftHours}</strong></div>

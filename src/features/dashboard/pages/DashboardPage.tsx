@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useOutletContext } from 'react-router-dom';
 import { ArrowLeft, ArrowLeftRight, ChevronLeft, ChevronRight, ArrowUpRight, BedDouble, Check, CircleAlert, Clock, FileText, LogIn, MoreHorizontal, Sparkles, Wallet, Wrench, type LucideIcon } from 'lucide-react';
@@ -11,6 +12,8 @@ import { formatCurrency, formatNumber, formatPercent } from '../../../utils/form
 import { getDashboardSummary } from '../services/dashboard.api';
 import type { DashboardIconKey, RevenuePoint } from '../types/dashboard.types';
 import { ROUTES } from '../../../core/constants/routes';
+import { getAuthSession } from '../../../core/auth/authManager';
+import { computeShiftProgress, useCurrentShift } from '../../shift-handover/services/currentShift';
 import './DashboardPage.css';
 
 const iconMap: Record<DashboardIconKey, LucideIcon> = {
@@ -85,6 +88,31 @@ export function DashboardPage() {
     staleTime: 0,
   });
   const t = (key: string) => translation(language, key);
+  const { data: currentShift } = useCurrentShift();
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(new Date()), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const staffName = getAuthSession()?.staffName || '';
+  const cairoHour = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Cairo', hour: '2-digit', hourCycle: 'h23' }).format(now));
+  const greeting = language === 'ar'
+    ? (cairoHour >= 5 && cairoHour < 12 ? 'صباح الخير' : cairoHour >= 12 && cairoHour < 18 ? 'مساء الخير' : 'مساء الخير')
+    : (cairoHour >= 5 && cairoHour < 12 ? 'Good morning' : cairoHour >= 12 && cairoHour < 18 ? 'Good afternoon' : 'Good evening');
+  const heroName = staffName
+    ? (language === 'ar' ? `مرحبًا بعودتك يا ${staffName}.` : `Welcome back, ${staffName}.`)
+    : t('dashboard.heroTitle');
+  const progress = currentShift ? computeShiftProgress(currentShift, now) : null;
+  const shiftName = currentShift ? t(`handoverPage.shiftType.${currentShift.shift_type}`) : t('handoverPage.info.shift');
+  const shiftFoot = !currentShift || !progress
+    ? '—'
+    : progress.ended
+      ? `${currentShift.start_time} — ${currentShift.end_time}`
+      : t('sidebar.shiftEnds')
+          .replace('{hours}', formatNumber(progress.remainingHours, language))
+          .replace('{minutes}', formatNumber(progress.remainingMinutes, language));
 
   if (isPending) return <LoadingState label={t('loading')} />;
   if (isError || !data) return <ErrorState title={t('dashboard.loadError')} message={getErrorMessage(error, language)} />;
@@ -94,22 +122,22 @@ export function DashboardPage() {
     <div className="feature-page dashboard-page">
       <section className="dashboard-page__hero">
         <div className="dashboard-page__hero-copy">
-          <span className="dashboard-page__eyebrow">{t('dashboard.heroEyebrow')}</span>
-          <h1>{t('dashboard.heroTitle')}</h1>
+          <span className="dashboard-page__eyebrow">{greeting}</span>
+          <h1>{heroName}</h1>
           <p>{t('dashboard.heroDescription')}</p>
         </div>
         <div className="dashboard-page__hero-shift">
           <div className="dashboard-page__hero-shift-heading">
             <div>
               <span>{t('dashboard.shiftProgress')}</span>
-              <strong>{t('sidebar.shiftTitle')}</strong>
+              <strong>{shiftName}</strong>
             </div>
             <Clock aria-hidden="true" />
           </div>
-          <div className="dashboard-page__hero-progress"><span style={{ width: `${data.shift.progressPercent}%` }} /></div>
+          <div className="dashboard-page__hero-progress"><span style={{ width: `${progress?.progressPercent ?? 0}%` }} /></div>
           <div className="dashboard-page__hero-shift-foot">
-            <span>{t('sidebar.shiftEnds').replace('{hours}', formatNumber(data.shift.remainingHours, language)).replace('{minutes}', formatNumber(data.shift.remainingMinutes, language))}</span>
-            <span>{formatNumber(data.shift.progressPercent, language)}%</span>
+            <span>{shiftFoot}</span>
+            <span>{formatNumber(progress?.progressPercent ?? 0, language)}%</span>
           </div>
         </div>
       </section>

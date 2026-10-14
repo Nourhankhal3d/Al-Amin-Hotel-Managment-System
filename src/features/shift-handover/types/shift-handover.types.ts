@@ -12,8 +12,8 @@ export type MaintenanceIssueStatus = 'open' | 'in_progress' | 'resolved';
 export type PaymentMethod = 'cash' | 'instapay' | 'vodafone_cash';
 
 export interface Shift {
-  shift_id: number;
-  staff_id: number;
+  shift_id: string;
+  staff_id: string;
   shift_date: string;
   shift_type: ShiftType;
   start_time: string;
@@ -80,7 +80,7 @@ export interface ShiftSummary {
   payments: PaymentTotals;
   check_ins: number;
   check_outs: number;
-  rooms_handled: number[];
+  rooms_handled: string[];
   cleaning_tasks: CleaningTask[];
   maintenance_issues: MaintenanceIssue[];
   pending: PendingItems;

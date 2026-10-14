@@ -1,6 +1,12 @@
 import { request } from '../../../core/api/apiClient';
+import { getAuthSession } from '../../../core/auth/authManager';
 import type { ShiftSummary } from '../types/shift-report.types';
 import type { ShiftSummary as HandoverSummary } from '../../shift-handover/types/shift-handover.types';
+// A night shift ends on the next calendar day (for example 23:00 -> 07:00).
+function addOneDay(date: string): string {
+  const [year, month, day] = date.split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day + 1)).toISOString().slice(0, 10);
+}
 
 export async function getShiftReport(): Promise<ShiftSummary> {
   try {
@@ -10,16 +16,20 @@ export async function getShiftReport(): Promise<ShiftSummary> {
       handover.maintenance_issues.filter((i) => i.status === 'resolved').length;
     const totalTasks = handover.cleaning_tasks.length + handover.maintenance_issues.length;
     const score = totalTasks > 0 ? Math.round((tasksDone / totalTasks) * 100) : 100;
+    const endDate =
+      handover.shift.end_time <= handover.shift.start_time
+        ? addOneDay(handover.shift.shift_date)
+        : handover.shift.shift_date;
 
     return {
       date: handover.shift.shift_date,
       checkedIn: handover.check_ins,
       checkedOut: handover.check_outs,
       tasksCompleted: tasksDone,
-      staffName: `موظف #${handover.shift.staff_id}`,
+      staffName: getAuthSession()?.staffName,
       shiftName: handover.shift.shift_type,
       startedAt: `${handover.shift.shift_date}T${handover.shift.start_time}`,
-      endedAt: `${handover.shift.shift_date}T${handover.shift.end_time}`,
+      endedAt: `${endDate}T${handover.shift.end_time}`,
       performanceScore: score,
       totalCollected: handover.payments.total,
       cashCollected: handover.payments.cash,

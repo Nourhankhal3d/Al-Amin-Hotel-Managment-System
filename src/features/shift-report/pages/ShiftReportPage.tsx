@@ -178,7 +178,7 @@ export function ShiftReportPage() {
     queryKey: SHIFT_REPORT_QUERY_KEY,
     queryFn: getShiftReport,
   });
-  const sample = import.meta.env.DEV ? buildSampleSummary(t) : undefined;
+  const sample = import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS !== 'false' ? buildSampleSummary(t) : undefined;
   const summary = data ? (sample ? { ...sample, ...data } : data) : sample;
 
   if (!summary && isPending) {

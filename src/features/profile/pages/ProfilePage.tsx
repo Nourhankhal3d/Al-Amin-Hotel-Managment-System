@@ -19,6 +19,7 @@ import { Input } from '../../../components/ui/Input';
 import { StatCard } from '../../../components/ui/StatCard';
 import { useToast } from '../../../components/ui/ToastContext';
 import { getAuthSession, clearAuthSession } from '../../../core/auth/authManager';
+import { logoutRequest } from '../../auth/services/auth.api';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { formatNumber, formatPercent } from '../../../utils/format';
@@ -40,7 +41,12 @@ export function ProfilePage() {
   const [editForm, setEditForm] = useState({ ...contact });
   const [saving, setSaving] = useState(false);
 
-  function handleLogout() {
+  async function handleLogout() {
+    try {
+      await logoutRequest();
+    } catch {
+      // the local logout below must happen even if the server call fails
+    }
     clearAuthSession();
     navigate(ROUTES.login, { replace: true });
   }

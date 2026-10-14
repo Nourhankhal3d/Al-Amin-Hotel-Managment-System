@@ -16,6 +16,6 @@ export function submitShiftHandover(data: HandoverRequest): Promise<Shift> {
   });
 }
 
-export function getShiftReport(shiftId: number): Promise<Blob> {
+export function getShiftReport(shiftId: string): Promise<Blob> {
   return request<Blob>(`/shifts/${shiftId}/report`, { responseType: 'blob' });
 }

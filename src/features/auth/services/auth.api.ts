@@ -8,3 +8,6 @@ export async function login(credentials: LoginCredentials): Promise<AuthResponse
   });
 }
 
+export async function logoutRequest(): Promise<void> {
+  await request<void>('/auth/logout', { method: 'POST' });
+}
