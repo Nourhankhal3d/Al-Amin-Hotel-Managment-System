@@ -144,7 +144,7 @@ async function searchGuests(filters, page = 1, limit = 20) {
 
   const [guests, total] = await Promise.all([
     Guest.find(query)
-      .sort({ name_search: 1 })
+    .sort({ name_search: 1, _id: 1 })
       .skip((safePage - 1) * safeLimit)
       .limit(safeLimit),
     Guest.countDocuments(query),
