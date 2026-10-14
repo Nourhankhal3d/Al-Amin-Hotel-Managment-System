@@ -13,6 +13,7 @@ const {
 const { ZONE, shiftWindow, cairoDate } = require('../../utils/time');
 const { toEGP } = require('../../utils/money');
 const { E } = require('../../utils/errors');
+const { isObjectId } = require('../../utils/ids');
 const { generateShiftReportPdf } = require('../../utils/pdf');
 
 const START_TIMES = { morning: '07:00', evening: '16:00', night: '23:00' };
@@ -396,6 +397,10 @@ async function handoverShift(staff, shiftNotes, now = new Date()) {
 }
 
 async function getShiftReport(staff, shiftId) {
+  if (!isObjectId(shiftId)) {
+    throw E.notFound('Report not found');
+  }
+
   const shift = await Shift.findById(shiftId);
   if (!shift || String(shift.staff_id) !== String(staff._id)) {
     throw E.notFound('Report not found');
