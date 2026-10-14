@@ -9,7 +9,7 @@ const {
 } = require('../../utils/crypto');
 const { audit } = require('../audit/audit.service');
 const { normalizePhone, escapeRegex } = require('./guest.utils');
-
+const { isObjectId } = require('../../utils/ids');
 function toGuestDto(guest) {
   return {
     guest_id: String(guest._id),
@@ -143,9 +143,9 @@ async function searchGuests(filters, page = 1, limit = 20) {
 }
 
 async function getGuestById(id) {
+  if (!isObjectId(id)) throw E.notFound('Guest not found.');
   const guest = await Guest.findById(id);
   if (!guest) throw E.notFound('Guest not found.');
   return toGuestDto(guest);
 }
-
 module.exports = { createGuest, searchGuests, getGuestById };

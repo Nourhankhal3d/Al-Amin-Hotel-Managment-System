@@ -254,4 +254,12 @@ describe('F6 Guests API', () => {
     expect(res.body.id_number_enc).toBeUndefined();
     expect(res.body.id_number_hash).toBeUndefined();
   });
+  
+  test('returns 404 for a malformed guest ID', async () => {
+    const res = await request(app)
+      .get('/api/v1/guests/abc')
+      .set(auth());
+
+    expect(res.status).toBe(404);
+  });
 });
