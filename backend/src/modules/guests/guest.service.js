@@ -1,4 +1,5 @@
 const { Guest } = require('../../db/models');
+const mongoose = require('mongoose');
 const { E } = require('../../utils/errors');
 const { sanitizeText, normalizeArabic } = require('../../utils/arabic');
 const {
@@ -8,6 +9,7 @@ const {
   maskId,
 } = require('../../utils/crypto');
 const { audit } = require('../audit/audit.service');
+const { AUDIT } = require('../audit/audit.actions');
 const { normalizePhone, escapeRegex } = require('./guest.utils');
 const { isObjectId } = require('../../utils/ids');
 function toGuestDto(guest) {
@@ -36,6 +38,8 @@ async function handleDuplicateKey(err, hash) {
   throw err;
 }
 
+ 
+
 async function createGuest(payload, actorStaffId, ip) {
   const name = sanitizeText(payload.name || '');
   const phone = normalizePhone(payload.phone || '');
@@ -44,8 +48,8 @@ async function createGuest(payload, actorStaffId, ip) {
   if (!name) throw E.validation('Name is required.');
 
   if (!/^\+?\d{7,15}$/.test(phone)) {
-  throw E.validation('Invalid phone number.');
-}
+    throw E.validation('Invalid phone number.');
+  }
   if (!/^[A-Z0-9]{7,30}$/.test(idNorm)) {
     throw E.validation('Invalid ID number.');
   }
@@ -54,41 +58,53 @@ async function createGuest(payload, actorStaffId, ip) {
   const existing = await Guest.findOne({ id_number_hash: hash });
 
   if (existing) {
-  const err = E.conflict('A guest with this ID number already exists.');
-  err.guest_id = String(existing._id);
-  throw err;
-}
-  
+    const err = E.conflict('A guest with this ID number already exists.');
+    err.guest_id = String(existing._id);
+    throw err;
+  }
+
+  let guest;
+  const session = await mongoose.startSession();
   try {
-    const guest = await Guest.create({
-      name,
-      name_search: normalizeArabic(name),
-      phone,
-      id_number_enc: encrypt(idNorm),
-      id_number_hash: hash,
-      id_number_last4: idNorm.slice(-4),
-    });
+    await session.withTransaction(async () => {
+      const [created] = await Guest.create(
+        [
+          {
+            name,
+            name_search: normalizeArabic(name),
+            phone,
+            id_number_enc: encrypt(idNorm),
+            id_number_hash: hash,
+            id_number_last4: idNorm.slice(-4),
+          },
+        ],
+        { session }
+      );
+      guest = created;
 
-    await audit({
-      action: 'GUEST_CREATED',
-      actorStaffId,
-      entity: 'guest',
-      entityId: String(guest._id),
-      details: {},
-      ip,
+      await audit(
+        {
+          action: AUDIT.GUEST_CREATED,
+          actorStaffId,
+          entity: 'guest',
+          entityId: String(created._id),
+          details: {},
+          ip,
+        },
+        { session }
+      );
     });
-
-    return toGuestDto(guest);
   } catch (err) {
     if (err && err.code === 11000) {
       await handleDuplicateKey(err, hash);
     }
-
     throw err;
+  } finally {
+    await session.endSession();
   }
 
+  return toGuestDto(guest);
 }
-
 async function searchGuests(filters, page = 1, limit = 20) {
   const { name, phone, id_number } = filters;
   const conditions = [];

@@ -18,7 +18,7 @@ const {
 } = require('../src/db/models');
 const { ZONE } = require('../src/utils/time');
 const { decrypt } = require('../src/utils/crypto');
-
+const AuditLog = require('../src/db/models/AuditLog');
 const password = 'Password123';
 const today = '2026-10-15';
 
@@ -261,5 +261,22 @@ describe('F6 Guests API', () => {
       .set(auth());
 
     expect(res.status).toBe(404);
+  });
+  
+  test('writes a GUEST_CREATED audit log without the ID number', async () => {
+    await AuditLog.collection.deleteMany({});
+
+    const res = await request(app)
+      .post('/api/v1/guests')
+      .set(auth())
+      .set('x-test-time', loginTime)
+      .send(testGuest);
+
+    expect(res.status).toBe(201);
+
+    const logs = await AuditLog.find({ action: 'GUEST_CREATED' }).lean();
+    expect(logs).toHaveLength(1);
+    expect(logs[0].entity_id).toBe(res.body.guest_id);
+    expect(JSON.stringify(logs[0])).not.toContain('AB12345678');
   });
 });
