@@ -15,13 +15,13 @@ interface RoomsGridProps {
 export function RoomsGrid({ rooms, language, onOpenRoom }: RoomsGridProps) {
   const t = (key: string) => getTranslation(language, key);
   const count = formatNumber(rooms.length, language);
-  const summary = t('rooms.table.summary').replace('{rows}', count).replace('{total}', count);
+  const summary = t('rooms.gridSubtitle').replace('{count}', count);
 
   return (
     <Card className="rooms-table-card" id="rooms-grid-card">
       <header className="rooms-table-card__header">
         <div>
-          <h2>{t('rooms.table.title')}</h2>
+         <h2>{t('rooms.gridTitle')}</h2>
           <p>{summary}</p>
         </div>
         <span className="rooms-table-card__updated">{t('rooms.table.updatedNow')}</span>

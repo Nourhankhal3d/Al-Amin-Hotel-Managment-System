@@ -32,7 +32,10 @@ export function RoomCard({ room, language, onOpen }: RoomCardProps) {
       onClick={() => onOpen(room.id)}
     >
       <span className="room-card__top">
-        <span className="room-card__number">{number}</span>
+                <span className="room-card__id">
+          <span className="room-card__label">{t('rooms.card.room')}</span>
+          <span className="room-card__number">{number}</span>
+        </span>
         {room.type === 'vip' && <span className="room-card__vip">VIP</span>}
       </span>
       <span className="room-card__status">

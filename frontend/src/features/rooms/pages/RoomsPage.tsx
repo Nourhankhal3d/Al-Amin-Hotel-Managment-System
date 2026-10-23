@@ -234,7 +234,7 @@ export function RoomsPage() {
 
   return (
     <div className="feature-page rooms-page">
-      <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.description')}>
+        <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.heroDescription')}>
         <Button variant="glass" type="button" className="rooms-page__hero-export" onClick={downloadCsv}><FileText aria-hidden="true" />{t('rooms.export')}</Button>
         <Button variant="gold" type="button" className="rooms-page__hero-add" onClick={openActivity}><Plus aria-hidden="true" />{t('rooms.addActivity')}</Button>
       </PageHero>

@@ -387,6 +387,12 @@
       "arrival": "Arrival date",
       "notes": "Description",
       "updatedAt": "Last updated"
+    },
+    "heroDescription": "Pick any room and update its details right from one quick board.",
+    "gridTitle": "All hotel rooms",
+    "gridSubtitle": "{count} rooms in one grid · click to update live",
+    "card": {
+      "room": "Room"
     }
   },
   "save": "Save Changes",
