@@ -1,0 +1,82 @@
+.room-card {
+  --room-card-accent: var(--color-primary);
+  display: grid;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.room-card:hover,
+.room-card:focus-visible {
+  border-color: var(--room-card-accent);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.room-card--available { --room-card-accent: var(--color-primary); }
+.room-card--occupied { --room-card-accent: var(--color-gold); }
+.room-card--reserved { --room-card-accent: #4f7bd9; }
+.room-card--cleaning { --room-card-accent: var(--color-status-cleaning-text); }
+.room-card--maintenance { --room-card-accent: #7c5cbf; }
+
+.room-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.room-card__number {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.room-card__vip {
+  padding: 0.1rem var(--space-2);
+  border-radius: var(--radius-pill);
+  color: var(--color-gold);
+  background: var(--color-gold-soft);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.room-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--room-card-accent);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.room-card__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--room-card-accent);
+}
+
+.room-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+}
+
+.room-card__footer {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -22,7 +22,7 @@ import { AddRoomActivityDrawer } from '../components/AddRoomActivityDrawer';
 import { RoomDetailsDrawer } from '../components/RoomDetailsDrawer';
 import { RoomsFilters } from '../components/RoomsFilters';
 import { RoomsStatsRow } from '../components/RoomsStatsRow';
-import { RoomsTable } from '../components/RoomsTable';
+import { RoomsGrid } from '../components/RoomsGrid';
 import './RoomsPage.css';
 
 const filterKeys = ['q', 'type', 'status', 'floor', 'availability', 'page'] as const;
@@ -73,7 +73,7 @@ export function RoomsPage() {
   const filteredRooms = roomsQuery.data?.matchingRooms ?? [];
   const totalPages = Math.max(1, Math.ceil(filteredRooms.length / ROOM_PAGE_SIZE));
   const effectivePage = Math.min(filters.page, totalPages);
-  const pageRooms = roomsQuery.data?.rows ?? [];
+  
   const isActivityOpen = searchParams.get('activity') === 'new';
 
   const setParam = useCallback((name: string, value: string, replace = false) => {
@@ -157,11 +157,6 @@ export function RoomsPage() {
       next.set('activity', 'new');
       return next;
     });
-  }
-
-  function changePage(page: number) {
-    setParam('page', String(page));
-    window.setTimeout(() => tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
   }
 
   async function saveDetails(status: RoomStatus, notes: string) {
@@ -254,7 +249,7 @@ export function RoomsPage() {
         <EmptyState title={t('rooms.table.empty')} description={t('rooms.table.emptyDescription')} action={<Button variant="secondary" type="button" onClick={resetFilters}>{t('rooms.table.resetFilters')}</Button>} />
       ) : (
         <div ref={tableRef}>
-          <RoomsTable rooms={pageRooms} totalRooms={filteredRooms.length} language={language} page={effectivePage} totalPages={totalPages} onPageChange={changePage} onOpenRoom={openRoom} />
+            <RoomsGrid rooms={filteredRooms} language={language} onOpenRoom={openRoom} />
         </div>
       )}
 

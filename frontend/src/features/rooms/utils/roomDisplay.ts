@@ -26,7 +26,7 @@ export function filterAndSortRooms(rooms: Room[], filters: RoomFilters, language
         || (filters.availability === 'available' ? room.status === 'available' : room.status !== 'available');
       return matchesQuery && matchesType && matchesStatus && matchesFloor && matchesAvailability;
     })
-    .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt));
+    .sort((left, right) => left.number.localeCompare(right.number, undefined, { numeric: true }));
 }
 
 export function getRoomGuestName(room: Room, language: Language): string {
