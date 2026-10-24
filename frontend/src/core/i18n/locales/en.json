@@ -336,7 +336,44 @@
       "saveActivity": "Save activity",
       "cancel": "Cancel",
       "chooseRoomFirst": "Choose a room first",
-      "noTransitions": "This room's status can't be changed here"
+      "noTransitions": "This room's status can't be changed here",
+      "guestSection": "Guest details",
+      "guestPhone": "Phone",
+      "guestIdNumber": "National ID",
+      "noGuest": "No current guest",
+      "departure": "Departure date",
+      "cleaningSection": "Cleaning requests",
+      "maintenanceSection": "Maintenance log",
+      "paymentsSection": "Payments log",
+      "noCleaning": "No cleaning requests",
+      "noMaintenance": "No maintenance issues",
+      "noPayments": "No payments yet",
+      "cleanerUnassigned": "No cleaner assigned",
+      "totalAmount": "Total",
+      "paidAmount": "Paid",
+      "remainingAmount": "Remaining",
+      "extrasLoading": "Loading details…",
+      "extrasError": "Couldn't load room details",
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "cleaningStatus": {
+        "pending": "Not started",
+        "done": "Done"
+      },
+      "maintenanceStatus": {
+        "open": "Open",
+        "in_progress": "In progress",
+        "resolved": "Resolved"
+      },
+      "paymentMethod": {
+        "cash": "Cash",
+        "instapay": "InstaPay",
+        "vodafone_cash": "Vodafone Cash"
+      }
     },
     "validation": {
       "roomRequired": "Choose a room",

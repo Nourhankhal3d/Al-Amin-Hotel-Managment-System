@@ -12,6 +12,7 @@ import { ROOM_STATUS_TRANSITIONS } from '../constants/roomOptions';
 import type { Room, RoomStatus } from '../types/room.types';
 import { getRoomGuestName } from '../utils/roomDisplay';
 import { RoomStatusBadge } from './RoomStatusBadge';
+import { RoomExtrasSections } from './RoomExtrasSections';
 import './RoomDetailsDrawer.css';
 
 interface RoomDetailsDrawerProps {
@@ -133,9 +134,11 @@ export function RoomDetailsDrawer({
         </div>
         <div>
           <span>{t('rooms.drawer.lastUpdated')}</span>
-          <strong>{formatRelativeTime(room.updatedAt, language)}</strong>
+               <strong>{formatRelativeTime(room.updatedAt, language)}</strong>
         </div>
       </section>
+
+      <RoomExtrasSections roomId={room.id} language={language} />
 
       <section className="room-details-drawer__section">
         <label
