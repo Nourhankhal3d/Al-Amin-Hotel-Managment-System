@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { BedDouble } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
@@ -32,13 +31,11 @@ export function RoomDetailsDrawer({
 }: RoomDetailsDrawerProps) {
   const [draftStatus, setDraftStatus] = useState<RoomStatus | undefined>(room?.status);
   const [draftNotes, setDraftNotes] = useState('');
-  const [showStatusSelect, setShowStatusSelect] = useState(false);
   const t = (key: string) => getTranslation(language, key);
 
   useEffect(() => {
     setDraftStatus(room?.status);
     setDraftNotes('');
-    setShowStatusSelect(false);
   }, [language, room]);
 
   if (!room) return null;
@@ -46,7 +43,12 @@ export function RoomDetailsDrawer({
   const currentStatus = draftStatus ?? room.status;
   const allowedStatuses = ROOM_STATUS_TRANSITIONS[room.status];
   const changed = currentStatus !== room.status;
-  const statusOptions = allowedStatuses.map((status) => ({
+  // The current status is always listed first so the select can show it,
+  // then the statuses the receptionist is allowed to move to.
+  const statusOptions = [
+    room.status,
+    ...allowedStatuses.filter((status) => status !== room.status),
+  ].map((status) => ({
     value: status,
     label: t(`rooms.status.${status}`),
   }));
@@ -70,13 +72,8 @@ export function RoomDetailsDrawer({
       className="room-details-drawer"
       footer={(
         <div className="room-details-drawer__footer">
-          <Button
-            variant="secondary"
-            type="button"
-            disabled={allowedStatuses.length === 0}
-            onClick={() => setShowStatusSelect((visible) => !visible)}
-          >
-            {t('rooms.drawer.updateStatus')}
+          <Button variant="secondary" type="button" onClick={onClose}>
+            {t('rooms.drawer.cancel')}
           </Button>
           <Button
             type="button"
@@ -99,10 +96,29 @@ export function RoomDetailsDrawer({
         <RoomStatusBadge status={currentStatus} language={language} />
       </section>
 
+      <div className="room-details-drawer__status-select">
+        <Select
+          label={t('rooms.drawer.newStatus')}
+          value={currentStatus}
+          options={statusOptions}
+          disabled={allowedStatuses.length === 0}
+          onChange={(value) => setDraftStatus(value as RoomStatus)}
+        />
+        {allowedStatuses.length === 0 && (
+          <p className="room-details-drawer__empty-log">
+            {t('rooms.drawer.noTransitions')}
+          </p>
+        )}
+      </div>
+
       <section
         className="room-details-drawer__info-grid"
         aria-label={t('rooms.drawer.detailsEyebrow')}
       >
+        <div>
+          <span>{t('rooms.table.roomType')}</span>
+          <strong>{t(`rooms.type.${room.type}`)}</strong>
+        </div>
         <div>
           <span>{t('rooms.drawer.guest')}</span>
           <strong>{getRoomGuestName(room, language)}</strong>
@@ -116,29 +132,10 @@ export function RoomDetailsDrawer({
           </strong>
         </div>
         <div>
-          <span>{t('rooms.drawer.currentStatus')}</span>
-          <strong>{t(`rooms.status.${currentStatus}`)}</strong>
-        </div>
-        <div>
           <span>{t('rooms.drawer.lastUpdated')}</span>
           <strong>{formatRelativeTime(room.updatedAt, language)}</strong>
         </div>
       </section>
-
-      {showStatusSelect && (
-        <div className="room-details-drawer__status-select">
-          <Select
-            label={t('rooms.drawer.chooseStatus')}
-            value={allowedStatuses.includes(currentStatus) ? currentStatus : ''}
-            options={statusOptions}
-            onChange={(value) => {
-              setDraftStatus(value as RoomStatus);
-              setShowStatusSelect(false);
-            }}
-            autoOpen
-          />
-        </div>
-      )}
 
       <section className="room-details-drawer__section">
         <label
@@ -176,7 +173,6 @@ export function RoomDetailsDrawer({
           </p>
         )}
       </section>
-
     </Drawer>
   );
 }
