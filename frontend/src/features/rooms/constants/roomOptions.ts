@@ -41,4 +41,4 @@ export const ROOM_AVAILABILITY_OPTIONS: RoomOption<RoomAvailability>[] = [
   { value: 'unavailable', labelKey: 'rooms.options.availability.unavailable' },
 ];
 
-export const ROOM_PAGE_SIZE = 6;
+export const ROOM_PAGE_SIZE = 36;
