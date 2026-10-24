@@ -1,0 +1,120 @@
+.rooms-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px;
+}
+
+.rooms-filters__search-row {
+  width: 100%;
+}
+
+.rooms-filters__search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.rooms-filters__search-icon {
+  position: absolute;
+  inset-inline-start: 14px;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.rooms-filters__search-input {
+  width: 100%;
+  min-height: 2.875rem;
+  padding: var(--space-3) 2.75rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  font-size: var(--font-size-sm);
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rooms-filters__search-input::-webkit-search-cancel-button { appearance: none; }
+
+.rooms-filters__search-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(65, 192, 106, 0.12);
+}
+
+.rooms-filters__clear {
+  position: absolute;
+  inset-inline-end: var(--space-3);
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  background: transparent;
+}
+
+.rooms-filters__clear:hover,
+.rooms-filters__clear:focus-visible {
+  color: var(--color-ink);
+  background: var(--color-surface-muted);
+}
+
+.rooms-filters__clear:focus-visible { outline: 2px solid var(--color-primary); }
+
+.rooms-filters__controls-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px;
+}
+
+.rooms-filters__selects {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+
+.rooms-filters__reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2) var(--space-4);
+  background: transparent;
+  border: 0;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s;
+  min-height: 2.625rem;
+}
+
+.rooms-filters__reset:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+@media (max-width: 52rem) {
+  .rooms-filters__controls-row { grid-template-columns: 1fr; }
+  .rooms-filters__selects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rooms-filters__reset { justify-self: start; }
+}
+
+@media (max-width: 32rem) {
+  .rooms-filters__selects {
+    grid-template-columns: 1fr;
+  }
+
+  .rooms-filters__controls-row { gap: var(--space-2); }
+}

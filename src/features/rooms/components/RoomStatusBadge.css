@@ -1,0 +1,17 @@
+.room-status-badge {
+  position: relative;
+  justify-content: center;
+  min-width: 3.75rem;
+  gap: var(--space-2);
+  padding-inline: var(--space-3);
+  font-weight: var(--font-weight-medium);
+}
+
+.room-status-badge::before {
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: 0 0 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
+}
