@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { BedDouble } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
@@ -6,11 +7,10 @@ import { Select } from '../../../components/ui/Select';
 import { Timeline } from '../../../components/common/Timeline';
 import type { Language } from '../../../core/i18n';
 import { getTranslation } from '../../../core/i18n';
-import { formatDate, formatRelativeTime } from '../../../utils/date';
+import { formatRelativeTime } from '../../../utils/date';
 import { formatNumber } from '../../../utils/format';
 import { ROOM_STATUS_TRANSITIONS } from '../constants/roomOptions';
 import type { Room, RoomStatus } from '../types/room.types';
-import { getRoomGuestName } from '../utils/roomDisplay';
 import { RoomStatusBadge } from './RoomStatusBadge';
 import { RoomExtrasSections } from './RoomExtrasSections';
 import './RoomDetailsDrawer.css';
@@ -119,18 +119,6 @@ export function RoomDetailsDrawer({
         <div>
           <span>{t('rooms.table.roomType')}</span>
           <strong>{t(`rooms.type.${room.type}`)}</strong>
-        </div>
-        <div>
-          <span>{t('rooms.drawer.guest')}</span>
-          <strong>{getRoomGuestName(room, language)}</strong>
-        </div>
-        <div>
-          <span>{t('rooms.drawer.arrival')}</span>
-          <strong>
-            {room.arrivalDate
-              ? formatDate(room.arrivalDate, language)
-              : t('rooms.drawer.arrivalEmpty')}
-          </strong>
         </div>
         <div>
           <span>{t('rooms.drawer.lastUpdated')}</span>

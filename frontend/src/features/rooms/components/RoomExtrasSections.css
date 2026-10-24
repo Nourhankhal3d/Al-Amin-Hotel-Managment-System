@@ -9,6 +9,8 @@
 
 .room-extras__grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
+.room-extras__grid:not(.room-extras__grid--three) > .room-extras__tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
 .room-extras__tile {
   display: grid;
   align-content: center;
