@@ -341,7 +341,7 @@ async function checkOut({ reservation_id, staff, shift, ip, now }) {
         {
           _id: reservation._id,
           status: 'checked_in',
-          $expr: { $lte: ['$total_amount', '$paid_cache'] },
+         $expr: mongoose.trusted({ $lte: ['$total_amount', '$paid_cache'] }),
         },
         {
           status: 'checked_out',
