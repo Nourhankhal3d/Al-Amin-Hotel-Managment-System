@@ -218,7 +218,22 @@ export function AddPaymentDrawer({ open, language, onClose }: AddPaymentDrawerPr
                     {t('paymentsPage.addForm.guest').replace('{name}', balance.guestName)}
                   </small>
                 )}
+                             {balance.totalAmount !== undefined && balance.paidAmount !== undefined && (
+                  <small className="payment-form__hint-text">
+                    {t('paymentsPage.addForm.total')}: {formatAmount(balance.totalAmount, language)} · {t('paymentsPage.addForm.paid')}: {formatAmount(balance.paidAmount, language)}
+                  </small>
+                )}
                 {remainingHint && <small className="payment-form__hint-text">{remainingHint}</small>}
+                {balance.remaining > 0 && (
+                  <button
+                    type="button"
+                    className="payment-form__pay-remaining"
+                    disabled={saving}
+                    onClick={() => { setAmount(String(balance.remaining)); clearError('amount'); }}
+                  >
+                    {t('paymentsPage.addForm.payRemaining')}
+                  </button>
+                )}
               </div>
             )}
           </div>
