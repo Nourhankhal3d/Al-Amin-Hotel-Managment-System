@@ -1,0 +1,9 @@
+.payments-ledger {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 56rem) {
+  .payments-ledger { grid-template-columns: 1fr; }
+}

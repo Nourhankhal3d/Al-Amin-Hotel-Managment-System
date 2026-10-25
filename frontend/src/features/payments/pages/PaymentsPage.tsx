@@ -18,12 +18,17 @@ import { getTranslation, type Language } from '../../../core/i18n';
 import { toDayKey } from '../../../core/utils/date';
 import { usePagination } from '../../../hooks/usePagination';
 import { formatNumber } from '../../../utils/format';
+import { AddExpenseDrawer } from '../components/AddExpenseDrawer';
 import { AddPaymentDrawer } from '../components/AddPaymentDrawer';
+import { ExpensesTable } from '../components/ExpensesTable';
 import { PaymentDetailsDrawer } from '../components/PaymentDetailsDrawer';
 import { PaymentsFilters } from '../components/PaymentsFilters';
 import type { PaymentsFilterValues } from '../components/PaymentsFilters';
+import { PaymentsLedgerSummary } from '../components/PaymentsLedgerSummary';
 import { PaymentsRevenueCard } from '../components/PaymentsRevenueCard';
-import { PaymentsSummary } from '../components/PaymentsSummary';
+import { PaymentsTabs } from '../components/PaymentsTabs';
+import type { PaymentsTab } from '../components/PaymentsTabs';
+import { getExpenses } from '../services/expenses.api';
 import { getPaymentsReport } from '../services/payments.api';
 import type { Payment } from '../types/payment.types';
 import { buildPaymentsCsv, buildPaymentsFileName, downloadCsv } from '../utils/paymentsExport';
@@ -33,6 +38,7 @@ import './PaymentsPage.css';
 
 const PAGE_SIZE = 8;
 const QUERY_KEY = ['payments', 'report'] as const;
+const EXPENSES_QUERY_KEY = ['payments', 'expenses'] as const;
 
 const emptyPaymentFilters: PaymentsFilterValues = {
   query: '',
@@ -75,15 +81,24 @@ export function PaymentsPage() {
   const toast = useToast();
   const [filters, setFilters] = useState<PaymentsFilterValues>(emptyPaymentFilters);
   const [receiptId, setReceiptId] = useState<string | null>(null);
+  const [tab, setTab] = useState<PaymentsTab>('income');
   const [addOpen, setAddOpen] = useState(false);
   const [addFormKey, setAddFormKey] = useState(0);
+  const [expenseOpen, setExpenseOpen] = useState(false);
+  const [expenseFormKey, setExpenseFormKey] = useState(0);
 
   const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: QUERY_KEY,
     queryFn: () => getPaymentsReport(),
   });
 
+  const expensesQuery = useQuery({
+    queryKey: EXPENSES_QUERY_KEY,
+    queryFn: getExpenses,
+  });
+
   const payments = useMemo(() => data ?? [], [data]);
+  const expenses = useMemo(() => expensesQuery.data ?? [], [expensesQuery.data]);
   const filtered = useMemo(() => filterPayments(payments, filters), [payments, filters]);
   const roomOptions = useMemo(
     () => Array.from(new Set(payments.map((payment) => payment.roomNo).filter((room): room is string => Boolean(room)))).sort(),
@@ -116,6 +131,17 @@ export function PaymentsPage() {
   const handleAddPayment = () => {
     setAddFormKey((current) => current + 1);
     setAddOpen(true);
+  };
+
+  const handleAddExpense = () => {
+    setExpenseFormKey((current) => current + 1);
+    setExpenseOpen(true);
+  };
+
+  // Every "add" button (hero, switch card) follows the active tab
+  const handleAdd = () => {
+    if (tab === 'income') handleAddPayment();
+    else handleAddExpense();
   };
 
   const label = (key: string | null, fallback: string) => (key ? t(key) : fallback);
@@ -164,14 +190,16 @@ export function PaymentsPage() {
 
   return (
     <div className="feature-page payments-page">
-      <PageHero eyebrow={t('paymentsPage.eyebrow')} title={t('paymentsPage.title')} description={t('paymentsPage.description')}>
-        <Button variant="glass" onClick={handleExport}>
-          <FileText aria-hidden="true" />
-          {t('paymentsPage.export')}
-        </Button>
-        <Button variant="gold" onClick={handleAddPayment}>
+      <PageHero eyebrow={t('paymentsPage.eyebrow')} title={t('paymentsPage.ledger.title')} description={t('paymentsPage.ledger.description')}>
+        {tab === 'income' && (
+          <Button variant="glass" onClick={handleExport}>
+            <FileText aria-hidden="true" />
+            {t('paymentsPage.export')}
+          </Button>
+        )}
+        <Button variant="gold" onClick={handleAdd}>
           <Plus aria-hidden="true" />
-          {t('paymentsPage.add')}
+          {tab === 'income' ? t('paymentsPage.addIncome') : t('paymentsPage.addExpense')}
         </Button>
       </PageHero>
 
@@ -185,42 +213,58 @@ export function PaymentsPage() {
         />
       ) : (
         <>
-          <PaymentsSummary payments={filtered} language={language} />
+          <PaymentsLedgerSummary payments={payments} expenses={expenses} language={language} />
 
-          <PaymentsRevenueCard payments={filtered} language={language} />
+          <PaymentsTabs tab={tab} language={language} onChange={setTab} onAdd={handleAdd} />
 
-          <Card className="filters-card">
-            <PaymentsFilters
-              language={language}
-              values={filters}
-              roomOptions={roomOptions}
-              onChange={handleFiltersChange}
-              onReset={handleReset}
+          {tab === 'income' ? (
+            <>
+              <PaymentsRevenueCard payments={filtered} language={language} />
+
+              <Card className="filters-card">
+                <PaymentsFilters
+                  language={language}
+                  values={filters}
+                  roomOptions={roomOptions}
+                  onChange={handleFiltersChange}
+                  onReset={handleReset}
+                />
+              </Card>
+
+              <TableCard
+                title={t('paymentsPage.table.title')}
+                subtitle={t('paymentsPage.table.subtitle')}
+                badge={t('paymentsPage.table.count').replace('{count}', formatNumber(filtered.length, language))}
+                footer={filtered.length > 0 ? (
+                  <Pagination
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                    pageLabel={summary}
+                    previousLabel={t('pagination.previous')}
+                    nextLabel={t('pagination.next')}
+                    navigationLabel={t('pagination.label')}
+                  />
+                ) : undefined}
+              >
+                {filtered.length === 0 ? (
+                  <EmptyState title={t('paymentsPage.table.empty')} description={t('paymentsPage.table.emptyDesc')} />
+                ) : (
+                  <Table columns={columns} rows={items} emptyMessage={t('paymentsPage.table.empty')} />
+                )}
+              </TableCard>
+            </>
+          ) : expensesQuery.isPending ? (
+            <LoadingState label={t('paymentsPage.expenses.loading')} />
+          ) : expensesQuery.isError ? (
+            <ErrorState
+              title={t('paymentsPage.expenses.loadError')}
+              message={getErrorMessage(expensesQuery.error, language)}
+              action={<Button variant="secondary" onClick={() => void expensesQuery.refetch()}>{t('paymentsPage.retry')}</Button>}
             />
-          </Card>
-
-          <TableCard
-            title={t('paymentsPage.table.title')}
-            subtitle={t('paymentsPage.table.subtitle')}
-            badge={t('paymentsPage.table.count').replace('{count}', formatNumber(filtered.length, language))}
-            footer={filtered.length > 0 ? (
-              <Pagination
-                page={page}
-                totalPages={totalPages}
-                onPageChange={setPage}
-                pageLabel={summary}
-                previousLabel={t('pagination.previous')}
-                nextLabel={t('pagination.next')}
-                navigationLabel={t('pagination.label')}
-              />
-            ) : undefined}
-          >
-            {filtered.length === 0 ? (
-              <EmptyState title={t('paymentsPage.table.empty')} description={t('paymentsPage.table.emptyDesc')} />
-            ) : (
-              <Table columns={columns} rows={items} emptyMessage={t('paymentsPage.table.empty')} />
-            )}
-          </TableCard>
+          ) : (
+            <ExpensesTable expenses={expenses} language={language} />
+          )}
         </>
       )}
 
@@ -232,7 +276,8 @@ export function PaymentsPage() {
       />
 
       <AddPaymentDrawer key={addFormKey} open={addOpen} language={language} onClose={() => setAddOpen(false)} />
+
+      <AddExpenseDrawer key={`expense-${expenseFormKey}`} open={expenseOpen} language={language} onClose={() => setExpenseOpen(false)} />
     </div>
   );
 }
-

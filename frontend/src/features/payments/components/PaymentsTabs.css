@@ -1,0 +1,40 @@
+.payments-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+}
+
+.payments-tabs__switch {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-muted);
+}
+
+.payments-tabs__tab {
+  min-height: 2.5rem;
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: 999px;
+  color: var(--color-text-muted);
+  background: transparent;
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.payments-tabs__tab--active {
+  color: var(--color-primary-dark);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 30rem) {
+  .payments-tabs { flex-direction: column; align-items: stretch; }
+  .payments-tabs__switch { justify-content: center; }
+}
