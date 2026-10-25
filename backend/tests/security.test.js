@@ -168,6 +168,9 @@ describe('Feature 12: Security Hardening (tests/security.test.js)', () => {
       if (p.includes('/payments') && m === 'post') {
         return { reservation_id: dummyId, amount: 100, payment_method: 'cash' };
       }
+      if (p.includes('/expenses') && m === 'post') {
+        return { category: 'electricity', amount: 100 };
+      }
       if (p.includes('/guests') && m === 'post') {
         return { name: 'علي حسن', phone: '01012345678', id_number: '29801011234567' };
       }

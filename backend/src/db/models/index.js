@@ -14,6 +14,7 @@ const AuditLog = require('./AuditLog');
 const IdempotencyKey = require('./IdempotencyKey');
 const Session = require('./Session');
 const ShiftReport = require('./ShiftReport');
+const Expense = require('./Expense');
 
 module.exports = {
   Staff,
@@ -32,4 +33,5 @@ module.exports = {
   IdempotencyKey,
   Session,
   ShiftReport,
+  Expense,
 };

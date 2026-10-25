@@ -79,6 +79,7 @@ app.use('/api/v1/dashboard', require('./modules/dashboard/dashboard.routes'));
 app.use('/api/v1/guests', require('./modules/guests/guest.routes'));
 app.use('/api/v1/reservations', require('./modules/reservations/reservation.routes'));
 app.use('/api/v1/payments', require('./modules/payments/payment.routes'));
+app.use('/api/v1/expenses', require('./modules/expenses/expense.routes'));
 app.use('/api/v1/cleaning-tasks', require('./modules/cleaning/cleaning.routes'));
 app.use('/api/v1/maintenance-issues', require('./modules/maintenance/maintenance.routes'));
 if (env.nodeEnv === 'test') {

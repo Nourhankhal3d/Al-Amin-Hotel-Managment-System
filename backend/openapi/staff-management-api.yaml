@@ -1062,6 +1062,68 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           $ref: '#/components/responses/Conflict'
+  /expenses:
+    post:
+      tags: [Expenses]
+      operationId: createExpense
+      summary: Record a shift expense
+      description: Records money the hotel spent during the shift (electricity, water, supplies...). The server sets `staff_id`, `shift_id` and `expense_datetime` itself. Expenses are append-only, with no update or delete, and a mistake is corrected from the Manager system.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExpenseCreate'
+            example:
+              category: electricity
+              amount: 450.00
+              notes: Electricity bill
+      responses:
+        '201':
+          description: Expense recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    get:
+      tags: [Expenses]
+      operationId: listShiftExpenses
+      summary: Expenses of the caller's current shift
+      description: Only the current shift is listed. A read-only session gets an empty list.
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
+      responses:
+        '200':
+          description: Expenses
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Expense'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /payments:
     post:
       tags: [Payments]
@@ -1914,6 +1976,40 @@ components:
         notes:
           type: string
           maxLength: 500
+    ExpenseCategory:
+      type: string
+      enum: [electricity, water, maintenance_supplies, cleaning_supplies, internet, emergency, other]
+    ExpenseCreate:
+      type: object
+      required: [category, amount]
+      properties:
+        category:
+          $ref: '#/components/schemas/ExpenseCategory'
+        amount:
+          $ref: '#/components/schemas/Money'
+        notes:
+          type: string
+          maxLength: 500
+    Expense:
+      type: object
+      required: [expense_id, staff_id, shift_id, category, amount, expense_datetime]
+      properties:
+        expense_id:
+          type: string
+        staff_id:
+          type: string
+        shift_id:
+          type: string
+        category:
+          $ref: '#/components/schemas/ExpenseCategory'
+        amount:
+          $ref: '#/components/schemas/Money'
+        notes:
+          type: string
+          nullable: true
+        expense_datetime:
+          type: string
+          format: date-time
     Payment:
       type: object
       required: [payment_id, reservation_id, staff_id, shift_id, amount, payment_method, payment_datetime, payment_verified]
