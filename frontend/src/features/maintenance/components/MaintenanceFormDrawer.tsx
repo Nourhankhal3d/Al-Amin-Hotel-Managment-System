@@ -27,6 +27,11 @@ import './MaintenanceFormDrawer.css';
 const FORM_ID = 'maintenance-request-form';
 const FIELD_ORDER: Array<keyof NewRequestFormValues> = ['roomNumber', 'priority', 'problem', 'notes'];
 
+// Display-only fields from the design (disabled: the create endpoint does not accept them yet)
+const ISSUE_TYPE_OPTIONS = ['plumbing', 'electrical', 'ac', 'furniture', 'other'];
+const STATUS_OPTIONS = ['pending', 'in_progress', 'resolved'];
+const noop = () => undefined;
+
 interface MaintenanceFormDrawerProps {
   open: boolean;
   language: Language;
@@ -96,6 +101,7 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
       }
     >
       <form id={FORM_ID} className="maintenance-form" onSubmit={handleSubmit} noValidate>
+        {/* Row 1: room + issue type (display only) */}
         <div className="maintenance-form__row">
           <Combobox
             id={fieldId('roomNumber')}
@@ -113,6 +119,28 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
             disabled={isSaving}
           />
           <Select
+            id={`${baseId}-issueType`}
+            label={t('mtFormIssueType')}
+            value=""
+            placeholder={t('mtFormIssueTypePh')}
+            options={ISSUE_TYPE_OPTIONS.map((type) => ({ value: type, label: t(`mtType_${type}`) }))}
+            onChange={noop}
+            disabled
+          />
+        </div>
+
+        {/* Row 2: technician (display only) + priority */}
+        <div className="maintenance-form__row">
+          <Select
+            id={`${baseId}-technician`}
+            label={t('mtFormTechnician')}
+            value=""
+            placeholder={t('mtFormTechnicianPh')}
+            options={[]}
+            onChange={noop}
+            disabled
+          />
+          <Select
             id={fieldId('priority')}
             label={t('priorityLabel')}
             value={values.priority}
@@ -124,6 +152,32 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
           />
         </div>
 
+        {/* Row 3: status + date (display only) */}
+        <div className="maintenance-form__row">
+          <Select
+            id={`${baseId}-status`}
+            label={t('statusLabel')}
+            value=""
+            placeholder={t('mtFormStatusPh')}
+            options={STATUS_OPTIONS.map((status) => ({ value: status, label: t(`mtStatus_${status}`) }))}
+            onChange={noop}
+            disabled
+          />
+          <label className="maintenance-form__field">
+            <span>{t('mtFormDate')}</span>
+            <input id={`${baseId}-date`} type="date" disabled />
+          </label>
+        </div>
+
+        {/* Row 4: time (display only) */}
+        <div className="maintenance-form__row">
+          <label className="maintenance-form__field">
+            <span>{t('mtFormTime')}</span>
+            <input id={`${baseId}-time`} type="time" disabled />
+          </label>
+        </div>
+
+        {/* Required by the current validation, so it stays */}
         <label className="maintenance-form__field">
           <span>{t('mtFormDescription')}</span>
           <input
@@ -162,6 +216,8 @@ export function MaintenanceFormDrawer({ open, language, onClose, onSubmit, isSav
           <Wrench aria-hidden="true" />
           {t('mtFormHint')}
         </p>
+
+        <p className="maintenance-form__soon">{t('mtFormSoon')}</p>
       </form>
     </Drawer>
   );

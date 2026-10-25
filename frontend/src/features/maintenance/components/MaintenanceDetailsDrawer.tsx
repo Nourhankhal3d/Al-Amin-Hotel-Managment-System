@@ -1,6 +1,5 @@
-import { useId, useRef, useState } from 'react';
-import { Check, Receipt, Wrench } from 'lucide-react';
-import { Timeline } from '../../../components/common/Timeline';
+import { useId, useState } from 'react';
+import { Wrench } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { Drawer } from '../../../components/ui/Drawer';
@@ -19,6 +18,7 @@ import { formatReference, formatRequestTime, formatTimeAgo, lastUpdateOf } from 
 import './MaintenanceDetailsDrawer.css';
 
 const EMPTY_VALUE = '—';
+const noop = () => undefined;
 
 type NextStatus = NonNullable<MaintenanceIssueUpdate['status']>;
 
@@ -34,27 +34,11 @@ interface MaintenanceDetailsDrawerProps {
 export function MaintenanceDetailsDrawer({ request, language, onClose, onSave, isSaving }: MaintenanceDetailsDrawerProps) {
   const t = (key: string) => getTranslation(language, key);
   const statusSelectId = useId();
-  const statusRef = useRef<HTMLDivElement>(null);
-  const logRef = useRef<HTMLElement>(null);
-  const [isEditingStatus, setIsEditingStatus] = useState(false);
   const [draftStatus, setDraftStatus] = useState<NextStatus | ''>('');
   const [statusError, setStatusError] = useState<string>();
 
   const nextStatuses = request ? NEXT_STATUSES[request.status] : [];
   const canChangeStatus = nextStatuses.length > 0;
-
-  const scrollTo = (element: HTMLElement | null) => element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-  const focusStatusSelect = () => {
-    // The select appears on the next render, so wait one frame before focusing it
-    requestAnimationFrame(() => document.getElementById(statusSelectId)?.focus({ preventScroll: true }));
-    scrollTo(statusRef.current);
-  };
-
-  const startEditingStatus = () => {
-    setIsEditingStatus(true);
-    focusStatusSelect();
-  };
 
   const changeDraftStatus = (next: string) => {
     const status = next as NextStatus;
@@ -67,37 +51,29 @@ export function MaintenanceDetailsDrawer({ request, language, onClose, onSave, i
     const error = validateStatusChange(request.status, draftStatus);
     if (error) {
       setStatusError(error);
-      setIsEditingStatus(true);
-      focusStatusSelect();
+      document.getElementById(statusSelectId)?.focus({ preventScroll: true });
       return;
     }
     onSave(draftStatus as NextStatus);
   };
 
-  // Log built from the two dates the API sends: when the issue was reported and when it was resolved
-  const logItems = request
-    ? [
-        ...(request.resolved_date
-          ? [{ id: 'resolved', title: t('mtLog_resolved'), description: t('mtLog_resolvedDesc'), time: formatRequestTime(request.resolved_date, language) }]
-          : []),
-        { id: 'reported', title: t('mtLog_reported'), description: t('mtLog_reportedDesc'), time: formatRequestTime(request.created_date, language) },
-      ]
-    : [];
+  const roomValue = request ? request.room_number || request.room_id : '';
+  const roomDisplay = Number.isFinite(Number(roomValue)) ? formatNumber(Number(roomValue), language) : roomValue;
 
   return (
     <Drawer
       open={request !== null}
-      title={request ? `${t('roomLabel')} ${Number.isFinite(Number(request.room_number || request.room_id)) ? formatNumber(Number(request.room_number || request.room_id), language) : (request.room_number || request.room_id)}` : ''}
+      title={request ? `${t('roomLabel')} ${roomDisplay}` : ''}
       eyebrow={t('mtDetailsEyebrow')}
       closeLabel={t('drawerClose')}
       onClose={onClose}
       className="maintenance-details-drawer"
-      footer={canChangeStatus ? (
+      footer={
         <div className="maintenance-details__footer">
-          <Button variant="secondary" onClick={startEditingStatus} disabled={isSaving}>{t('updateStatus')}</Button>
-          <Button onClick={save} disabled={isSaving}>{t('mtSaveChanges')}</Button>
+          <Button variant="secondary" onClick={onClose} disabled={isSaving}>{t('mtClose')}</Button>
+          {canChangeStatus && <Button onClick={save} disabled={isSaving}>{t('mtSaveReport')}</Button>}
         </div>
-      ) : undefined}
+      }
     >
       {request && (
         <div className="maintenance-details">
@@ -115,24 +91,16 @@ export function MaintenanceDetailsDrawer({ request, language, onClose, onSave, i
           </section>
 
           <div className="maintenance-details__grid">
-            <div ref={statusRef} className={`maintenance-details__info${isEditingStatus ? ' maintenance-details__info--editing' : ''}`}>
-              <span>{t('statusLabel')}</span>
-              {isEditingStatus && canChangeStatus ? (
-                <Select
-                  id={statusSelectId}
-                  value={draftStatus}
-                  placeholder={t('mtChooseStatus')}
-                  options={nextStatuses.map((option) => ({ value: option, label: t(STATUS_LABEL_KEY[option]) }))}
-                  onChange={changeDraftStatus}
-                  error={statusError ? t(statusError) : undefined}
-                  disabled={isSaving}
-                />
-              ) : (
-                <strong>{t(STATUS_LABEL_KEY[request.status])}</strong>
-              )}
+            <div className="maintenance-details__info">
+              <span>{t('mtFormTechnician')}</span>
+              <strong>{EMPTY_VALUE}</strong>
             </div>
             <div className="maintenance-details__info">
-              <span>{t('mtResolvedAt')}</span>
+              <span>{t('statusLabel')}</span>
+              <strong>{t(STATUS_LABEL_KEY[request.status])}</strong>
+            </div>
+            <div className="maintenance-details__info">
+              <span>{t('mtExpectedFix')}</span>
               <strong>{request.resolved_date ? formatRequestTime(request.resolved_date, language) : EMPTY_VALUE}</strong>
             </div>
             <div className="maintenance-details__info">
@@ -141,26 +109,58 @@ export function MaintenanceDetailsDrawer({ request, language, onClose, onSave, i
             </div>
           </div>
 
+          <section className="maintenance-details__editor">
+            <Select
+              id={`${statusSelectId}-tech`}
+              label={t('mtFormTechnician')}
+              value=""
+              placeholder={EMPTY_VALUE}
+              options={[]}
+              onChange={noop}
+              disabled
+            />
+            {canChangeStatus ? (
+              <Select
+                id={statusSelectId}
+                label={t('updateStatus')}
+                value={draftStatus}
+                placeholder={t('mtChooseStatus')}
+                options={nextStatuses.map((option) => ({ value: option, label: t(STATUS_LABEL_KEY[option]) }))}
+                onChange={changeDraftStatus}
+                error={statusError ? t(statusError) : undefined}
+                disabled={isSaving}
+              />
+            ) : (
+              <Select
+                id={statusSelectId}
+                label={t('updateStatus')}
+                value=""
+                placeholder={t(STATUS_LABEL_KEY[request.status])}
+                options={[]}
+                onChange={noop}
+                disabled
+              />
+            )}
+          </section>
+
           <section>
             <h3 className="maintenance-details__heading">{t('mtDescription')}</h3>
             <p className="maintenance-details__box">{request.notes || EMPTY_VALUE}</p>
           </section>
 
-          <section ref={logRef}>
-            <h3 className="maintenance-details__heading">{t('mtLog')}</h3>
-            <Timeline items={logItems} />
+          <section>
+            <h3 className="maintenance-details__heading">{t('mtRoomInfo')}</h3>
+            <div className="maintenance-details__grid">
+              <div className="maintenance-details__info">
+                <span>{t('roomNumberLabel')}</span>
+                <strong>{roomDisplay}</strong>
+              </div>
+              <div className="maintenance-details__info">
+                <span>{t('mtGuest')}</span>
+                <strong>{EMPTY_VALUE}</strong>
+              </div>
+            </div>
           </section>
-
-          <div className="maintenance-details__actions">
-            <button type="button" className="maintenance-details__action" onClick={() => scrollTo(statusRef.current)}>
-              <Check aria-hidden="true" />
-              {t('followStatus')}
-            </button>
-            <button type="button" className="maintenance-details__action" onClick={() => scrollTo(logRef.current)}>
-              <Receipt aria-hidden="true" />
-              {t('viewLog')}
-            </button>
-          </div>
         </div>
       )}
     </Drawer>

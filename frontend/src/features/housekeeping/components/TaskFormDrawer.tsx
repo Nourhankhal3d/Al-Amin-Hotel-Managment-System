@@ -26,6 +26,11 @@ import './TaskFormDrawer.css';
 const FORM_ID = 'housekeeping-task-form';
 const FIELD_ORDER: Array<keyof NewTaskFormValues> = ['roomNumber', 'cleanerName', 'priority', 'notes'];
 
+// Display-only fields from the design. They are disabled because the create endpoint does not accept them yet.
+const TASK_TYPE_OPTIONS = ['checkout', 'precheckin', 'daily', 'guest'];
+const STATUS_OPTIONS = ['pending', 'in_progress', 'done'];
+const noop = () => undefined;
+
 interface TaskFormDrawerProps {
   open: boolean;
   language: Language;
@@ -93,6 +98,7 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving, ro
       }
     >
       <form id={FORM_ID} className="task-form" onSubmit={handleSubmit} noValidate>
+        {/* Row 1: room + assigned staff */}
         <div className="task-form__row">
           <Combobox
             id={fieldId('roomNumber')}
@@ -127,6 +133,29 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving, ro
           </label>
         </div>
 
+        {/* Row 2: task type + status (display only) */}
+        <div className="task-form__row">
+          <Select
+            id={`${baseId}-taskType`}
+            label={t('hkColTaskType')}
+            value=""
+            placeholder={t('hkFormTaskTypePh')}
+            options={TASK_TYPE_OPTIONS.map((type) => ({ value: type, label: t(`hkType_${type}`) }))}
+            onChange={noop}
+            disabled
+          />
+          <Select
+            id={`${baseId}-status`}
+            label={t('statusLabel')}
+            value=""
+            placeholder={t('hkFormStatusPh')}
+            options={STATUS_OPTIONS.map((status) => ({ value: status, label: t(`hkStatus_${status}`) }))}
+            onChange={noop}
+            disabled
+          />
+        </div>
+
+        {/* Row 3: priority + date (date is display only) */}
         <div className="task-form__row">
           <Select
             id={fieldId('priority')}
@@ -138,6 +167,18 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving, ro
             error={errorText('priority')}
             disabled={isSaving}
           />
+          <label className="task-form__field">
+            <span>{t('hkFormDate')}</span>
+            <input id={`${baseId}-date`} type="date" disabled />
+          </label>
+        </div>
+
+        {/* Row 4: time (display only) */}
+        <div className="task-form__row">
+          <label className="task-form__field">
+            <span>{t('hkFormTime')}</span>
+            <input id={`${baseId}-time`} type="time" disabled />
+          </label>
         </div>
 
         <label className="task-form__field">
@@ -161,6 +202,8 @@ export function TaskFormDrawer({ open, language, onClose, onSubmit, isSaving, ro
           <Sparkles aria-hidden="true" />
           {t('hkFormHint')}
         </p>
+
+        <p className="task-form__soon">{t('hkFormSoon')}</p>
       </form>
     </Drawer>
   );

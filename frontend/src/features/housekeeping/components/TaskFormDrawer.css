@@ -3,7 +3,7 @@
   gap: var(--space-5);
 }
 
-/* Two equal columns; a row with one field (priority) keeps it at half width, as in the prototype */
+/* Two equal columns; a row with one field keeps it at half width, as in the design */
 .task-form__row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -51,8 +51,15 @@
 }
 
 .task-form__field .task-form__control--error { border-color: var(--color-danger); }
+
+/* Disabled (display-only) fields */
 .task-form__field input:disabled,
-.task-form__field textarea:disabled { opacity: 0.6; }
+.task-form__field textarea:disabled,
+.task-form .ui-select__trigger:disabled,
+.task-form .ui-select__trigger[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 .task-form__error {
   color: var(--color-danger);
@@ -73,10 +80,18 @@
 
 .task-form__hint svg { flex: 0 0 1.1rem; width: 1.1rem; height: 1.1rem; color: var(--color-primary); }
 
+/* Note that the display-only fields are not saved yet */
+.task-form__soon {
+  margin: calc(var(--space-2) * -1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
 /* Footer: "cancel" on the start side, wider "submit" on the end side */
 .task-form__footer {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  align-items: center;
   gap: var(--space-3);
   width: 100%;
 }
