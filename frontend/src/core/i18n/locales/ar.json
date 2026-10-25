@@ -867,6 +867,71 @@
         "amount": "أدخل مبلغًا أكبر من صفر",
         "amountTooHigh": "المبلغ أكبر من المتبقي ({amount})",
         "method": "اختر طريقة الدفع"
+      },
+      "total": "الإجمالي",
+      "paid": "المدفوع",
+      "payRemaining": "ادفع المتبقي"
+    },
+    "addIncome": "إضافة إيراد",
+    "addExpense": "إضافة مصروف",
+    "ledger": {
+      "title": "سجل الوردية المالي",
+      "description": "متابعة إيرادات ومصروفات الوردية الحالية وصافي الرصيد.",
+      "income": "إيرادات الوردية",
+      "expenses": "مصروفات الوردية",
+      "net": "صافي الوردية",
+      "incomeHint": "مجموع المدفوعات المسجلة",
+      "expensesHint": "مجموع المصروفات المسجلة",
+      "netHint": "الإيرادات ناقص المصروفات"
+    },
+    "tabs": {
+      "label": "نوع السجل",
+      "income": "الإيرادات",
+      "expenses": "المصروفات"
+    },
+    "expenses": {
+      "title": "مصروفات الوردية",
+      "subtitle": "سجل مصروفات الوردية الحالية",
+      "count": "{count} مصروف",
+      "empty": "لا توجد مصروفات",
+      "emptyDesc": "لم يتم تسجيل أي مصروف في هذه الوردية بعد.",
+      "loading": "جارٍ تحميل المصروفات",
+      "loadError": "تعذر تحميل المصروفات",
+      "columns": {
+        "category": "الفئة",
+        "amount": "المبلغ",
+        "time": "الوقت",
+        "notes": "ملاحظات"
+      },
+      "categories": {
+        "electricity": "كهرباء",
+        "water": "مياه",
+        "maintenance_supplies": "مستلزمات صيانة",
+        "cleaning_supplies": "مستلزمات نظافة",
+        "internet": "إنترنت",
+        "emergency": "طارئ",
+        "other": "أخرى"
+      }
+    },
+    "expenseForm": {
+      "eyebrow": "معاملة جديدة",
+      "title": "إضافة مصروف",
+      "close": "إغلاق",
+      "category": "الفئة",
+      "categoryPlaceholder": "اختر الفئة",
+      "amount": "المبلغ",
+      "amountPlaceholder": "٠ ج.م",
+      "time": "وقت التسجيل",
+      "timeNow": "الوقت الحالي · {time}",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أضف ملاحظات عن المصروف",
+      "info": "سيتم تسجيل التاريخ والموظف تلقائيًا، وسيُخصم المصروف من صافي الوردية.",
+      "submit": "إضافة المصروف",
+      "cancel": "إلغاء",
+      "success": "تم تسجيل المصروف — {amount}",
+      "errors": {
+        "category": "اختر الفئة",
+        "amount": "أدخل مبلغًا أكبر من صفر"
       }
     }
   },

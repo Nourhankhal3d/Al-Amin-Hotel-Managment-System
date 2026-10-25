@@ -867,6 +867,71 @@
         "amount": "Enter an amount greater than zero",
         "amountTooHigh": "Amount is more than the remaining balance ({amount})",
         "method": "Choose a payment method"
+      },
+      "total": "Total",
+      "paid": "Paid",
+      "payRemaining": "Pay remaining"
+    },
+    "addIncome": "Add income",
+    "addExpense": "Add expense",
+    "ledger": {
+      "title": "Shift financial log",
+      "description": "Track the current shift income, expenses and net balance.",
+      "income": "Shift income",
+      "expenses": "Shift expenses",
+      "net": "Shift net",
+      "incomeHint": "Total recorded payments",
+      "expensesHint": "Total recorded expenses",
+      "netHint": "Income minus expenses"
+    },
+    "tabs": {
+      "label": "Log type",
+      "income": "Income",
+      "expenses": "Expenses"
+    },
+    "expenses": {
+      "title": "Shift expenses",
+      "subtitle": "Expenses recorded in the current shift",
+      "count": "{count} expenses",
+      "empty": "No expenses",
+      "emptyDesc": "No expense has been recorded in this shift yet.",
+      "loading": "Loading expenses",
+      "loadError": "Could not load expenses",
+      "columns": {
+        "category": "Category",
+        "amount": "Amount",
+        "time": "Time",
+        "notes": "Notes"
+      },
+      "categories": {
+        "electricity": "Electricity",
+        "water": "Water",
+        "maintenance_supplies": "Maintenance supplies",
+        "cleaning_supplies": "Cleaning supplies",
+        "internet": "Internet",
+        "emergency": "Emergency",
+        "other": "Other"
+      }
+    },
+    "expenseForm": {
+      "eyebrow": "New transaction",
+      "title": "Add expense",
+      "close": "Close",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "amount": "Amount",
+      "amountPlaceholder": "0 EGP",
+      "time": "Recorded at",
+      "timeNow": "Current time · {time}",
+      "notes": "Notes",
+      "notesPlaceholder": "Add notes about the expense",
+      "info": "The date and staff member are recorded automatically, and the expense is deducted from the shift net.",
+      "submit": "Add expense",
+      "cancel": "Cancel",
+      "success": "Expense recorded — {amount}",
+      "errors": {
+        "category": "Select a category",
+        "amount": "Enter an amount greater than zero"
       }
     }
   },
