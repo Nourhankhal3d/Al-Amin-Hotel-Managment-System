@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+﻿const { Schema, model } = require('mongoose');
 
 const shiftReportSchema = new Schema(
   {
@@ -102,6 +102,7 @@ const shiftReportSchema = new Schema(
       type: Date,
       default: null,
     },
+    notes: { type: String, default: null },
     manager_comment: {
       type: String,
       default: null,

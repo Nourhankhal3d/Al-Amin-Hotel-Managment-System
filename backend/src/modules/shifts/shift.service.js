@@ -18,6 +18,8 @@ const { E } = require('../../utils/errors');
 const { sanitizeText } = require('../../utils/arabic');
 const { audit } = require('../audit/audit.service');
 const pdfUtils = require('../../utils/pdf');
+const { saveShiftReport } = require('../manager/shiftReports/report.builder');
+const { notifyManagers } = require('../notifications/notify');
 const { toCleaningTaskDto } = require('../cleaning/cleaning.dto');
 const { toMaintenanceIssueDto } = require('../maintenance/maintenance.dto');
 const { toPaymentDto } = require('../payments/payment.dto');
@@ -327,9 +329,10 @@ async function getCurrentShift(staffId) {
   return formatShift(shift);
 }
 
-async function buildSummary(shift) {
+async function buildSummary(shift, session = null) {
   // 1. Payments in this shift
-  const payments = await Payment.find({ shift_id: shift._id });
+ const payments = await Payment.find({ shift_id: shift._id })
+  .session(session || null);
   let cashPiastres = 0;
   let instapayPiastres = 0;
   let vodafonePiastres = 0;
@@ -343,20 +346,31 @@ async function buildSummary(shift) {
 
   // 2. Check-ins & check-outs counts
   const [check_ins, check_outs] = await Promise.all([
-    Reservation.countDocuments({ check_in_shift_id: shift._id }),
-    Reservation.countDocuments({ check_out_shift_id: shift._id }),
+Reservation.countDocuments({ check_in_shift_id: shift._id })
+  .session(session || null),
+Reservation.countDocuments({ check_out_shift_id: shift._id })
+  .session(session || null),
   ]);
 
   // 3. Rooms handled: RoomStatusHistory, CleaningTask, MaintenanceIssue, Reservation (check-in / check-out in this shift)
   const roomSet = new Set();
   const [statusHistories, shiftCleaningTasks, shiftMaintenanceIssues, shiftReservations] =
     await Promise.all([
-      RoomStatusHistory.find({ shift_id: shift._id }).select('room_id'),
-      CleaningTask.find({ shift_id: shift._id }),
-      MaintenanceIssue.find({ shift_id: shift._id }),
+      RoomStatusHistory.find({ shift_id: shift._id })
+        .select('room_id')
+        .session(session || null),
+
+      CleaningTask.find({ shift_id: shift._id })
+        .session(session || null),
+
+      MaintenanceIssue.find({ shift_id: shift._id })
+        .session(session || null),
+
       Reservation.find({
         $or: [{ check_in_shift_id: shift._id }, { check_out_shift_id: shift._id }],
-      }).select('room_id'),
+      })
+        .select('room_id')
+        .session(session || null),
     ]);
 
   statusHistories.forEach((h) => h.room_id && roomSet.add(String(h.room_id)));
@@ -370,12 +384,20 @@ async function buildSummary(shift) {
   // - cleaning_tasks: all pending from all shifts
   // - maintenance_issues: all open/in_progress from all shifts
   // - unverified_payments: this shift only
-  const [pendingCleaning, pendingMaintenance, unverifiedPayments] = await Promise.all([
-    CleaningTask.find({ status: 'pending' }),
-    MaintenanceIssue.find({ $or: [{ status: 'open' }, { status: 'in_progress' }] }),
-    Payment.find({ shift_id: shift._id, payment_verified: false }),
-  ]);
+const [pendingCleaning, pendingMaintenance, unverifiedPayments] =
+  await Promise.all([
+    CleaningTask.find({ status: 'pending' })
+      .session(session || null),
 
+    MaintenanceIssue.find({
+      $or: [{ status: 'open' }, { status: 'in_progress' }],
+    }).session(session || null),
+
+    Payment.find({
+      shift_id: shift._id,
+      payment_verified: false,
+    }).session(session || null),
+  ]);
   return {
     shift: formatShift(shift),
     payments: {
@@ -468,6 +490,12 @@ async function handoverShift({ staff, session, shiftNotes, now = new Date(), ip 
       },
       { session: mongoSession }
     );
+    const report = await saveShiftReport(shift, {
+      notes: cleanNotes,
+      session: mongoSession,
+      staff,
+      now,
+    });
 
     await mongoSession.commitTransaction();
   } catch (err) {
@@ -485,10 +513,30 @@ async function handoverShift({ staff, session, shiftNotes, now = new Date(), ip 
 
   // Reload shift
   shift = await Shift.findById(shift._id);
+  // Notify managers after the transaction has committed.
+  try {
+    const report = await ShiftReport.findOne({ shift_id: shift._id })
+      .select('_id');
 
-  // Generate report after commit (isolated from transaction so handover remains successful even if PDF generation fails)
+    if (report) {
+      await notifyManagers({
+        type: 'SHIFT_REPORT_SUBMITTED',
+        title: 'Shift report',
+        message: staff.name,
+        refType: 'ShiftReport',
+        refId: report._id,
+      });
+    }
+  } catch (notificationErr) {
+    console.error(
+      'Shift report notification failed:',
+      notificationErr.message
+    );
+  }
+  // Generate PDF after commit; report data was saved inside the transaction.
   try {
     const summary = await buildSummary(shift);
+
     summary.shift.status = 'handed_over';
     summary.shift.handed_over_at = now.toISOString();
     summary.shift.shift_notes = cleanNotes;
@@ -498,18 +546,45 @@ async function handoverShift({ staff, session, shiftNotes, now = new Date(), ip 
       staff,
     });
 
-    await ShiftReport.create({
-      shift_id: shift._id,
-      pdf: pdfBuffer,
-      sha256,
-      created_at: now,
-    });
+    await ShiftReport.updateOne(
+      { shift_id: shift._id },
+      {
+        $set: {
+          pdf: pdfBuffer,
+          pdf_data: pdfBuffer,
+          sha256,
+          pdf_generated_at: now,
+        },
+      }
+    );
 
-    await Shift.updateOne({ _id: shift._id }, { report_status: 'ready' });
+    await Shift.updateOne(
+      { _id: shift._id },
+      { report_status: 'ready' }
+    );
+
     shift.report_status = 'ready';
+
   } catch (reportErr) {
     console.error('Shift report generation failed:', reportErr.message);
-    await Shift.updateOne({ _id: shift._id }, { report_status: 'failed' });
+
+    await ShiftReport.updateOne(
+      { shift_id: shift._id },
+      {
+        $set: {
+          pdf: null,
+          pdf_data: null,
+          sha256: null,
+          pdf_generated_at: null,
+        },
+      }
+    );
+
+    await Shift.updateOne(
+      { _id: shift._id },
+      { report_status: 'failed' }
+    );
+
     shift.report_status = 'failed';
   }
 
