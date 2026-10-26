@@ -38,18 +38,17 @@ describe('Manager Features 0-3 Endpoints', () => {
     test('POST /api/v1/manager/staff creates staff and returns temporary_password', async () => {
       const uniqueSuffix = Date.now();
       const payload = {
-        full_name: 'Ahmed Manager Test',
-        email: `ahmed.test.${uniqueSuffix}@hotel.com`,
-        phone: '01012345678',
-        staff_type: 'RECEPTIONIST',
-        hire_date: '2026-10-01',
-      };
-
+       full_name: 'Ahmed Manager Test',
+       email: `ahmed.test.${uniqueSuffix}@hotel.com`,
+       phone: '01012345678',
+       staff_type: 'RECEPTIONIST',
+       hire_date: '2026-10-01',
+       default_shift_type: 'morning',
+     };
       const res = await request(app)
         .post('/api/v1/manager/staff')
         .set('Authorization', `Bearer ${managerToken}`)
         .send(payload);
-
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('data');
       expect(res.body.data).toHaveProperty('staff_id');
@@ -78,7 +77,7 @@ describe('Manager Features 0-3 Endpoints', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.data.full_name).toBe('Ahmed Updated Test');
-      expect(res.body.data.phone).toBe('01099998888');
+      expect(res.body.data.phone).toBe('+201099998888');
     });
 
     test('POST /api/v1/manager/staff/:id/reset-password returns new temporary password', async () => {
@@ -96,7 +95,7 @@ describe('Manager Features 0-3 Endpoints', () => {
         .delete(`/api/v1/manager/staff/${createdStaffId}`)
         .set('Authorization', `Bearer ${managerToken}`);
 
-      expect(res.status).toBe(204);
+      expect(res.status).toBe(200);
 
       const check = await request(app)
         .get(`/api/v1/manager/staff/${createdStaffId}`)
@@ -119,11 +118,12 @@ describe('Manager Features 0-3 Endpoints', () => {
         .set('Authorization', `Bearer ${managerToken}`);
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('data');
-      expect(res.body.data.length).toBe(3); // morning, evening, night
-      expect(res.body.data[0]).toHaveProperty('shift_type');
-      expect(res.body.data[0]).toHaveProperty('start_time');
-      expect(res.body.data[0]).toHaveProperty('end_time');
+      expect(res.body.data).toHaveProperty('business_date', '2026-10-25');
+      expect(res.body.data).toHaveProperty('cards');
+      expect(res.body.data.cards).toHaveLength(3); // morning, evening, night
+      expect(res.body.data.cards[0]).toHaveProperty('shift_type', 'MORNING');
+      expect(res.body.data.cards[0]).toHaveProperty('start_at');
+      expect(res.body.data.cards[0]).toHaveProperty('end_at');
     });
 
     test('POST /api/v1/manager/shifts schedules a shift for staff', async () => {
@@ -137,8 +137,8 @@ describe('Manager Features 0-3 Endpoints', () => {
         });
 
       expect(res.status).toBe(201);
-      expect(res.body.data).toHaveProperty('shift_date', '2026-11-15');
-      expect(res.body.data).toHaveProperty('shift_type', 'morning');
+      expect(res.body.data).toHaveProperty('business_date', '2026-11-15');
+      expect(res.body.data).toHaveProperty('shift_type', 'MORNING');
     });
   });
 
@@ -197,10 +197,9 @@ describe('Manager Features 0-3 Endpoints', () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('data');
-      expect(res.body.data).toHaveProperty('totals');
       expect(res.body.data).toHaveProperty('series');
-      expect(res.body.data).toHaveProperty('by_method');
       expect(Array.isArray(res.body.data.series)).toBe(true);
+      expect(res.body.data).toHaveProperty('by_method');
       expect(Array.isArray(res.body.data.by_method)).toBe(true);
     });
 

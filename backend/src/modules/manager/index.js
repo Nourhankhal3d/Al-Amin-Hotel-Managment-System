@@ -15,5 +15,6 @@ router.use('/dashboard', require('./dashboard/dashboard.routes'));
 router.use('/activities', require('./activities/activities.routes'));
 router.use('/leave-requests', require('./leaves/leave.routes'));
 router.use('/approvals', require('./approvals/approvals.routes'));
+router.use('/shift-reports', require('./shiftReports/shiftReports.routes'));
 
 module.exports = router;

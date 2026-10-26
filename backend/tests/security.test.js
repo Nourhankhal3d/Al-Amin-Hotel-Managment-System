@@ -164,19 +164,29 @@ describe('Feature 12: Security Hardening (tests/security.test.js)', () => {
         if (m === 'post') return { room_id: dummyId, priority: 'medium' };
         if (m === 'patch') return { priority: 'low' };
       }
-      if (p.includes('/maintenance-issues')) {
-        if (m === 'post') return { room_id: dummyId, problem: 'مشكلة فحص', priority: 'low' };
-        if (m === 'patch') return { priority: 'urgent' };
+     if (p.includes('/maintenance-issues')) {
+      if (m === 'post') return { room_id: dummyId, problem: 'مشكلة فحص', priority: 'low' };
+      if (m === 'patch') return { priority: 'urgent' };
+    }
+    if (p.includes('/reservations/') && p.endsWith('/cancel') && m === 'post') {
+      return { reason: 'Security test cancellation' };
+    }
+    if (p.includes('/reservations')) {
+      if (m === 'post' && !p.includes('/check-in') && !p.includes('/extend') && !p.includes('/check-out') && !p.includes('/cancel')) {
+        return { guest_id: dummyId, room_id: dummyId, check_in: '2026-10-25T12:00:00.000Z', check_out: '2026-10-26T12:00:00.000Z' };
       }
-      if (p.includes('/reservations')) {
-        if (m === 'post' && !p.includes('/check-in') && !p.includes('/extend') && !p.includes('/check-out') && !p.includes('/cancel')) {
-          return { guest_id: dummyId, room_id: dummyId, check_in: '2026-10-25T12:00:00.000Z', check_out: '2026-10-26T12:00:00.000Z' };
-        }
-        if (m === 'patch') return { check_out: '2026-10-27T12:00:00.000Z' };
-      }
-      if (p.includes('/payments') && m === 'post') {
-        return { reservation_id: dummyId, amount: 100, payment_method: 'cash' };
-      }
+      if (m === 'patch') return { check_out: '2026-10-27T12:00:00.000Z' };
+    }
+    if (p === '/approval-requests' && m === 'post') {
+      return {
+        request_type: 'REFUND',
+        booking_id: dummyId,
+        reason: 'Security test approval request',
+      };
+    }
+    if (p.includes('/payments') && m === 'post') {
+      return { reservation_id: dummyId, amount: 100, payment_method: 'cash' };
+    }
       if (p.includes('/guests') && m === 'post') {
         return { name: 'علي حسن', phone: '01012345678', id_number: '29801011234567' };
       }
