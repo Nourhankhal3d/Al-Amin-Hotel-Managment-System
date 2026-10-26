@@ -7,7 +7,7 @@ const THOUSAND: Record<Language, string> = { ar: 'ألف', en: 'K' };
 /** `1450` -> `١٬٤٥٠ ج.م` / `EGP 1,450` */
 export function formatAmount(amount: number, language: Language): string {
   if (!Number.isFinite(amount)) return '—';
-  const value = formatNumber(amount, language);
+     const value = new Intl.NumberFormat(language === 'ar' ? 'ar-EG' : 'en-EG', { minimumFractionDigits: Number.isInteger(amount) ? 0 : 2, maximumFractionDigits: 2 }).format(amount);
   return language === 'ar' ? `${value} ${CURRENCY.ar}` : `${CURRENCY.en} ${value}`;
 }
 
