@@ -2137,6 +2137,11 @@
       },
       "unsavedWarning": "لديك تغييرات غير محفوظة في الإعدادات، هل أنت متأكد من مغادرة الصفحة؟",
       "retry": "إعادة المحاولة"
-    }
+    },
+    "housekeeping": {},
+    "maintenance": {},
+    "finance": {},
+    "reports": {},
+    "refunds": {}
   }
 }

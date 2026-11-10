@@ -2093,6 +2093,11 @@
       },
       "unsavedWarning": "You have unsaved changes in settings. Are you sure you want to leave?",
       "retry": "Retry"
-    }
+    },
+    "housekeeping": {},
+    "maintenance": {},
+    "finance": {},
+    "reports": {},
+    "refunds": {}
   }
 }
