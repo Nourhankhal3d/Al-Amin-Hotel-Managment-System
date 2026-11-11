@@ -11,9 +11,11 @@ import { ShiftReportPage } from '../../features/shift-report/pages/ShiftReportPa
 import { ProfilePage } from '../../features/profile/pages/ProfilePage';
 import { SettingsPage } from '../../features/settings/pages/SettingsPage';
 import { ROUTES } from '../../core/constants/routes';
+import { ROLES } from '../../core/constants/roles';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RoleRoute } from './RoleRoute';
 import { ManagerLayout } from '../../layouts/ManagerLayout';
+import { SubManagerLayout } from '../../layouts/SubManagerLayout';
 import { ComingSoonPage } from '../../components/common/ComingSoonPage';
 import { ManagerDashboardPage } from '../../features/manager-dashboard';
 import { ManagerRoomsPage } from '../../features/manager-rooms';
@@ -23,6 +25,11 @@ import { ManagerPasswordRequestsPage } from '../../features/manager-password-req
 import { ManagerRoomTypesPage } from '../../features/manager-room-types';
 import { ManagerProfilePage } from '../../features/manager-profile';
 import { ManagerSettingsPage } from '../../features/manager-settings';
+import { SubManagerDashboardPage } from '../../features/submanager-dashboard';
+import { SubManagerFinancePage } from '../../features/submanager-finance';
+import { SubManagerReportsPage } from '../../features/submanager-reports';
+import { SubManagerProfilePage } from '../../features/submanager-profile';
+import { SubManagerSettingsPage } from '../../features/submanager-settings';
 
 export function AppRouter() {
   return (
@@ -56,6 +63,14 @@ export function AppRouter() {
           <Route path={ROUTES.managerRoomTypes} element={<ManagerRoomTypesPage />} />
           <Route path={ROUTES.managerProfile} element={<ManagerProfilePage />} />
           <Route path={ROUTES.managerSettings} element={<ManagerSettingsPage />} />
+        </Route>
+        <Route element={<RoleRoute allowedRoles={[ROLES.subManager]}><SubManagerLayout /></RoleRoute>}>
+          <Route path={ROUTES.subManager} element={<Navigate to={ROUTES.subManagerDashboard} replace />} />
+          <Route path={ROUTES.subManagerDashboard} element={<SubManagerDashboardPage />} />
+          <Route path={ROUTES.subManagerFinance} element={<SubManagerFinancePage />} />
+          <Route path={ROUTES.subManagerReports} element={<SubManagerReportsPage />} />
+          <Route path={ROUTES.subManagerProfile} element={<SubManagerProfilePage />} />
+          <Route path={ROUTES.subManagerSettings} element={<SubManagerSettingsPage />} />
         </Route>
           {import.meta.env.DEV && (
             <Route path="/__dev/shift-handover" element={<DashboardLayout />}>

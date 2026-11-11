@@ -2138,5 +2138,144 @@
       "unsavedWarning": "لديك تغييرات غير محفوظة في الإعدادات، هل أنت متأكد من مغادرة الصفحة؟",
       "retry": "إعادة المحاولة"
     }
+  },
+  "submanager": {
+    "shell": {
+      "section": "المتابعة المالية",
+      "brand": "الأمين",
+      "location": "فندق أسوان",
+      "nav": {
+        "dashboard": "لوحة التحكم",
+        "finance": "الشؤون المالية",
+        "reports": "التقارير المالية",
+        "profile": "الملف الشخصي",
+        "settings": "الإعدادات"
+      },
+      "statusCard": {
+        "title": "الفندق يعمل الآن",
+        "subtitle": "متابعة مالية فقط"
+      },
+      "logout": "تسجيل الخروج",
+      "topbar": {
+        "searchPlaceholder": "ابحث عن غرفة أو مهمة أو ضيف",
+        "searchShortcut": "⌘ K",
+        "userName": "المدير الفرعي",
+        "userRole": "متابعة مالية",
+        "userAvatar": "س م",
+        "languageToggle": "تبديل اللغة",
+        "notifications": "الإشعارات"
+      }
+    },
+    "login": {
+      "title": "تسجيل الدخول",
+      "subtitle": "أدخل بياناتك للوصول إلى لوحة التحكم",
+      "usernameLabel": "اسم المستخدم",
+      "usernamePlaceholder": "أدخل اسم المستخدم",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "••••••••",
+      "forgotPasswordLink": "هل نسيت كلمة المرور؟",
+      "submitButton": "تسجيل الدخول",
+      "forgot": {
+        "title": "استعادة الوصول",
+        "subtitle": "أرسل طلبًا إلى المدير لمراجعة حسابك وإصدار كلمة مرور مؤقتة.",
+        "usernameLabel": "اسم المستخدم",
+        "usernamePlaceholder": "أدخل اسم المستخدم",
+        "employeeNumberLabel": "رقم الموظف",
+        "employeeNumberPlaceholder": "مثال: EMP-018",
+        "submitButton": "إرسال طلب المساعدة",
+        "backToLogin": "العودة لتسجيل الدخول",
+        "successTitle": "تم إرسال الطلب للمراجعة",
+        "successSubtitle": "سيظهر طلبك لدى المدير",
+        "successAction": "العودة لتسجيل الدخول"
+      }
+    },
+    "dashboard": {
+      "title": "لوحة التحكم",
+      "placeholder": "صفحة لوحة التحكم الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B."
+    },
+    "finance": {
+      "title": "الشؤون المالية",
+      "placeholder": "صفحة الشؤون المالية الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B."
+    },
+    "reports": {
+      "title": "التقارير المالية",
+      "placeholder": "صفحة التقارير المالية الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو C."
+    },
+    "profile": {
+      "title": "الملف الشخصي",
+      "eyebrow": "حساب إداري",
+      "accountTitle": "حساب المدير الفرعي",
+      "role": "مدير الفندق",
+      "hotel": "Al Amin Hotel",
+      "location": "أسوان، مصر",
+      "editBtn": "تعديل الملف",
+      "notificationBtn": "تفضيلات الإشعارات",
+      "stats": {
+        "employeesTitle": "الموظفون المُدارون",
+        "employeesValue": "18",
+        "employeesSubtitle": "جميع الأقسام",
+        "roomsTitle": "الغرف المُدارة",
+        "roomsValue": "36",
+        "roomsSubtitle": "3 طوابق",
+        "reportsTitle": "التقارير المُنشأة",
+        "reportsValue": "28",
+        "reportsSubtitle": "هذا الشهر",
+        "tasksTitle": "مهام الإدارة",
+        "tasksValue": "12",
+        "tasksSubtitle": "9 مكتملة"
+      },
+      "accountInfo": {
+        "title": "معلومات الحساب",
+        "subtitle": "بيانات التواصل والوصول",
+        "roleLabel": "الدور",
+        "roleValue": "المدير الفرعي",
+        "accountLabel": "الحساب",
+        "accountValue": "حساب المدير الفرعي",
+        "emailLabel": "البريد",
+        "phoneLabel": "الهاتف",
+        "lastLoginLabel": "آخر دخول",
+        "lastLoginValue": "اليوم، 08:12 ص",
+        "statusLabel": "حالة الحساب",
+        "statusValue": "نشط"
+      },
+      "actions": {
+        "logout": "تسجيل الخروج",
+        "notifications": "تفضيلات الإشعارات",
+        "changePassword": "تغيير كلمة المرور"
+      },
+      "editDrawer": {
+        "title": "تعديل الملف الشخصي",
+        "nameLabel": "الاسم الكامل",
+        "namePlaceholder": "أدخل الاسم الكامل",
+        "emailLabel": "البريد الإلكتروني",
+        "emailPlaceholder": "manager@alaminhotel.com",
+        "phoneLabel": "رقم الهاتف",
+        "phonePlaceholder": "+20 100 000 0000",
+        "save": "حفظ التغييرات",
+        "cancel": "إلغاء",
+        "successToast": "تم تحديث الملف الشخصي بنجاح",
+        "errNameRequired": "الاسم مطلوب",
+        "errEmailRequired": "البريد الإلكتروني مطلوب",
+        "errEmailInvalid": "البريد الإلكتروني غير صالح",
+        "errPhoneRequired": "رقم الهاتف مطلوب"
+      },
+      "passwordDrawer": {
+        "title": "تغيير كلمة المرور",
+        "currentPasswordLabel": "كلمة المرور الحالية",
+        "newPasswordLabel": "كلمة المرور الجديدة",
+        "confirmPasswordLabel": "تأكيد كلمة المرور الجديدة",
+        "submit": "تحديث كلمة المرور",
+        "cancel": "إلغاء",
+        "successToast": "تم تغيير كلمة المرور بنجاح",
+        "errCurrentRequired": "كلمة المرور الحالية مطلوبة",
+        "errNewRequired": "كلمة المرور الجديدة مطلوبة",
+        "errNewLength": "يجب ألا تقل كلمة المرور عن 6 أحرف",
+        "errConfirmMismatch": "كلمتا المرور غير متطابقتين"
+      }
+    },
+    "settings": {
+      "title": "الإعدادات",
+      "placeholder": "صفحة الإعدادات الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو C."
+    }
   }
 }

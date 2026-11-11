@@ -1,0 +1,125 @@
+.submanager-drawer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 8px 0;
+}
+
+.submanager-drawer-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: start;
+}
+
+.submanager-drawer-form__group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink, #2F2F2F);
+}
+
+.submanager-drawer-form__input {
+  width: 100%;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 11px;
+  padding: 11px 14px;
+  background: var(--color-surface, #ffffff);
+  outline: none;
+  font-size: 14px;
+  color: var(--color-ink, #2F2F2F);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  text-align: start;
+}
+
+[dir="rtl"] .submanager-drawer-form__input[dir="ltr"] {
+  text-align: right;
+}
+
+[dir="ltr"] .submanager-drawer-form__input[dir="ltr"] {
+  text-align: left;
+}
+
+.submanager-drawer-form__input:focus {
+  border-color: var(--color-primary, #41C06A);
+  box-shadow: 0 0 0 3px rgba(65, 192, 106, 0.12);
+}
+
+.submanager-drawer-form__field-error {
+  font-size: 12px;
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.submanager-drawer-form__password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.submanager-drawer-form__password-wrap .submanager-drawer-form__input {
+  padding-inline-end: 42px;
+}
+
+.submanager-drawer-form__eye-btn {
+  position: absolute;
+  inset-inline-end: 10px;
+  background: transparent;
+  border: 0;
+  color: var(--color-text-muted, #7D827E);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.submanager-drawer-form__eye-btn:hover {
+  color: var(--color-ink, #2F2F2F);
+}
+
+.submanager-drawer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+
+.submanager-drawer-footer__btn-cancel {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 11px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink, #2F2F2F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.submanager-drawer-footer__btn-cancel:hover {
+  background: var(--color-surface-muted, #FAF8F4);
+}
+
+.submanager-drawer-footer__btn-submit {
+  background: var(--color-primary, #41C06A);
+  border: 0;
+  border-radius: 11px;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.submanager-drawer-footer__btn-submit:hover:not(:disabled) {
+  background: var(--color-primary-dark, #258742);
+}
+
+.submanager-drawer-footer__btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

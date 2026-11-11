@@ -8,6 +8,7 @@ export const DEFAULT_PERMISSIONS: Record<Role, Permission[]> = {
   Receptionist: ['dashboard', 'rooms', 'housekeeping', 'maintenance', 'payments', 'shift'],
   Housekeeping: ['housekeeping', 'shift'],
   Maintenance: ['maintenance', 'shift'],
+  SubManager: ['dashboard', 'payments'],
 };
 
 export function hasPermission(role: Role, permission: Permission): boolean {

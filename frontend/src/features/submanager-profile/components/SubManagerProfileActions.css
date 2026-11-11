@@ -1,0 +1,68 @@
+.submanager-profile-actions {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 18px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 18px rgba(65, 58, 43, 0.04);
+}
+
+.submanager-profile-actions__group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.submanager-profile-actions__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink, #2F2F2F);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.submanager-profile-actions__btn:hover {
+  background: var(--color-surface-muted, #FAF8F4);
+  border-color: var(--color-primary, #41C06A);
+  color: var(--color-primary-dark, #1E6E38);
+}
+
+.submanager-profile-actions__btn--danger {
+  background: #FFF5F5;
+  border-color: #FED7D7;
+  color: #E53E3E;
+}
+
+.submanager-profile-actions__btn--danger:hover {
+  background: #FED7D7;
+  border-color: #FEB2B2;
+  color: #C53030;
+}
+
+.submanager-profile-actions__icon {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 640px) {
+  .submanager-profile-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .submanager-profile-actions__group,
+  .submanager-profile-actions__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

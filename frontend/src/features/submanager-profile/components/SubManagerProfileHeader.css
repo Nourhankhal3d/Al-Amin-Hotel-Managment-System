@@ -1,0 +1,135 @@
+.submanager-profile-header {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 18px;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 4px 18px rgba(65, 58, 43, 0.04);
+}
+
+.submanager-profile-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.submanager-profile-header__btn-edit {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #EBE8E0);
+  color: var(--color-ink, #2F2F2F);
+  padding: 9px 18px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.submanager-profile-header__btn-edit:hover {
+  background: var(--color-surface-muted, #FAF8F4);
+  border-color: var(--color-primary, #41C06A);
+  color: var(--color-primary-dark, #1E6E38);
+}
+
+.submanager-profile-header__btn-notif {
+  background: var(--color-primary, #41C06A);
+  border: 0;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.submanager-profile-header__btn-notif:hover {
+  background: var(--color-primary-dark, #258742);
+}
+
+.submanager-profile-header__identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.submanager-profile-header__meta {
+  display: flex;
+  flex-direction: column;
+  text-align: end;
+}
+
+[dir="ltr"] .submanager-profile-header__meta {
+  text-align: start;
+}
+
+.submanager-profile-header__eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  color: #C9A768;
+  margin-bottom: 2px;
+  letter-spacing: 0.3px;
+}
+
+.submanager-profile-header__title {
+  margin: 0 0 4px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2E9E52;
+  line-height: 1.2;
+}
+
+.submanager-profile-header__subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted, #7D827E);
+  line-height: 1.3;
+}
+
+.submanager-profile-header__location {
+  font-size: 11px;
+  color: #9DA19E;
+  margin-top: 2px;
+}
+
+.submanager-profile-header__logo-tile {
+  width: 72px;
+  height: 72px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.submanager-profile-header__logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .submanager-profile-header {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .submanager-profile-header__identity {
+    justify-content: space-between;
+  }
+
+  .submanager-profile-header__actions {
+    justify-content: stretch;
+  }
+
+  .submanager-profile-header__actions button {
+    flex: 1;
+  }
+}
+

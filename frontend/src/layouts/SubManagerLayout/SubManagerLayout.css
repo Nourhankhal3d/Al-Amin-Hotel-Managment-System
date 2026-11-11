@@ -1,0 +1,57 @@
+.submanager-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: var(--color-bg, #FAF8F4);
+  color: var(--color-ink, #2F2F2F);
+  font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  box-sizing: border-box;
+}
+
+.submanager-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.submanager-content {
+  flex: 1;
+  padding: 24px;
+  max-width: 1500px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.submanager-page-placeholder {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: var(--radius-card, 18px);
+  box-shadow: 0px 12px 35px rgba(65, 58, 43, 0.06);
+  padding: 32px;
+}
+
+.submanager-page-placeholder h1 {
+  margin: 0 0 12px;
+  font-size: var(--font-size-xl, 1.55rem);
+  color: var(--color-ink, #2F2F2F);
+}
+
+.submanager-page-placeholder p {
+  color: var(--color-text-muted, #7D827E);
+  font-size: 14px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .submanager-shell {
+    flex-direction: column;
+  }
+
+  .submanager-content {
+    padding: 16px;
+  }
+}
+

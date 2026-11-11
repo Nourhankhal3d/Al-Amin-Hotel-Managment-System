@@ -4,6 +4,9 @@ export const ROLES = {
   receptionist: 'Receptionist',
   housekeeping: 'Housekeeping',
   maintenance: 'Maintenance',
+  // Provisionally 'sub_manager' in backend (TODO: confirm with backend role enum)
+  subManager: 'SubManager',
 } as const;
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
+

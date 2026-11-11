@@ -2,6 +2,7 @@ import { http, HttpResponse } from 'msw';
 import { managerDashboardHandlers } from './managerDashboard.handler';
 import { managerRoomsHandlers } from './managerRooms.handler';
 import { managerAuthHandlers } from './managerAuth';
+import { subManagerAuthHandlers } from './subManagerAuth';
 import { managerPasswordRequestsHandlers } from './managerPasswordRequests';
 import { managerProfileHandlers } from './managerProfile';
 import { managerSettingsHandlers } from './managerSettings';
@@ -666,6 +667,7 @@ const writeHandlers = [
 
 export const handlers = [
   ...managerAuthHandlers,
+  ...subManagerAuthHandlers,
   ...managerPasswordRequestsHandlers,
   ...managerProfileHandlers,
   ...managerSettingsHandlers,
