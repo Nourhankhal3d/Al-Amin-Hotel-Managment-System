@@ -1,0 +1,184 @@
+/* =====================================================================
+   GroupedBarChart — Al-Amin Shared Component
+   RTL-safe, token-driven bar chart with pale backdrop, wide/thin series,
+   baseline, first/mid/last labels, and optional badge slot.
+   ===================================================================== */
+
+.grouped-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.grouped-bar-chart__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.grouped-bar-chart__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.grouped-bar-chart__title {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+}
+
+.grouped-bar-chart__subtitle {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.grouped-bar-chart__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.grouped-bar-chart__badge {
+  display: inline-flex;
+  align-items: center;
+}
+
+.grouped-bar-chart__legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.grouped-bar-chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.grouped-bar-chart__legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.grouped-bar-chart__legend-dot--green {
+  background-color: var(--color-primary);
+}
+
+.grouped-bar-chart__legend-dot--gold {
+  background-color: var(--color-gold);
+}
+
+.grouped-bar-chart__legend-dot--light-green {
+  background-color: var(--color-chart-light-green);
+}
+
+.grouped-bar-chart__plot-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.grouped-bar-chart__plot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  position: relative;
+}
+
+.grouped-bar-chart__col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  min-width: 0;
+}
+
+.grouped-bar-chart__backdrop {
+  position: absolute;
+  inset-block: 0;
+  width: min(100%, 36px);
+  background-color: var(--color-primary-softer);
+  border-radius: var(--radius-sm);
+  pointer-events: none;
+}
+
+.grouped-bar-chart__bars {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  width: min(100%, 36px);
+  height: 100%;
+}
+
+.grouped-bar-chart__bar {
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease, opacity 0.2s ease;
+  min-height: 2px;
+}
+
+.grouped-bar-chart__bar--wide {
+  flex: 0 0 16px;
+  max-width: 18px;
+  border-radius: 4px 4px 0 0;
+}
+
+.grouped-bar-chart__bar--thin {
+  flex: 0 0 6px;
+  max-width: 8px;
+  border-radius: 3px 3px 0 0;
+}
+
+.grouped-bar-chart__bar--green {
+  background-color: var(--color-primary);
+}
+
+.grouped-bar-chart__bar--gold {
+  background-color: var(--color-gold);
+}
+
+.grouped-bar-chart__bar--light-green {
+  background-color: var(--color-chart-light-green);
+}
+
+.grouped-bar-chart__baseline {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
+.grouped-bar-chart__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.grouped-bar-chart__label-col {
+  flex: 1;
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  overflow: visible;
+  white-space: nowrap;
+}

@@ -2391,8 +2391,290 @@
         "VALIDATION_ERROR": "بعض البيانات ناقصة أو غير صحيحة، يُرجى مراجعة النموذج."
       }
     },
-    "finance": {},
-    "reports": {},
+    "finance": {
+      "hero": {
+        "eyebrow": "حسابات الوردية",
+        "title": "مراقبة الشؤون المالية",
+        "subtitle": "مراجعة معاملات الوردية وملخصها المالي.",
+        "viewReports": "عرض التقارير"
+      },
+      "stats": {
+        "totalRevenue": "إجمالي الإيرادات",
+        "totalExpenses": "إجمالي المصروفات",
+        "netShift": "صافي الوردية",
+        "recordedAutoHint": "مسجل تلقائيًا خلال الوردية",
+        "netProfitHint": "الإيرادات بعد خصم المصروفات"
+      },
+      "revenueCard": {
+        "title": "إيرادات الوردية",
+        "netCaption": "صافي الرصيد بعد خصم المصروفات واستبعاد المبالغ المستردة",
+        "chips": {
+          "revenues": "إيرادات",
+          "expenses": "مصروفات",
+          "refunded": "مستردة"
+        },
+        "methods": {
+          "instapay": "إنستاباي",
+          "cash": "نقدي",
+          "vodafone": "فودافون كاش",
+          "cleaning": "مستلزمات تنظيف",
+          "maintenance": "مستلزمات صيانة"
+        },
+        "chartAriaLabel": "مخطط بياني لإيرادات الوردية عبر الساعات",
+        "hours": {
+          "8am": "8 ص",
+          "10am": "10 ص",
+          "12pm": "12 م",
+          "now": "الآن"
+        }
+      },
+      "tabs": {
+        "revenues": "الإيرادات",
+        "expenses": "المصروفات"
+      },
+      "common": {
+        "loading": "جاري تحميل البيانات المالية...",
+        "errorTitle": "تعذر تحميل البيانات المالية",
+        "retry": "إعادة المحاولة"
+      },
+      "filters": {
+        "searchPlaceholder": "ابحث بالضيف أو رقم المعاملة",
+        "methodLabel": "طريقة الدفع",
+        "statusLabel": "الحالة",
+        "dateLabel": "التاريخ",
+        "all": "الكل",
+        "today": "اليوم - 2025-06-18",
+        "reset": "إعادة ضبط"
+      },
+      "revenuesTable": {
+        "title": "سجل الإيرادات",
+        "subtitle": "دفعات الغرف والخدمات والمدفوعات الأخرى",
+        "countBadge": "{count} معاملة",
+        "thTransaction": "رقم المعاملة",
+        "thRoom": "الغرفة",
+        "thGuest": "اسم الضيف",
+        "thAmount": "المبلغ",
+        "thMethod": "طريقة الدفع",
+        "thTime": "وقت الاستلام",
+        "thStatus": "الحالة",
+        "thActions": "الإجراءات",
+        "openDrawer": "عرض تفاصيل الدفعة",
+        "showingCount": "عرض {current} من {total} معاملة",
+        "emptyTitle": "لا توجد معاملات مطابقة",
+        "emptyDescription": "جرّب تعديل خيارات البحث أو التصفية لعرض النتائج.",
+        "emptyReset": "إعادة ضبط الفلاتر"
+      },
+      "paymentDrawer": {
+        "eyebrow": "تفاصيل الدفعة",
+        "amountReceived": "المبلغ المستلم",
+        "roomNumber": "رقم الغرفة",
+        "guestName": "اسم الضيف",
+        "paymentMethod": "طريقة الدفع",
+        "timeReceived": "وقت الاستلام",
+        "referenceNumber": "رقم المرجع",
+        "staffMember": "الموظف",
+        "notes": "ملاحظات",
+        "noNotes": "لا توجد ملاحظات مسجلة لهذه المعاملة.",
+        "updateStatus": "تحديث حالة الدفع",
+        "saveStatus": "حفظ الحالة",
+        "saving": "جاري الحفظ...",
+        "close": "إغلاق",
+        "toastSuccess": "تم تحديث حالة الدفعة بنجاح",
+        "toastError": "تعذر تحديث حالة الدفعة"
+      },
+      "statuses": {
+        "completed": "مكتملة",
+        "pending": "معلّقة",
+        "refunded": "مستردة",
+        "cancelled": "ملغاة"
+      },
+      "methods": {
+        "cash": "نقدي",
+        "instapay": "إنستاباي",
+        "vodafone": "فودافون كاش",
+        "card": "بطاقة بنكية"
+      },
+      "expensesFilters": {
+        "searchPlaceholder": "ابحث بفئة المصروف أو الملاحظات",
+        "categoryLabel": "فئة المصروف",
+        "dateLabel": "التاريخ",
+        "all": "الكل",
+        "today": "اليوم - 2025-06-18",
+        "reset": "إعادة ضبط"
+      },
+      "expensesTable": {
+        "title": "مصروفات الوردية",
+        "subtitle": "كل المصروفات المسجلة خلال الوردية الحالية",
+        "countBadge": "{count} مصروفات",
+        "thRecordNumber": "رقم السجل",
+        "thCategory": "فئة المصروف",
+        "thAmount": "المبلغ",
+        "thDate": "التاريخ",
+        "thTime": "الوقت",
+        "thNotes": "الملاحظات",
+        "thRecordedBy": "سجّل بواسطة",
+        "thActions": "الإجراءات",
+        "viewAllFooter": "عرض جميع مصروفات الوردية",
+        "openDrawer": "عرض تفاصيل المصروف",
+        "showingCount": "عرض {current} من {total} مصروفات",
+        "emptyTitle": "لا توجد مصروفات مطابقة",
+        "emptyDescription": "جرّب تعديل خيارات البحث أو التصفية لعرض النتائج.",
+        "emptyReset": "إعادة ضبط الفلاتر"
+      },
+      "categories": {
+        "cleaning": "مستلزمات تنظيف",
+        "maintenance": "مستلزمات صيانة",
+        "utilities": "كهرباء",
+        "emergency": "مصروفات طارئة",
+        "other": "أخرى"
+      },
+      "expenseDrawer": {
+        "eyebrow": "تفاصيل المصروف",
+        "amountExpensed": "المبلغ المصروف",
+        "date": "التاريخ",
+        "time": "الوقت",
+        "recordedBy": "سجل بواسطة",
+        "category": "الفئة",
+        "notes": "ملاحظات",
+        "noNotes": "لا توجد ملاحظات مسجلة لهذا المصروف.",
+        "editRecord": "تعديل السجل",
+        "close": "إغلاق",
+        "editEyebrow": "تعديل تفاصيل المصروف",
+        "editTitle": "تعديل السجل - {id}",
+        "amountLabel": "المبلغ (ج.م)",
+        "categoryLabel": "فئة المصروف",
+        "notesLabel": "الملاحظات",
+        "saveChanges": "حفظ التعديلات",
+        "saving": "جاري الحفظ...",
+        "cancel": "إلغاء",
+        "toastSuccess": "تم تحديث بيانات المصروف بنجاح",
+        "toastError": "تعذر تحديث بيانات المصروف",
+        "errors": {
+          "amountRequired": "المبلغ مطلوب ويجب أن يكون قيمة رقمية",
+          "amountPositive": "المبلغ يجب أن يكون أكبر من صفر",
+          "categoryRequired": "يرجى تحديد فئة المصروف"
+        }
+      }
+    },
+    "reports": {
+      "hero": {
+        "eyebrow": "تحليلات الإدارة",
+        "title": "التقارير",
+        "subtitle": "تقارير تشغيلية ومالية طويلة المدى لاتخاذ قرارات واضحة.",
+        "generateReport": "إنشاء التقرير",
+        "export": "تصدير"
+      },
+      "toolbar": {
+        "periods": {
+          "daily": "يومي",
+          "weekly": "أسبوعي",
+          "monthly": "شهري",
+          "yearly": "سنوي"
+        },
+        "filters": "الفلاتر",
+        "dateRange": "نطاق التاريخ",
+        "print": "طباعة",
+        "pdf": "PDF"
+      },
+      "reportCard": {
+        "hotelNameLocation": "فندق الأمين · أسوان",
+        "titles": {
+          "daily": "التقرير المالي يومي",
+          "weekly": "التقرير المالي أسبوعي",
+          "monthly": "التقرير المالي شهري",
+          "yearly": "التقرير المالي سنوي"
+        },
+        "periodEnding": "الفترة المنتهية في {{date}}",
+        "updatedNow": "تم التحديث الآن",
+        "summary": {
+          "totalRevenue": "إجمالي الإيرادات",
+          "vsPreviousPeriod": "+{{change}}٪ عن الفترة السابقة",
+          "totalExpenses": "إجمالي المصروفات",
+          "withinOperatingBudget": "ضمن الميزانية التشغيلية",
+          "netProfit": "صافي الربح",
+          "afterExpensesDeduction": "بعد خصم المصروفات",
+          "avgOccupancy": "متوسط الإشغال",
+          "outOfRooms": "من {{count}} غرفة"
+        }
+      },
+      "kpis": {
+        "profitMargin": "هامش الربح",
+        "healthyFinancialPerformance": "أداء مالي صحي",
+        "vipRoomsPerformance": "أداء غرف VIP",
+        "standardRoomsPerformance": "أداء الغرف العادية",
+        "revenueFormatted": "{{amount}} ألف ج.م إيراد",
+        "transactions": "المعاملات",
+        "completedTasks": "{{count}} مهمة مكتملة"
+      },
+      "paymentDistribution": {
+        "title": "توزيع المدفوعات",
+        "subtitle": "حسب وسيلة الدفع",
+        "thousandEgp": "ألف ج.م",
+        "egp": "ج.م",
+        "cash": "نقدي",
+        "instapay": "إنستاباي",
+        "vodafoneCash": "فودافون كاش"
+      },
+      "revenueExpensesNet": {
+        "title": "الإيرادات والمصروفات وصافي الربح",
+        "subtitle": "مقارنة الأداء خلال الفترة المختارة",
+        "stableGrowth": "نمو مستقر",
+        "decliningGrowth": "انخفاض تدريجي",
+        "balancedGrowth": "أداء متوازن"
+      },
+      "expenseCategories": {
+        "title": "فئات المصروفات",
+        "subtitle": "توزيع الإنفاق التشغيلي",
+        "cleaning": "مستلزمات تنظيف",
+        "utilities": "كهرباء ومياه",
+        "maintenance": "مستلزمات صيانة",
+        "emergency": "أخرى",
+        "other": "أخرى"
+      },
+      "roomsPerformance": {
+        "title": "أداء الغرف",
+        "subtitle": "الغرف العادية وVIP",
+        "standardLabel": "الغرف العادية",
+        "vipLabel": "غرف VIP",
+        "roomsOccupancy": "{{rooms}} غرفة · {{occupancy}}٪ إشغال",
+        "revenueText": "إيراد {{amount}} ألف ج.م"
+      },
+      "charts": {
+        "sectionTitle": "الرسوم البيانية والتحليلات"
+      },
+      "filtersDrawer": {
+        "eyebrow": "تخصيص التقرير",
+        "title": "فلاتر متقدمة",
+        "date": "التاريخ",
+        "period": "فترة التقرير",
+        "floor": "الطابق",
+        "roomType": "نوع الغرفة",
+        "roomStatus": "حالة الغرفة",
+        "shift": "الوردية",
+        "paymentMethod": "طريقة الدفع",
+        "expenseCategory": "فئة المصروف",
+        "apply": "تطبيق الفلاتر",
+        "reset": "إعادة ضبط",
+        "toastApplied": "تم تطبيق الفلاتر بنجاح",
+        "toastReset": "تمت إعادة ضبط الفلاتر"
+      },
+      "dateRangeDrawer": {
+        "eyebrow": "نطاق مخصص",
+        "title": "تحديد نطاق التاريخ",
+        "from": "من تاريخ",
+        "to": "إلى تاريخ",
+        "apply": "تطبيق النطاق",
+        "reset": "إلغاء النطاق",
+        "errorInvalidRange": "تاريخ البداية يجب أن يكون قبل أو يساوي تاريخ النهاية",
+        "toastApplied": "تم تطبيق نطاق التاريخ بنجاح"
+      },
+      "toastReportGenerated": "تم تحديث التقرير بنجاح وتنزيل الملخص",
+      "toastExported": "تم تصدير بيانات الرسوم البيانية بنجاح",
+      "loading": "جارٍ تحميل التقرير...",
+      "errorTitle": "تعذر تحميل التقرير",
+      "errorRetry": "إعادة المحاولة",
+      "empty": "لا توجد بيانات متاحة لهذا التقرير"
+    },
     "refunds": {
       "eyebrow": "الشؤون المالية",
       "title": "طلبات الاسترداد",

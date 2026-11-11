@@ -1,0 +1,93 @@
+/* Finance Revenues Table Styles */
+.finance-revenues-table-card {
+  width: 100%;
+}
+
+.finance-table__transaction-no {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.02em;
+}
+
+.finance-table__room-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 4px 8px;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+}
+
+.finance-table__guest-name {
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+}
+
+.finance-table__amount {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-sm);
+}
+
+.finance-table__time {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+/* Method Chips */
+.finance-method-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.finance-method-chip--instapay {
+  background-color: var(--color-purple-soft);
+  color: var(--color-purple);
+}
+
+.finance-method-chip--cash {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+.finance-method-chip--vodafone {
+  background-color: var(--color-amber-soft);
+  color: var(--color-amber-ink);
+}
+
+.finance-method-chip--card {
+  background-color: var(--color-info-soft);
+  color: var(--color-info);
+}
+
+/* Action Chevron Button */
+.finance-table__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.finance-table__action-btn:hover {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}

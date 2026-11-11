@@ -1,0 +1,151 @@
+/* Finance Revenue Card Styles */
+.finance-revenue-card {
+  display: flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+  gap: var(--space-6);
+  align-items: stretch;
+  margin-block-end: var(--space-5);
+}
+
+/* Summary Section (Right in RTL, Left in LTR) */
+.finance-revenue-card__summary {
+  flex: 0 0 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--space-3);
+}
+
+.finance-revenue-card__eyebrow {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gold-ink);
+  letter-spacing: 0.02em;
+}
+
+.finance-revenue-card__amount-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.finance-revenue-card__amount {
+  font-size: 2.25rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+  line-height: 1.1;
+}
+
+.finance-revenue-card__currency {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.finance-revenue-card__caption {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  max-width: 320px;
+}
+
+.finance-revenue-card__chips-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+}
+
+.finance-revenue-card__chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Vertical Divider */
+.finance-revenue-card__divider {
+  width: 1px;
+  background-color: var(--color-border);
+  align-self: stretch;
+}
+
+/* Chart Section (Left in RTL, Right in LTR) */
+.finance-revenue-card__chart-section {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.finance-revenue-card__chart-wrapper {
+  width: 100%;
+}
+
+.finance-revenue-card__legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block-start: var(--space-2);
+}
+
+.finance-revenue-card__legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Shared Chip Styles */
+.finance-chip,
+.finance-legend-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 5px 12px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.finance-chip__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.finance-chip__val {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+}
+
+.finance-chip__label {
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 960px) {
+  .finance-revenue-card {
+    flex-direction: column;
+  }
+
+  .finance-revenue-card__summary {
+    flex: auto;
+    width: 100%;
+  }
+
+  .finance-revenue-card__divider {
+    width: 100%;
+    height: 1px;
+  }
+}

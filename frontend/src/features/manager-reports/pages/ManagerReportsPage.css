@@ -1,0 +1,62 @@
+/* Manager Reports Page Styles */
+.manager-reports-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+}
+
+.manager-reports-page__hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-semibold);
+}
+
+.manager-reports-page__state-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 360px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-card);
+}
+
+.manager-reports-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+}
+
+/* =====================================================================
+   Print Styles for Reports (Feature-local visibility technique)
+   Hides all page chrome, hero, toolbars, sidebar, header, etc.
+   Displays exclusively the report card print area (.report-print-area).
+   ===================================================================== */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  .report-print-area,
+  .report-print-area * {
+    visibility: visible !important;
+  }
+
+  .report-print-area {
+    position: absolute !important;
+    inset-inline-start: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    box-shadow: none !important;
+    border: 1px solid #dcdcdc !important;
+    background: #ffffff !important;
+  }
+}

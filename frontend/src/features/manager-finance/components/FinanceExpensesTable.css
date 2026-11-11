@@ -1,0 +1,105 @@
+/* Finance Expenses Table Styles */
+.finance-expenses-table-card {
+  width: 100%;
+}
+
+.finance-expense-table__record-no {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.02em;
+}
+
+.finance-expense-category-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  background-color: var(--color-gold-soft);
+  color: var(--color-gold-ink);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.finance-expense-table__amount {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-danger);
+  font-size: var(--font-size-sm);
+  direction: ltr;
+  display: inline-block;
+}
+
+[dir="rtl"] .finance-expense-table__amount {
+  direction: rtl;
+}
+
+.finance-expense-table__date {
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.finance-expense-table__time {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.finance-expense-table__notes {
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.finance-expense-table__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.finance-expense-table__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.finance-expense-table__action-btn:hover {
+  background-color: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.finance-expense-table__footer-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.finance-expense-table__footer-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

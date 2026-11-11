@@ -1,0 +1,40 @@
+/* Custom Date Range Drawer Styles */
+.report-date-range-drawer__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+}
+
+.report-date-range-drawer__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.report-date-range-drawer__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+}
+
+.report-date-range-drawer__input {
+  width: 100%;
+}
+
+.report-date-range-drawer__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-2);
+  background: var(--color-danger-soft);
+  border-radius: var(--radius-sm);
+}
+
+.report-date-range-drawer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  width: 100%;
+}
