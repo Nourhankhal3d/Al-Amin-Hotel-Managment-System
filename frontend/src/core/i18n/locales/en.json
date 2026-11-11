@@ -2147,7 +2147,47 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "placeholder": "Sub-Manager Dashboard page is under development by Member B."
+      "placeholder": "Sub-Manager Dashboard page is under development by Member B.",
+      "eyebrow": "Financial Reports",
+      "reportTitle": "Daily Report",
+      "description": "A daily financial and operational summary.",
+      "downloadPdf": "Download PDF",
+      "loading": "Loading daily report",
+      "loadError": "Could not load the daily report",
+      "retry": "Try again",
+      "emptyTitle": "No financial data",
+      "emptyDescription": "Financial metrics will appear here when records are available.",
+      "stats": {
+        "revenue": "Revenue",
+        "revenueHint": "Period total",
+        "expenses": "Expenses",
+        "expensesHint": "Operating expenses",
+        "net": "Net profit",
+        "netHint": "After expenses",
+        "operations": "Operations",
+        "operationsHint": "Financial records"
+      },
+      "summary": {
+        "title": "Daily analysis",
+        "caption": "Net balance after operating expenses",
+        "chartLabel": "Cumulative revenue across shift hours",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "refunded": "Refunded",
+        "paymentMethods": "Revenue by payment method",
+        "expenseSources": "Expenses by source"
+      },
+      "paymentMethods": {
+        "instapay": "InstaPay",
+        "cash": "Cash",
+        "vodafone_cash": "Vodafone Cash"
+      },
+      "expenseSources": {
+        "cleaning_supplies": "Cleaning supplies",
+        "maintenance_supplies": "Maintenance supplies",
+        "electricity": "Electricity",
+        "emergency": "Emergency"
+      }
     },
     "finance": {
       "title": "Finance",

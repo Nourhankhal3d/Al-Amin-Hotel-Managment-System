@@ -2191,7 +2191,47 @@
     },
     "dashboard": {
       "title": "لوحة التحكم",
-      "placeholder": "صفحة لوحة التحكم الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B."
+      "placeholder": "صفحة لوحة التحكم الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B.",
+      "eyebrow": "التقارير المالية",
+      "reportTitle": "التقرير اليومي",
+      "description": "ملخص مالي وتشغيلي للفترة اليومية.",
+      "downloadPdf": "تحميل PDF",
+      "loading": "جارٍ تحميل التقرير اليومي",
+      "loadError": "تعذر تحميل التقرير اليومي",
+      "retry": "إعادة المحاولة",
+      "emptyTitle": "لا توجد بيانات مالية",
+      "emptyDescription": "ستظهر المؤشرات هنا عند تسجيل العمليات المالية.",
+      "stats": {
+        "revenue": "الإيرادات",
+        "revenueHint": "إجمالي المبالغ المستلمة",
+        "expenses": "المصروفات",
+        "expensesHint": "مصروفات التشغيل",
+        "net": "صافي الربح",
+        "netHint": "بعد خصم المصروفات",
+        "operations": "العمليات",
+        "operationsHint": "السجلات المالية"
+      },
+      "summary": {
+        "title": "التحليل اليومي",
+        "caption": "صافي الرصيد بعد خصم مصروفات التشغيل",
+        "chartLabel": "الإيرادات التراكمية خلال ساعات الوردية",
+        "revenue": "إيرادات",
+        "expenses": "مصروفات",
+        "refunded": "مستردة",
+        "paymentMethods": "الإيرادات حسب وسيلة الدفع",
+        "expenseSources": "المصروفات حسب المصدر"
+      },
+      "paymentMethods": {
+        "instapay": "إنستاباي",
+        "cash": "نقدي",
+        "vodafone_cash": "فودافون كاش"
+      },
+      "expenseSources": {
+        "cleaning_supplies": "مستلزمات تنظيف",
+        "maintenance_supplies": "مستلزمات صيانة",
+        "electricity": "كهرباء",
+        "emergency": "طوارئ"
+      }
     },
     "finance": {
       "title": "الشؤون المالية",
