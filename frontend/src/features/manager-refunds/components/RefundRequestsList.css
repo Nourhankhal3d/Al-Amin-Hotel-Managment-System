@@ -1,0 +1,82 @@
+.refunds-list {
+  display: grid;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One white card per request; the whole card opens the review drawer */
+.refunds-list__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  text-align: start;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 140ms ease, background 140ms ease;
+}
+
+.refunds-list__row:hover { border-color: var(--color-primary); }
+
+.refunds-list__row:focus-visible {
+  outline: 0;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.refunds-list__icon {
+  display: grid;
+  flex: 0 0 3.5rem;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: var(--radius-card);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+}
+
+.refunds-list__icon svg { width: 1.4rem; height: 1.4rem; }
+
+.refunds-list__text {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.refunds-list__meta,
+.refunds-list__amounts {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.refunds-list__guest {
+  color: var(--color-ink);
+  font-size: var(--font-size-md);
+}
+
+.refunds-list__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.refunds-list__chevron {
+  flex: 0 0 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-ink);
+}
+
+@media (max-width: 36rem) {
+  .refunds-list__row { flex-wrap: wrap; padding: var(--space-4); }
+  .refunds-list__badges { order: 3; width: 100%; }
+}

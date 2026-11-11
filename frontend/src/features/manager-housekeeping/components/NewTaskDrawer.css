@@ -1,0 +1,88 @@
+/* Same look as the receptionist's "Add cleaning task" drawer (features/housekeeping/components/TaskFormDrawer.css) */
+.hk-task-form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* Two equal columns; a row with one field (priority) keeps it at half width, as in the receptionist's form */
+.hk-task-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-4);
+}
+
+.hk-task-form__field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.hk-task-form__field > span:first-child {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Same height and corners for every field (room and cleaner get them from the shared Combobox) */
+.hk-task-form .ui-select__trigger {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.hk-task-form__field textarea {
+  width: 100%;
+  min-height: 7rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+}
+
+.hk-task-form__field textarea::placeholder { color: var(--color-text-muted); }
+.hk-task-form__field textarea:focus-visible { border-color: var(--color-primary); }
+.hk-task-form__field .hk-task-form__control--error { border-color: var(--color-danger); }
+.hk-task-form__field textarea:disabled { opacity: 0.6; }
+
+/* The shared drawer focus rule (globals.css) also rings the input inside the combobox; the combobox already rings its box */
+.hk-task-form .ui-combobox__control input:focus {
+  box-shadow: none;
+}
+
+.hk-task-form__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}
+
+.hk-task-form__hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-sm);
+}
+
+.hk-task-form__hint svg { flex: 0 0 1.1rem; width: 1.1rem; height: 1.1rem; color: var(--color-primary); }
+
+/* Footer: "cancel" on the start side, wider "submit" on the end side */
+.hk-task-form__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.hk-task-form__footer .ui-button { min-height: 3.25rem; border-radius: var(--radius-card); }
+
+@media (max-width: 30rem) {
+  .hk-task-form__row { grid-template-columns: 1fr; }
+}
