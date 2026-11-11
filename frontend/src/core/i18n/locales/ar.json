@@ -2235,7 +2235,113 @@
     },
     "finance": {
       "title": "الشؤون المالية",
-      "placeholder": "صفحة الشؤون المالية الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B."
+      "placeholder": "صفحة الشؤون المالية الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B.",
+      "eyebrow": "حسابات الوردية",
+      "pageTitle": "مراقبة الشؤون المالية",
+      "description": "مراجعة معاملات الوردية ومصروفاتها المسجلة.",
+      "viewReports": "عرض التقارير",
+      "loading": "جارٍ تحميل السجل المالي",
+      "loadError": "تعذر تحميل السجل المالي",
+      "retry": "إعادة المحاولة",
+      "stats": {
+        "revenue": "إجمالي الإيرادات",
+        "expenses": "إجمالي المصروفات",
+        "net": "صافي الوردية"
+      },
+      "summary": {
+        "title": "إيرادات الوردية",
+        "caption": "صافي الرصيد بعد خصم مصروفات التشغيل",
+        "chartLabel": "الإيرادات التراكمية خلال ساعات الوردية"
+      },
+      "tabs": {
+        "revenues": "الإيرادات",
+        "expenses": "المصروفات",
+        "label": "سجل الشؤون المالية"
+      },
+      "filters": {
+        "searchRevenues": "ابحث بالضيف أو رقم المعاملة",
+        "searchExpenses": "ابحث بالفئة أو الملاحظات",
+        "paymentMethod": "طريقة الدفع",
+        "status": "الحالة",
+        "category": "الفئة",
+        "date": "التاريخ",
+        "all": "الكل",
+        "reset": "إعادة ضبط"
+      },
+      "revenueTable": {
+        "title": "سجل الإيرادات",
+        "count": "{count} معاملة",
+        "summary": "عرض {rows} من {total} معاملة",
+        "empty": "لا توجد إيرادات مطابقة",
+        "emptyDescription": "جرّب تغيير البحث أو عوامل التصفية.",
+        "transaction": "رقم المعاملة",
+        "room": "الغرفة",
+        "guest": "الضيف",
+        "amount": "المبلغ",
+        "method": "طريقة الدفع",
+        "time": "وقت الاستلام",
+        "status": "الحالة",
+        "open": "فتح تفاصيل المعاملة {id}"
+      },
+      "expenseTable": {
+        "title": "مصروفات الوردية",
+        "count": "{count} مصروفات",
+        "empty": "لا توجد مصروفات مطابقة",
+        "emptyDescription": "جرّب تغيير البحث أو عوامل التصفية.",
+        "record": "رقم السجل",
+        "category": "الفئة",
+        "amount": "المبلغ",
+        "date": "التاريخ",
+        "time": "الوقت",
+        "notes": "الملاحظات",
+        "recordedBy": "سجل بواسطة",
+        "open": "فتح تفاصيل المصروف {id}"
+      },
+      "status": {
+        "completed": "مكتملة",
+        "pending": "معلّقة",
+        "refunded": "مستردة",
+        "cancelled": "ملغاة"
+      },
+      "details": {
+        "paymentEyebrow": "تفاصيل الدفعة",
+        "expenseEyebrow": "تفاصيل المصروف",
+        "amount": "المبلغ المستلم",
+        "room": "رقم الغرفة",
+        "guest": "اسم الضيف",
+        "method": "طريقة الدفع",
+        "time": "وقت الاستلام",
+        "reference": "رقم المرجع",
+        "employee": "الموظف",
+        "notes": "ملاحظات",
+        "statusUpdate": "تحديث حالة الدفع",
+        "saveStatus": "حفظ الحالة",
+        "close": "إغلاق",
+        "category": "الفئة",
+        "date": "التاريخ",
+        "recordedBy": "سجل بواسطة",
+        "edit": "تعديل السجل",
+        "saveEdit": "حفظ التعديلات",
+        "cancelEdit": "إلغاء",
+        "amountPlaceholder": "أدخل المبلغ",
+        "datePlaceholder": "اختر التاريخ",
+        "timePlaceholder": "اختر الوقت",
+        "notesPlaceholder": "أدخل ملاحظات المصروف",
+        "categoryPlaceholder": "اختر الفئة",
+        "amountError": "أدخل مبلغًا أكبر من صفر",
+        "categoryError": "اختر فئة المصروف",
+        "dateError": "أدخل تاريخًا صالحًا",
+        "timeError": "أدخل وقتًا صالحًا",
+        "notesError": "أدخل ملاحظات المصروف"
+      },
+      "actions": {
+        "exportCsv": "تصدير CSV",
+        "exported": "تم تصدير السجلات بنجاح",
+        "noExport": "لا توجد سجلات لتصديرها",
+        "paymentUpdated": "تم تحديث حالة الدفع",
+        "expenseUpdated": "تم تحديث سجل المصروف",
+        "updateFailed": "تعذر حفظ التغييرات"
+      }
     },
     "reports": {
       "title": "التقارير المالية",

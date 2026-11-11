@@ -2191,7 +2191,113 @@
     },
     "finance": {
       "title": "Finance",
-      "placeholder": "Sub-Manager Finance page is under development by Member B."
+      "placeholder": "Sub-Manager Finance page is under development by Member B.",
+      "eyebrow": "Shift accounts",
+      "pageTitle": "Financial Monitoring",
+      "description": "Review the recorded transactions and expenses for this shift.",
+      "viewReports": "View reports",
+      "loading": "Loading finance ledger",
+      "loadError": "Could not load the finance ledger",
+      "retry": "Try again",
+      "stats": {
+        "revenue": "Total revenue",
+        "expenses": "Total expenses",
+        "net": "Shift net"
+      },
+      "summary": {
+        "title": "Shift revenue",
+        "caption": "Net balance after operating expenses",
+        "chartLabel": "Cumulative revenue across shift hours"
+      },
+      "tabs": {
+        "revenues": "Revenue",
+        "expenses": "Expenses",
+        "label": "Finance ledger"
+      },
+      "filters": {
+        "searchRevenues": "Search guest or transaction ID",
+        "searchExpenses": "Search category or notes",
+        "paymentMethod": "Payment method",
+        "status": "Status",
+        "category": "Category",
+        "date": "Date",
+        "all": "All",
+        "reset": "Reset"
+      },
+      "revenueTable": {
+        "title": "Revenue log",
+        "count": "{count} transactions",
+        "summary": "Showing {rows} of {total} transactions",
+        "empty": "No matching revenue records",
+        "emptyDescription": "Try changing the search or filters.",
+        "transaction": "Transaction ID",
+        "room": "Room",
+        "guest": "Guest",
+        "amount": "Amount",
+        "method": "Payment method",
+        "time": "Received at",
+        "status": "Status",
+        "open": "Open transaction {id}"
+      },
+      "expenseTable": {
+        "title": "Shift expenses",
+        "count": "{count} expenses",
+        "empty": "No matching expenses",
+        "emptyDescription": "Try changing the search or filters.",
+        "record": "Record ID",
+        "category": "Category",
+        "amount": "Amount",
+        "date": "Date",
+        "time": "Time",
+        "notes": "Notes",
+        "recordedBy": "Recorded by",
+        "open": "Open expense {id}"
+      },
+      "status": {
+        "completed": "Completed",
+        "pending": "Pending",
+        "refunded": "Refunded",
+        "cancelled": "Cancelled"
+      },
+      "details": {
+        "paymentEyebrow": "Payment details",
+        "expenseEyebrow": "Expense details",
+        "amount": "Amount received",
+        "room": "Room",
+        "guest": "Guest name",
+        "method": "Payment method",
+        "time": "Received at",
+        "reference": "Reference number",
+        "employee": "Employee",
+        "notes": "Notes",
+        "statusUpdate": "Update payment status",
+        "saveStatus": "Save status",
+        "close": "Close",
+        "category": "Category",
+        "date": "Date",
+        "recordedBy": "Recorded by",
+        "edit": "Edit record",
+        "saveEdit": "Save changes",
+        "cancelEdit": "Cancel",
+        "amountPlaceholder": "Enter amount",
+        "datePlaceholder": "Choose date",
+        "timePlaceholder": "Choose time",
+        "notesPlaceholder": "Enter expense notes",
+        "categoryPlaceholder": "Choose category",
+        "amountError": "Enter an amount greater than zero",
+        "categoryError": "Choose an expense category",
+        "dateError": "Enter a valid date",
+        "timeError": "Enter a valid time",
+        "notesError": "Enter expense notes"
+      },
+      "actions": {
+        "exportCsv": "Export CSV",
+        "exported": "Records exported successfully",
+        "noExport": "There are no records to export",
+        "paymentUpdated": "Payment status updated",
+        "expenseUpdated": "Expense record updated",
+        "updateFailed": "Could not save your changes"
+      }
     },
     "reports": {
       "title": "Financial Reports",

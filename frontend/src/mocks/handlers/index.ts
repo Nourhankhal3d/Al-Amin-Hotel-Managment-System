@@ -4,6 +4,7 @@ import { managerRoomsHandlers } from './managerRooms.handler';
 import { managerAuthHandlers } from './managerAuth';
 import { subManagerAuthHandlers } from './subManagerAuth';
 import { subManagerDashboardHandlers } from './subManagerDashboard';
+import { subManagerFinanceHandlers } from './subManagerFinance';
 import { managerPasswordRequestsHandlers } from './managerPasswordRequests';
 import { managerProfileHandlers } from './managerProfile';
 import { managerSettingsHandlers } from './managerSettings';
@@ -670,6 +671,7 @@ export const handlers = [
   ...managerAuthHandlers,
   ...subManagerAuthHandlers,
   ...subManagerDashboardHandlers,
+  ...subManagerFinanceHandlers,
   ...managerPasswordRequestsHandlers,
   ...managerProfileHandlers,
   ...managerSettingsHandlers,
