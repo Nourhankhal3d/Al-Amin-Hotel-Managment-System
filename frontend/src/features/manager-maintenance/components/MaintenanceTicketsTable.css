@@ -1,0 +1,27 @@
+.mt-table td,
+.mt-table th { white-space: nowrap; }
+
+.mt-table__code {
+  color: var(--color-ink);
+  font-weight: var(--font-weight-semibold);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.mt-table__issue { color: var(--color-ink); }
+
+.mt-table__muted { color: var(--color-text-muted); }
+
+.mt-table__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.mt-table__shown {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}

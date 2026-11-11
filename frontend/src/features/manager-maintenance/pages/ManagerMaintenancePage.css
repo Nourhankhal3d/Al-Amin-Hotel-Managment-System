@@ -1,0 +1,49 @@
+.manager-maintenance {
+  min-width: 0;
+}
+
+/* 6 cards on 2 rows of 3, as in the design */
+.manager-maintenance__stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Icon colors sampled from the design: green icons use the brand green, gold ones the darker gold ink */
+.manager-maintenance__stats .ui-stat-card--green .ui-stat-card__icon { color: var(--color-primary); }
+.manager-maintenance__stats .ui-stat-card--gold .ui-stat-card__icon { color: var(--color-gold-ink); }
+
+/* Search on its own row, then the four filters and the reset link */
+.manager-maintenance__filters {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.manager-maintenance__filters > .common-search {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.manager-maintenance__selects {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: var(--space-4);
+}
+
+.manager-maintenance__selects .ui-select__trigger {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+@media (max-width: 72rem) {
+  .manager-maintenance__selects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .manager-maintenance__selects .filter-bar__reset { justify-self: start; }
+}
+
+@media (max-width: 48rem) {
+  .manager-maintenance__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 36rem) {
+  .manager-maintenance__stats,
+  .manager-maintenance__selects { grid-template-columns: 1fr; }
+}
