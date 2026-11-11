@@ -1,0 +1,86 @@
+/* Payment Details Drawer Styles */
+.payment-details-drawer .drawer__content {
+  padding: var(--space-5);
+}
+
+.payment-drawer__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Amount Card */
+.payment-drawer__amount-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.payment-drawer__amount-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.payment-drawer__amount-val {
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+  line-height: 1.1;
+}
+
+.payment-drawer__status-pill {
+  margin-block-start: var(--space-1);
+}
+
+/* 6 Tiles Grid */
+.payment-drawer__tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.payment-drawer__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.payment-drawer__section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+}
+
+.payment-drawer__notes-box {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  font-size: var(--font-size-sm);
+  color: var(--color-ink);
+  line-height: 1.6;
+  min-height: 54px;
+}
+
+/* Footer Actions */
+.payment-drawer__footer-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.payment-drawer__save-btn {
+  flex: 2;
+}
+
+.payment-drawer__close-btn {
+  flex: 1;
+}

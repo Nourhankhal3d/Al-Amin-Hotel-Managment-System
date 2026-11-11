@@ -1,0 +1,66 @@
+/* Manager Finance Page Top Styles */
+.manager-finance-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+}
+
+.manager-finance-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+}
+
+.manager-finance-page__state-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-card);
+}
+
+.manager-finance-page__content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Tabs Bar */
+.manager-finance-tabs-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-card);
+  margin-block-end: var(--space-4);
+}
+
+/* Tab Containers for Tasks 5 and 6 */
+.manager-finance-tab-container {
+  width: 100%;
+}
+
+.manager-finance-tab-pane {
+  width: 100%;
+}
+
+.manager-finance-page__table-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 240px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}

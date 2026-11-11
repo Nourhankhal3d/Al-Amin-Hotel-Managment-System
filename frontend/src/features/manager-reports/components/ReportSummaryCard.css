@@ -1,0 +1,164 @@
+/* Report Summary Card & Print Area Styles */
+.report-summary-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-6) var(--space-8);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+/* Header Area */
+.report-summary-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.report-summary-card__brand-block {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.report-summary-card__logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.report-summary-card__copy {
+  display: flex;
+  flex-direction: column;
+}
+
+.report-summary-card__eyebrow {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gold-ink);
+  letter-spacing: 0.02em;
+  margin-block-end: 2px;
+}
+
+.report-summary-card__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.report-summary-card__date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-block-start: 4px;
+}
+
+/* Updated Now Badge */
+.report-summary-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}
+
+.report-summary-card__badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary-dark);
+}
+
+/* Divider */
+.report-summary-card__divider {
+  border: none;
+  border-top: 1px solid var(--color-table-divider);
+  margin: 0;
+  width: 100%;
+}
+
+/* 4 Summary Figures Row */
+.report-summary-card__figures {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.report-summary-card__figure {
+  display: flex;
+  flex-direction: column;
+  padding-inline-end: var(--space-4);
+  border-inline-end: 1px solid var(--color-table-divider);
+}
+
+.report-summary-card__figure:last-child {
+  padding-inline-end: 0;
+  border-inline-end: none;
+}
+
+.report-summary-card__figure-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  margin-block-end: 6px;
+}
+
+.report-summary-card__figure-value {
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+  line-height: 1.15;
+  margin-block-end: 4px;
+}
+
+.report-summary-card__figure-caption {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.report-summary-card__figure-caption--positive {
+  color: var(--color-primary-dark);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .report-summary-card__figures {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .report-summary-card__figure:nth-child(2) {
+    border-inline-end: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .report-summary-card {
+    padding: var(--space-4);
+  }
+  .report-summary-card__header {
+    flex-direction: column;
+  }
+  .report-summary-card__figures {
+    grid-template-columns: 1fr;
+  }
+  .report-summary-card__figure {
+    border-inline-end: none;
+    border-bottom: 1px solid var(--color-table-divider);
+    padding-bottom: var(--space-3);
+  }
+  .report-summary-card__figure:last-child {
+    border-bottom: none;
+  }
+}

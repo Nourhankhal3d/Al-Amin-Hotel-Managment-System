@@ -2347,8 +2347,290 @@
         "VALIDATION_ERROR": "Some details are missing or invalid. Please check the form."
       }
     },
-    "finance": {},
-    "reports": {},
+    "finance": {
+      "hero": {
+        "eyebrow": "Shift Accounts",
+        "title": "Financial Monitoring",
+        "subtitle": "Review shift transactions and financial summary.",
+        "viewReports": "View Reports"
+      },
+      "stats": {
+        "totalRevenue": "Total Revenue",
+        "totalExpenses": "Total Expenses",
+        "netShift": "Net Shift Profit",
+        "recordedAutoHint": "Recorded automatically during shift",
+        "netProfitHint": "Revenue after deducting expenses"
+      },
+      "revenueCard": {
+        "title": "Shift Revenue",
+        "netCaption": "Net balance after deducting expenses and excluding refunded amounts",
+        "chips": {
+          "revenues": "Revenues",
+          "expenses": "Expenses",
+          "refunded": "Refunded"
+        },
+        "methods": {
+          "instapay": "Instapay",
+          "cash": "Cash",
+          "vodafone": "Vodafone Cash",
+          "cleaning": "Cleaning supplies",
+          "maintenance": "Maintenance supplies"
+        },
+        "chartAriaLabel": "Shift revenue timeline chart",
+        "hours": {
+          "8am": "8 AM",
+          "10am": "10 AM",
+          "12pm": "12 PM",
+          "now": "Now"
+        }
+      },
+      "tabs": {
+        "revenues": "Revenues",
+        "expenses": "Expenses"
+      },
+      "common": {
+        "loading": "Loading financial data...",
+        "errorTitle": "Unable to load financial data",
+        "retry": "Retry"
+      },
+      "filters": {
+        "searchPlaceholder": "Search by guest or transaction number",
+        "methodLabel": "Payment Method",
+        "statusLabel": "Status",
+        "dateLabel": "Date",
+        "all": "All",
+        "today": "Today - 2025-06-18",
+        "reset": "Reset filters"
+      },
+      "revenuesTable": {
+        "title": "Revenue Ledger",
+        "subtitle": "Room, service, and other payments",
+        "countBadge": "{count} transactions",
+        "thTransaction": "Transaction No.",
+        "thRoom": "Room",
+        "thGuest": "Guest Name",
+        "thAmount": "Amount",
+        "thMethod": "Payment Method",
+        "thTime": "Time Received",
+        "thStatus": "Status",
+        "thActions": "Actions",
+        "openDrawer": "View payment details",
+        "showingCount": "Showing {current} of {total} transactions",
+        "emptyTitle": "No matching transactions",
+        "emptyDescription": "Try adjusting your search or filter options to see results.",
+        "emptyReset": "Reset Filters"
+      },
+      "paymentDrawer": {
+        "eyebrow": "Payment Details",
+        "amountReceived": "Amount Received",
+        "roomNumber": "Room Number",
+        "guestName": "Guest Name",
+        "paymentMethod": "Payment Method",
+        "timeReceived": "Time Received",
+        "referenceNumber": "Reference Number",
+        "staffMember": "Staff",
+        "notes": "Notes",
+        "noNotes": "No notes recorded for this transaction.",
+        "updateStatus": "Update Payment Status",
+        "saveStatus": "Save Status",
+        "saving": "Saving...",
+        "close": "Close",
+        "toastSuccess": "Payment status updated successfully",
+        "toastError": "Failed to update payment status"
+      },
+      "statuses": {
+        "completed": "Completed",
+        "pending": "Pending",
+        "refunded": "Refunded",
+        "cancelled": "Cancelled"
+      },
+      "methods": {
+        "cash": "Cash",
+        "instapay": "Instapay",
+        "vodafone": "Vodafone Cash",
+        "card": "Card"
+      },
+      "expensesFilters": {
+        "searchPlaceholder": "Search by expense category or notes",
+        "categoryLabel": "Expense Category",
+        "dateLabel": "Date",
+        "all": "All",
+        "today": "Today - 2025-06-18",
+        "reset": "Reset filters"
+      },
+      "expensesTable": {
+        "title": "Shift Expenses",
+        "subtitle": "All expenses recorded during current shift",
+        "countBadge": "{count} Expenses",
+        "thRecordNumber": "Record No.",
+        "thCategory": "Expense Category",
+        "thAmount": "Amount",
+        "thDate": "Date",
+        "thTime": "Time",
+        "thNotes": "Notes",
+        "thRecordedBy": "Recorded By",
+        "thActions": "Actions",
+        "viewAllFooter": "Showing all shift expenses",
+        "openDrawer": "View expense details",
+        "showingCount": "Showing {current} of {total} expenses",
+        "emptyTitle": "No matching expenses",
+        "emptyDescription": "Try adjusting your search or filter options to see results.",
+        "emptyReset": "Reset Filters"
+      },
+      "categories": {
+        "cleaning": "Cleaning supplies",
+        "maintenance": "Maintenance supplies",
+        "utilities": "Electricity",
+        "emergency": "Emergency expenses",
+        "other": "Other"
+      },
+      "expenseDrawer": {
+        "eyebrow": "Expense Details",
+        "amountExpensed": "Expensed Amount",
+        "date": "Date",
+        "time": "Time",
+        "recordedBy": "Recorded By",
+        "category": "Category",
+        "notes": "Notes",
+        "noNotes": "No notes recorded for this expense.",
+        "editRecord": "Edit Record",
+        "close": "Close",
+        "editEyebrow": "Edit Expense Details",
+        "editTitle": "Edit Record - {id}",
+        "amountLabel": "Amount (EGP)",
+        "categoryLabel": "Expense Category",
+        "notesLabel": "Notes",
+        "saveChanges": "Save Changes",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "toastSuccess": "Expense updated successfully",
+        "toastError": "Failed to update expense",
+        "errors": {
+          "amountRequired": "Amount is required and must be a number",
+          "amountPositive": "Amount must be greater than zero",
+          "categoryRequired": "Please select an expense category"
+        }
+      }
+    },
+    "reports": {
+      "hero": {
+        "eyebrow": "Management Analytics",
+        "title": "Reports",
+        "subtitle": "Long-term operational and financial reports for informed decision-making.",
+        "generateReport": "Generate Report",
+        "export": "Export"
+      },
+      "toolbar": {
+        "periods": {
+          "daily": "Daily",
+          "weekly": "Weekly",
+          "monthly": "Monthly",
+          "yearly": "Yearly"
+        },
+        "filters": "Filters",
+        "dateRange": "Date Range",
+        "print": "Print",
+        "pdf": "PDF"
+      },
+      "reportCard": {
+        "hotelNameLocation": "Al-Amin Hotel · Aswan",
+        "titles": {
+          "daily": "Daily Financial Report",
+          "weekly": "Weekly Financial Report",
+          "monthly": "Monthly Financial Report",
+          "yearly": "Yearly Financial Report"
+        },
+        "periodEnding": "Period ending {{date}}",
+        "updatedNow": "Updated just now",
+        "summary": {
+          "totalRevenue": "Total Revenue",
+          "vsPreviousPeriod": "+{{change}}% vs previous period",
+          "totalExpenses": "Total Expenses",
+          "withinOperatingBudget": "Within operating budget",
+          "netProfit": "Net Profit",
+          "afterExpensesDeduction": "After expense deductions",
+          "avgOccupancy": "Average Occupancy",
+          "outOfRooms": "Out of {{count}} rooms"
+        }
+      },
+      "kpis": {
+        "profitMargin": "Profit Margin",
+        "healthyFinancialPerformance": "Healthy financial performance",
+        "vipRoomsPerformance": "VIP Rooms Performance",
+        "standardRoomsPerformance": "Standard Rooms Performance",
+        "revenueFormatted": "{{amount}}k EGP revenue",
+        "transactions": "Transactions",
+        "completedTasks": "{{count}} completed tasks"
+      },
+      "paymentDistribution": {
+        "title": "Payment Distribution",
+        "subtitle": "By payment method",
+        "thousandEgp": "k EGP",
+        "egp": "EGP",
+        "cash": "Cash",
+        "instapay": "Instapay",
+        "vodafoneCash": "Vodafone Cash"
+      },
+      "revenueExpensesNet": {
+        "title": "Revenue, Expenses & Net Profit",
+        "subtitle": "Performance comparison over the selected period",
+        "stableGrowth": "Stable growth",
+        "decliningGrowth": "Gradual decline",
+        "balancedGrowth": "Balanced performance"
+      },
+      "expenseCategories": {
+        "title": "Expense Categories",
+        "subtitle": "Operational spending breakdown",
+        "cleaning": "Cleaning supplies",
+        "utilities": "Electricity & water",
+        "maintenance": "Maintenance supplies",
+        "emergency": "Other",
+        "other": "Other"
+      },
+      "roomsPerformance": {
+        "title": "Rooms Performance",
+        "subtitle": "Standard & VIP rooms",
+        "standardLabel": "Standard Rooms",
+        "vipLabel": "VIP Rooms",
+        "roomsOccupancy": "{{rooms}} rooms · {{occupancy}}% occupancy",
+        "revenueText": "Revenue {{amount}}k EGP"
+      },
+      "charts": {
+        "sectionTitle": "Charts & Analytics"
+      },
+      "filtersDrawer": {
+        "eyebrow": "Customize Report",
+        "title": "Advanced Filters",
+        "date": "Date",
+        "period": "Report Period",
+        "floor": "Floor",
+        "roomType": "Room Type",
+        "roomStatus": "Room Status",
+        "shift": "Shift",
+        "paymentMethod": "Payment Method",
+        "expenseCategory": "Expense Category",
+        "apply": "Apply Filters",
+        "reset": "Reset Filters",
+        "toastApplied": "Filters applied successfully",
+        "toastReset": "Filters reset to defaults"
+      },
+      "dateRangeDrawer": {
+        "eyebrow": "Custom Range",
+        "title": "Select Date Range",
+        "from": "From Date",
+        "to": "To Date",
+        "apply": "Apply Range",
+        "reset": "Clear Range",
+        "errorInvalidRange": "Start date must be before or equal to end date",
+        "toastApplied": "Date range applied successfully"
+      },
+      "toastReportGenerated": "Report refreshed and summary downloaded successfully",
+      "toastExported": "Chart data exported successfully",
+      "loading": "Loading report...",
+      "errorTitle": "Failed to load report",
+      "errorRetry": "Retry",
+      "empty": "No data available for this report"
+    },
     "refunds": {
       "eyebrow": "Finance",
       "title": "Refund requests",
