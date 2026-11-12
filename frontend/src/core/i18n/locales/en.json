@@ -214,7 +214,7 @@
     "title": "Room management",
     "description": "Manage room status and guest information with ease and clarity.",
     "addActivity": "Add room activity",
-    "export": "Export",
+    "exportButton": "Export",
     "stats": {
       "total": "Total rooms",
       "available": "Available",
@@ -400,6 +400,10 @@
   "splashSubtitle": "Smart Hotel Management System",
   "loginTitle": "Welcome Back",
   "loginSubtitle": "Enter your credentials to access dashboard",
+  "demoLogin": {
+    "or": "or",
+    "subManager": "Demo Login as Sub-Manager"
+  },
   "registerTitle": "Create New Account",
   "registerSubtitle": "Fill in the details below to register",
   "usernameLabel": "Username",
@@ -2173,6 +2177,7 @@
         "chartLabel": "Cumulative revenue across shift hours",
         "revenue": "Revenue",
         "expenses": "Expenses",
+        "net": "Net profit",
         "refunded": "Refunded",
         "paymentMethods": "Revenue by payment method",
         "expenseSources": "Expenses by source"
@@ -2300,8 +2305,149 @@
       }
     },
     "reports": {
-      "title": "Financial Reports",
-      "placeholder": "Sub-Manager Financial Reports page is under development by Member C."
+      "title": "Reports",
+      "placeholder": "Sub-Manager Financial Reports page is under development by Member C.",
+      "eyebrow": "Financial Reports",
+      "hotelName": "Al-Amin Hotel - Aswan",
+      "subtitle": "Long-term operational and financial reports for clear decision-making.",
+      "loading": "Loading financial reports",
+      "loadError": "Could not load the financial report",
+      "emptyTitle": "No financial data",
+      "emptyDescription": "No transactions match the selected filters. Try changing the date range or category.",
+      "actions": {
+        "create": "Create report",
+        "export": "Export",
+        "print": "Print",
+        "date": "Date range",
+        "filters": "Filters",
+        "retry": "Try again"
+      },
+      "period": {
+        "label": "Reporting period",
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year"
+      },
+      "daily": {
+        "eyebrow": "Daily performance summary",
+        "title": "Daily financial report",
+        "subtitle": "Daily performance summary",
+        "updated": "Updated just now",
+        "periodEnding": "Period ending {date}"
+      },
+      "kpis": {
+        "label": "Financial metrics",
+        "secondaryLabel": "Additional performance metrics",
+        "revenue": "Total revenue",
+        "revenueHint": "Compared with previous period",
+        "expenses": "Total expenses",
+        "expensesHint": "Compared with previous period",
+        "expensesBudgetHint": "Operating budget",
+        "profit": "Net profit",
+        "profitHint": "After expenses",
+        "net": "Net profit",
+        "collection": "Collection rate",
+        "collectionHint": "Of total invoices",
+        "margin": "Profit margin",
+        "vip": "VIP room performance",
+        "regular": "Regular room performance",
+        "transactions": "Transactions",
+        "transactionsHint": "9 completed tasks"
+      },
+      "charts": {
+        "payments": "Payment breakdown",
+        "paymentsHint": "By payment method",
+        "methods": "Payment methods",
+        "revenueExpenses": "Revenue, expenses and net profit",
+        "revenueExpensesHint": "Performance comparison for the period",
+        "stableGrowth": "Stable growth",
+        "totalPayments": "Total payments",
+        "paymentUnit": "EGP",
+        "chartLabel": "Revenue and expense comparison chart",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "expenseCategories": "Expense categories",
+        "expenseCategoriesHint": "Operating expense distribution",
+        "roomPerformance": "Room performance",
+        "roomPerformanceHint": "Occupancy by room type",
+        "roomsCount": "{count} rooms",
+        "occupancy": "occupied",
+        "roomRevenue": "Revenue"
+      },
+      "months": {
+        "december": "December",
+        "september": "September",
+        "june": "June",
+        "march": "March",
+        "january": "January"
+      },
+      "paymentMethods": {
+        "cash": "Cash",
+        "instapay": "InstaPay",
+        "card": "Vodafone Cash"
+      },
+      "categories": {
+        "room_booking": "Room bookings",
+        "cleaning_supplies": "Cleaning supplies",
+        "utilities": "Electricity and water",
+        "maintenance_supplies": "Maintenance supplies",
+        "other": "Other"
+      },
+      "roomTypes": {
+        "regular": "Regular rooms",
+        "vip": "VIP rooms"
+      },
+      "types": {
+        "revenue": "Revenue",
+        "expense": "Expense"
+      },
+      "status": {
+        "completed": "Completed",
+        "pending": "Pending"
+      },
+      "table": {
+        "title": "Financial transactions",
+        "subtitle": "Recorded revenue and expense details",
+        "count": "{count} transactions",
+        "id": "Transaction ID",
+        "description": "Description",
+        "category": "Category",
+        "room": "Room",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "pagination": "Transaction pages"
+      },
+      "drawer": {
+        "eyebrow": "Customize report",
+        "title": "Advanced filters",
+        "close": "Close filters",
+        "dateRange": "Date range",
+        "dateFrom": "From date",
+        "dateTo": "To date",
+        "category": "Category",
+        "allCategories": "All categories",
+        "paymentMethod": "Payment method",
+        "allMethods": "All methods",
+        "floor": "Floor",
+        "allFloors": "All floors",
+        "roomType": "Room type",
+        "allRoomTypes": "All room types",
+        "roomStatus": "Room status",
+        "allRoomStatuses": "All statuses",
+        "occupied": "Occupied",
+        "maintenance": "Maintenance",
+        "shift": "Shift",
+        "allShifts": "All shifts",
+        "morning": "Morning",
+        "evening": "Evening",
+        "night": "Night",
+        "expenseCategory": "Expense category",
+        "period": "Period",
+        "apply": "Apply filters",
+        "reset": "Reset"
+      }
     },
     "profile": {
       "title": "Profile",
@@ -2377,7 +2523,67 @@
     },
     "settings": {
       "title": "Settings",
-      "placeholder": "Sub-Manager Settings page is under development by Member C."
+      "eyebrow": "SYSTEM PREFERENCES",
+      "subtitle": "Manage hotel information, notifications, shifts, and system preferences.",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "export": "Export",
+      "saved": "Saved automatically",
+      "loading": "Loading settings...",
+      "loadError": "Could not load settings",
+      "retry": "Try again",
+      "saveSuccess": "Changes saved successfully",
+      "saveError": "Could not save settings",
+      "exportSuccess": "Settings exported successfully",
+      "unsavedWarning": "You have unsaved changes. Are you sure you want to leave?",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "validation": {
+        "hotelName": "Enter the hotel name",
+        "location": "Enter the hotel location",
+        "positiveInteger": "Enter a whole number greater than zero"
+      },
+      "export": {
+        "field": "Setting",
+        "value": "Value"
+      },
+      "hotel": {
+        "title": "Hotel Information",
+        "subtitle": "Core management settings for Al-Amin Hotel.",
+        "name": "Hotel name",
+        "location": "Location",
+        "floors": "Number of floors",
+        "rooms": "Total rooms"
+      },
+      "shifts": {
+        "title": "Shift Configuration",
+        "subtitle": "Approved working hours.",
+        "time": "Shift time",
+        "morning": "Morning",
+        "evening": "Evening",
+        "night": "Night"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "subtitle": "Choose which notifications you want to receive.",
+        "payments": "Payments",
+        "paymentsDescription": "Instant notifications and important updates.",
+        "reports": "Reports",
+        "reportsDescription": "Instant notifications and important updates."
+      },
+      "appearance": {
+        "label": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "language": {
+        "label": "Language",
+        "arabic": "العربية",
+        "english": "English",
+        "ar": "Arabic",
+        "en": "English"
+      }
     }
   }
 }

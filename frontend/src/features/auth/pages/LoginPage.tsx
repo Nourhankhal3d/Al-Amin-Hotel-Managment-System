@@ -12,6 +12,7 @@ import { useLanguage } from '../../../core/i18n/useLanguage';
 import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
 import { login } from '../services/auth.api';
 import { ForgotPasswordCard } from '../components/ForgotPasswordCard';
+import './LoginPage.css';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -40,6 +41,21 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<LoginValidationErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
+  const showDemoLogin = import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true';
+
+  function handleDemoLogin() {
+    if (!showDemoLogin || loading) return;
+    setApiError(null);
+    setLoading(true);
+    setAccessToken('mock-access-token');
+    setAuthSession({
+      role: ROLES.subManager,
+      userId: 'demo-submanager',
+      staffName: t('submanager.shell.topbar.userName'),
+      readOnly: false,
+    });
+    navigate(ROUTES.subManagerDashboard, { replace: true });
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -171,6 +187,20 @@ export function LoginPage() {
                 {loading ? t('loading') : t('login')}
               </Button>
             </form>
+            {showDemoLogin && (
+              <div className="login-demo">
+                <span className="login-demo__divider">{t('demoLogin.or')}</span>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="login-demo__button"
+                  onClick={handleDemoLogin}
+                  disabled={loading}
+                >
+                  {t('demoLogin.subManager')}
+                </Button>
+              </div>
+            )}
           </>
         )}
       </div>
