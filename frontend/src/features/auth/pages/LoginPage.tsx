@@ -1,6 +1,6 @@
 import { Eye, EyeOff, Globe } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { setAccessToken } from '../../../core/api/apiClient';
@@ -10,16 +10,28 @@ import { getAuthSession, setAuthSession } from '../../../core/auth/authManager';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
-import { login, requestPasswordReset } from '../services/auth.api';
+import { login } from '../services/auth.api';
+import { ForgotPasswordCard } from '../components/ForgotPasswordCard';
+import './LoginPage.css';
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { language, toggleLanguage, t } = useLanguage();
+
+  const isForgotView = searchParams.get('view') === 'forgot';
 
   useEffect(() => {
     const session = getAuthSession();
     if (session) {
-      navigate(session.role === ROLES.manager ? ROUTES.managerDashboard : ROUTES.dashboard, { replace: true });
+      const role = (session.role || '').toLowerCase();
+      if (role === 'manager' || role === 'admin') {
+        navigate(ROUTES.managerDashboard, { replace: true });
+      } else if (role === 'submanager' || role === 'sub_manager') {
+        navigate(ROUTES.subManagerDashboard, { replace: true });
+      } else {
+        navigate(ROUTES.dashboard, { replace: true });
+      }
     }
   }, [navigate]);
 
@@ -29,11 +41,21 @@ export function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<LoginValidationErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
-  const [showForgotModal, setShowForgotModal] = useState(false);
-  const [forgotUsername, setForgotUsername] = useState('');
-  const [forgotLoading, setForgotLoading] = useState(false);
-  const [forgotError, setForgotError] = useState<string | null>(null);
-  const [forgotSent, setForgotSent] = useState(false);
+  const showDemoLogin = import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true';
+
+  function handleDemoLogin() {
+    if (!showDemoLogin || loading) return;
+    setApiError(null);
+    setLoading(true);
+    setAccessToken('mock-access-token');
+    setAuthSession({
+      role: ROLES.subManager,
+      userId: 'demo-submanager',
+      staffName: t('submanager.shell.topbar.userName'),
+      readOnly: false,
+    });
+    navigate(ROUTES.subManagerDashboard, { replace: true });
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -53,36 +75,24 @@ export function LoginPage() {
       setAccessToken(response.access_token);
       const role = String((response.staff as { role?: string }).role || '').toLowerCase();
       const isManager = role === 'manager' || role === 'admin';
+      const isSubManager = role === 'submanager' || role === 'sub_manager';
       setAuthSession({
-        role: isManager ? ROLES.manager : ROLES.receptionist,
+        role: isManager ? ROLES.manager : isSubManager ? ROLES.subManager : ROLES.receptionist,
         userId: String(response.staff.staff_id),
         staffName: response.staff.name,
         readOnly: response.read_only,
       });
-      navigate(isManager ? ROUTES.managerDashboard : ROUTES.dashboard, { replace: true });
+      if (isManager) {
+        navigate(ROUTES.managerDashboard, { replace: true });
+      } else if (isSubManager) {
+        navigate(ROUTES.subManagerDashboard, { replace: true });
+      } else {
+        navigate(ROUTES.dashboard, { replace: true });
+      }
     } catch (error) {
       setApiError(getErrorMessage(error, language));
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleForgotSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    const clean = forgotUsername.trim();
-    if (!clean) {
-      setForgotError(t('forgotPasswordRequired'));
-      return;
-    }
-    setForgotLoading(true);
-    setForgotError(null);
-    try {
-      await requestPasswordReset(clean);
-      setForgotSent(true);
-    } catch (error) {
-      setForgotError(getErrorMessage(error, language));
-    } finally {
-      setForgotLoading(false);
     }
   }
 
@@ -100,139 +110,98 @@ export function LoginPage() {
           </button>
         </div>
 
-        <div className="figma-auth-header">
-          <div className="figma-auth-logo">
-            <img src="/al-amin-hotel-logo.png" alt="Al-Amin Logo" />
-          </div>
-          <h1 className="figma-auth-title">{t('loginTitle')}</h1>
-          <p className="figma-auth-subtitle">{t('loginSubtitle')}</p>
-        </div>
-
-        {apiError && <div className="figma-alert figma-alert--error">{apiError}</div>}
-
-        <form className="figma-auth-form" onSubmit={handleSubmit} noValidate>
-          <div className="figma-form-group">
-            <label htmlFor="login-username">{t('usernameLabel')}</label>
-            <Input
-              id="login-username"
-              name="username"
-              type="text"
-              className="figma-input"
-              value={username}
-              onChange={(event) => {
-                setUsername(event.target.value);
-                if (errors.username) setErrors((previous) => ({ ...previous, username: undefined }));
-              }}
-              placeholder={t('usernamePlaceholder')}
-              disabled={loading}
-            />
-            {errors.username && <span className="figma-field-error">{errors.username}</span>}
-          </div>
-
-          <div className="figma-form-group">
-            <div className="figma-label-row">
-              <label htmlFor="login-password">{t('passwordLabel')}</label>
-              <button
-                type="button"
-                className="figma-link-btn"
-                onClick={() => {
-                  setForgotSent(false);
-                  setForgotUsername(username.trim() || '');
-                  setForgotError(null);
-                  setShowForgotModal(true);
-                }}
-              >
-                {t('forgotPassword')}
-              </button>
+        {isForgotView ? (
+          <ForgotPasswordCard
+            onBackToLogin={() => setSearchParams({})}
+            defaultUsername={username}
+          />
+        ) : (
+          <>
+            <div className="figma-auth-header">
+              <div className="figma-auth-logo">
+                <img src="/al-amin-hotel-logo.png" alt="Al-Amin Logo" />
+              </div>
+              <h1 className="figma-auth-title">{t('loginTitle')}</h1>
+              <p className="figma-auth-subtitle">{t('loginSubtitle')}</p>
             </div>
-            <div className="figma-password-wrap">
-              <Input
-                id="login-password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                className="figma-input"
-                value={password}
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                  if (errors.password) setErrors((previous) => ({ ...previous, password: undefined }));
-                }}
-                placeholder={t('passwordPlaceholder')}
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className="figma-eye-btn"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? t('hidePassword') : t('showPassword')}
-              >
-                {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
-              </button>
-            </div>
-            {errors.password && <span className="figma-field-error">{errors.password}</span>}
-          </div>
 
-          <Button type="submit" disabled={loading} className="figma-btn-primary">
-            {loading ? t('loading') : t('login')}
-          </Button>
-        </form>
+            {apiError && <div className="figma-alert figma-alert--error">{apiError}</div>}
 
-        {showForgotModal && (
-          <div className="ui-drawer-backdrop" onClick={() => setShowForgotModal(false)}>
-            <div className="ui-dialog figma-dialog" onClick={(event) => event.stopPropagation()}>
-              <h2>{t('forgotPasswordTitle')}</h2>
-              {!forgotSent ? (
-                <form onSubmit={handleForgotSubmit} className="figma-auth-form" style={{ marginTop: 12 }}>
-                  <p className="figma-dialog-desc">{t('forgotPasswordDesc')}</p>
-                  {forgotError && <p className="figma-alert figma-alert--error">{forgotError}</p>}
-                  <Input
-                    type="text"
-                    className="figma-input"
-                    value={forgotUsername}
-                    onChange={(event) => {
-                      setForgotUsername(event.target.value);
-                      if (forgotError) setForgotError(null);
-                    }}
-                    placeholder={t('forgotPasswordUsernamePlaceholder')}
-                    disabled={forgotLoading}
-                    required
-                    autoFocus
-                  />
-                  <div className="ui-dialog__actions">
-                    <Button
-                      type="button"
-                      className="ui-button--secondary"
-                      onClick={() => setShowForgotModal(false)}
-                      disabled={forgotLoading}
-                    >
-                      {t('cancel')}
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="figma-btn-primary"
-                      style={{ width: 'auto' }}
-                      disabled={forgotLoading}
-                    >
-                      {forgotLoading ? t('loading') : t('forgotPasswordSend')}
-                    </Button>
-                  </div>
-                </form>
-              ) : (
-                <div style={{ marginTop: 12 }}>
-                  <p className="figma-alert figma-alert--success">{t('forgotPasswordSuccess')}</p>
-                  <div className="ui-dialog__actions" style={{ marginTop: 16 }}>
-                    <Button
-                      type="button"
-                      className="figma-btn-primary"
-                      style={{ width: 'auto' }}
-                      onClick={() => setShowForgotModal(false)}
-                    >
-                      {t('back')}
-                    </Button>
-                  </div>
+            <form className="figma-auth-form" onSubmit={handleSubmit} noValidate>
+              <div className="figma-form-group">
+                <label htmlFor="login-username">{t('usernameLabel')}</label>
+                <Input
+                  id="login-username"
+                  name="username"
+                  type="text"
+                  className="figma-input"
+                  value={username}
+                  onChange={(event) => {
+                    setUsername(event.target.value);
+                    if (errors.username) setErrors((previous) => ({ ...previous, username: undefined }));
+                  }}
+                  placeholder={t('usernamePlaceholder')}
+                  disabled={loading}
+                />
+                {errors.username && <span className="figma-field-error">{errors.username}</span>}
+              </div>
+
+              <div className="figma-form-group">
+                <div className="figma-label-row">
+                  <label htmlFor="login-password">{t('passwordLabel')}</label>
+                  <button
+                    type="button"
+                    className="figma-link-btn"
+                    onClick={() => setSearchParams({ view: 'forgot' })}
+                  >
+                    {t('forgotPassword')}
+                  </button>
                 </div>
-              )}
-            </div>
-          </div>
+                <div className="figma-password-wrap">
+                  <Input
+                    id="login-password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    className="figma-input"
+                    value={password}
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                      if (errors.password) setErrors((previous) => ({ ...previous, password: undefined }));
+                    }}
+                    placeholder={t('passwordPlaceholder')}
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    className="figma-eye-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? t('hidePassword') : t('showPassword')}
+                  >
+                    {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                  </button>
+                </div>
+                {errors.password && <span className="figma-field-error">{errors.password}</span>}
+              </div>
+
+              <Button type="submit" disabled={loading} className="figma-btn-primary">
+                {loading ? t('loading') : t('login')}
+              </Button>
+            </form>
+            {showDemoLogin && (
+              <div className="login-demo">
+                <span className="login-demo__divider">{t('demoLogin.or')}</span>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="login-demo__button"
+                  onClick={handleDemoLogin}
+                  disabled={loading}
+                >
+                  {t('demoLogin.subManager')}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

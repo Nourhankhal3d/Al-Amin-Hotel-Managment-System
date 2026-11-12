@@ -214,7 +214,7 @@
     "title": "إدارة الغرف",
     "description": "إدارة حالة الغرف ومعلومات الضيوف بسهولة وهدوء.",
     "addActivity": "إضافة نشاط غرفة",
-    "export": "تصدير",
+    "exportButton": "تصدير",
     "stats": {
       "total": "إجمالي الغرف",
       "available": "متاحة",
@@ -400,6 +400,10 @@
   "splashSubtitle": "نظام إدارة الفنادق الذكي",
   "loginTitle": "تسجيل الدخول",
   "loginSubtitle": "أدخل بياناتك للوصول إلى لوحة التحكم",
+  "demoLogin": {
+    "or": "أو",
+    "subManager": "دخول تجريبي كمدير فرعي"
+  },
   "registerTitle": "إنشاء حساب جديد",
   "registerSubtitle": "قم بملء البيانات التالية للتسجيل في النظام",
   "usernameLabel": "اسم المستخدم",
@@ -2776,6 +2780,493 @@
         "NOT_FOUND": "هذا الطلب لم يعد موجودًا.",
         "VALIDATION_ERROR": "بعض البيانات ناقصة أو غير صحيحة، راجع المبلغ والملاحظات.",
         "CONFLICT": "تعذّر تسجيل الاسترداد: إما أنه لم يتبقَّ مبلغ قابل للاسترداد في هذا الحجز، أو لا توجد وردية استقبال مفتوحة لتسجيله. راجع الحجز وحاول مرة أخرى."
+      }
+    }
+  },
+  "submanager": {
+    "shell": {
+      "section": "المتابعة المالية",
+      "brand": "الأمين",
+      "location": "فندق أسوان",
+      "nav": {
+        "dashboard": "لوحة التحكم",
+        "finance": "الشؤون المالية",
+        "reports": "التقارير المالية",
+        "profile": "الملف الشخصي",
+        "settings": "الإعدادات"
+      },
+      "statusCard": {
+        "title": "الفندق يعمل الآن",
+        "subtitle": "متابعة مالية فقط"
+      },
+      "logout": "تسجيل الخروج",
+      "topbar": {
+        "searchPlaceholder": "ابحث عن غرفة أو مهمة أو ضيف",
+        "searchShortcut": "⌘ K",
+        "userName": "المدير الفرعي",
+        "userRole": "متابعة مالية",
+        "userAvatar": "س م",
+        "languageToggle": "تبديل اللغة",
+        "notifications": "الإشعارات"
+      }
+    },
+    "login": {
+      "title": "تسجيل الدخول",
+      "subtitle": "أدخل بياناتك للوصول إلى لوحة التحكم",
+      "usernameLabel": "اسم المستخدم",
+      "usernamePlaceholder": "أدخل اسم المستخدم",
+      "passwordLabel": "كلمة المرور",
+      "passwordPlaceholder": "••••••••",
+      "forgotPasswordLink": "هل نسيت كلمة المرور؟",
+      "submitButton": "تسجيل الدخول",
+      "forgot": {
+        "title": "استعادة الوصول",
+        "subtitle": "أرسل طلبًا إلى المدير لمراجعة حسابك وإصدار كلمة مرور مؤقتة.",
+        "usernameLabel": "اسم المستخدم",
+        "usernamePlaceholder": "أدخل اسم المستخدم",
+        "employeeNumberLabel": "رقم الموظف",
+        "employeeNumberPlaceholder": "مثال: EMP-018",
+        "submitButton": "إرسال طلب المساعدة",
+        "backToLogin": "العودة لتسجيل الدخول",
+        "successTitle": "تم إرسال الطلب للمراجعة",
+        "successSubtitle": "سيظهر طلبك لدى المدير",
+        "successAction": "العودة لتسجيل الدخول"
+      }
+    },
+    "dashboard": {
+      "title": "لوحة التحكم",
+      "placeholder": "صفحة لوحة التحكم الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B.",
+      "eyebrow": "التقارير المالية",
+      "reportTitle": "التقرير اليومي",
+      "description": "ملخص مالي وتشغيلي للفترة اليومية.",
+      "downloadPdf": "تحميل PDF",
+      "loading": "جارٍ تحميل التقرير اليومي",
+      "loadError": "تعذر تحميل التقرير اليومي",
+      "retry": "إعادة المحاولة",
+      "emptyTitle": "لا توجد بيانات مالية",
+      "emptyDescription": "ستظهر المؤشرات هنا عند تسجيل العمليات المالية.",
+      "stats": {
+        "revenue": "الإيرادات",
+        "revenueHint": "إجمالي المبالغ المستلمة",
+        "expenses": "المصروفات",
+        "expensesHint": "مصروفات التشغيل",
+        "net": "صافي الربح",
+        "netHint": "بعد خصم المصروفات",
+        "operations": "العمليات",
+        "operationsHint": "السجلات المالية"
+      },
+      "summary": {
+        "title": "التحليل اليومي",
+        "caption": "صافي الرصيد بعد خصم مصروفات التشغيل",
+        "chartLabel": "الإيرادات التراكمية خلال ساعات الوردية",
+        "revenue": "إيرادات",
+        "expenses": "مصروفات",
+        "refunded": "مستردة",
+        "paymentMethods": "الإيرادات حسب وسيلة الدفع",
+        "expenseSources": "المصروفات حسب المصدر"
+      },
+      "paymentMethods": {
+        "instapay": "إنستاباي",
+        "cash": "نقدي",
+        "vodafone_cash": "فودافون كاش"
+      },
+      "expenseSources": {
+        "cleaning_supplies": "مستلزمات تنظيف",
+        "maintenance_supplies": "مستلزمات صيانة",
+        "electricity": "كهرباء",
+        "emergency": "طوارئ"
+      }
+    },
+    "finance": {
+      "title": "الشؤون المالية",
+      "placeholder": "صفحة الشؤون المالية الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو B.",
+      "eyebrow": "حسابات الوردية",
+      "pageTitle": "مراقبة الشؤون المالية",
+      "description": "مراجعة معاملات الوردية ومصروفاتها المسجلة.",
+      "viewReports": "عرض التقارير",
+      "loading": "جارٍ تحميل السجل المالي",
+      "loadError": "تعذر تحميل السجل المالي",
+      "retry": "إعادة المحاولة",
+      "stats": {
+        "revenue": "إجمالي الإيرادات",
+        "expenses": "إجمالي المصروفات",
+        "net": "صافي الوردية"
+      },
+      "summary": {
+        "title": "إيرادات الوردية",
+        "caption": "صافي الرصيد بعد خصم مصروفات التشغيل",
+        "chartLabel": "الإيرادات التراكمية خلال ساعات الوردية"
+      },
+      "tabs": {
+        "revenues": "الإيرادات",
+        "expenses": "المصروفات",
+        "label": "سجل الشؤون المالية"
+      },
+      "filters": {
+        "searchRevenues": "ابحث بالضيف أو رقم المعاملة",
+        "searchExpenses": "ابحث بالفئة أو الملاحظات",
+        "paymentMethod": "طريقة الدفع",
+        "status": "الحالة",
+        "category": "الفئة",
+        "date": "التاريخ",
+        "all": "الكل",
+        "reset": "إعادة ضبط"
+      },
+      "revenueTable": {
+        "title": "سجل الإيرادات",
+        "count": "{count} معاملة",
+        "summary": "عرض {rows} من {total} معاملة",
+        "empty": "لا توجد إيرادات مطابقة",
+        "emptyDescription": "جرّب تغيير البحث أو عوامل التصفية.",
+        "transaction": "رقم المعاملة",
+        "room": "الغرفة",
+        "guest": "الضيف",
+        "amount": "المبلغ",
+        "method": "طريقة الدفع",
+        "time": "وقت الاستلام",
+        "status": "الحالة",
+        "open": "فتح تفاصيل المعاملة {id}"
+      },
+      "expenseTable": {
+        "title": "مصروفات الوردية",
+        "count": "{count} مصروفات",
+        "empty": "لا توجد مصروفات مطابقة",
+        "emptyDescription": "جرّب تغيير البحث أو عوامل التصفية.",
+        "record": "رقم السجل",
+        "category": "الفئة",
+        "amount": "المبلغ",
+        "date": "التاريخ",
+        "time": "الوقت",
+        "notes": "الملاحظات",
+        "recordedBy": "سجل بواسطة",
+        "open": "فتح تفاصيل المصروف {id}"
+      },
+      "status": {
+        "completed": "مكتملة",
+        "pending": "معلّقة",
+        "refunded": "مستردة",
+        "cancelled": "ملغاة"
+      },
+      "details": {
+        "paymentEyebrow": "تفاصيل الدفعة",
+        "expenseEyebrow": "تفاصيل المصروف",
+        "amount": "المبلغ المستلم",
+        "room": "رقم الغرفة",
+        "guest": "اسم الضيف",
+        "method": "طريقة الدفع",
+        "time": "وقت الاستلام",
+        "reference": "رقم المرجع",
+        "employee": "الموظف",
+        "notes": "ملاحظات",
+        "statusUpdate": "تحديث حالة الدفع",
+        "saveStatus": "حفظ الحالة",
+        "close": "إغلاق",
+        "category": "الفئة",
+        "date": "التاريخ",
+        "recordedBy": "سجل بواسطة",
+        "edit": "تعديل السجل",
+        "saveEdit": "حفظ التعديلات",
+        "cancelEdit": "إلغاء",
+        "amountPlaceholder": "أدخل المبلغ",
+        "datePlaceholder": "اختر التاريخ",
+        "timePlaceholder": "اختر الوقت",
+        "notesPlaceholder": "أدخل ملاحظات المصروف",
+        "categoryPlaceholder": "اختر الفئة",
+        "amountError": "أدخل مبلغًا أكبر من صفر",
+        "categoryError": "اختر فئة المصروف",
+        "dateError": "أدخل تاريخًا صالحًا",
+        "timeError": "أدخل وقتًا صالحًا",
+        "notesError": "أدخل ملاحظات المصروف"
+      },
+      "actions": {
+        "exportCsv": "تصدير CSV",
+        "exported": "تم تصدير السجلات بنجاح",
+        "noExport": "لا توجد سجلات لتصديرها",
+        "paymentUpdated": "تم تحديث حالة الدفع",
+        "expenseUpdated": "تم تحديث سجل المصروف",
+        "updateFailed": "تعذر حفظ التغييرات"
+      }
+    },
+    "reports": {
+      "title": "التقارير",
+      "placeholder": "صفحة التقارير المالية الخاصة بالمدير الفرعي قيد التطوير بواسطة العضو C.",
+      "eyebrow": "التقارير المالية",
+      "hotelName": "فندق الأمين - أسوان",
+      "subtitle": "تقارير تشغيلية ومالية طويلة المدى لاتخاذ قرارات واضحة",
+      "loading": "جارٍ تحميل التقارير المالية",
+      "loadError": "تعذر تحميل التقرير المالي",
+      "emptyTitle": "لا توجد بيانات مالية",
+      "emptyDescription": "لا توجد معاملات مطابقة للفلاتر المحددة. جرّب تغيير نطاق التاريخ أو الفئة.",
+      "actions": {
+        "create": "إنشاء التقرير",
+        "export": "تصدير",
+        "print": "طباعة",
+        "date": "نطاق التاريخ",
+        "filters": "الفلاتر",
+        "retry": "إعادة المحاولة"
+      },
+      "period": {
+        "label": "الفترة الزمنية",
+        "day": "يومي",
+        "week": "أسبوعي",
+        "month": "شهري",
+        "year": "سنوي"
+      },
+      "daily": {
+        "eyebrow": "ملخص الأداء اليومي",
+        "title": "التقرير المالي يومي",
+        "subtitle": "ملخص الأداء اليومي",
+        "updated": "تم التحديث الآن",
+        "periodEnding": "الفترة المنتهية في {date}"
+      },
+      "kpis": {
+        "label": "المؤشرات المالية",
+        "secondaryLabel": "مؤشرات أداء إضافية",
+        "revenue": "إجمالي الإيرادات",
+        "revenueHint": "مقارنة بالفترة السابقة",
+        "expenses": "إجمالي المصروفات",
+        "expensesHint": "مقارنة بالفترة السابقة",
+        "expensesBudgetHint": "الميزانية التشغيلية",
+        "profit": "صافي الربح",
+        "profitHint": "بعد خصم المصروفات",
+        "net": "صافي الربح",
+        "collection": "نسبة التحصيل",
+        "collectionHint": "من إجمالي الفواتير",
+        "margin": "هامش الربح",
+        "vip": "أداء الغرف الـ VIP",
+        "regular": "أداء الغرف العادية",
+        "transactions": "المعاملات",
+        "transactionsHint": "9 مهام مكتملة"
+      },
+      "charts": {
+        "payments": "توزيع المدفوعات",
+        "paymentsHint": "حسب وسيلة الدفع",
+        "methods": "وسائل الدفع",
+        "revenueExpenses": "الإيرادات والمصروفات وصافي الربح",
+        "revenueExpensesHint": "مقارنة الأداء خلال الفترة",
+        "stableGrowth": "نمو مستقر",
+        "totalPayments": "إجمالي المدفوعات",
+        "paymentUnit": "جنيه مصري",
+        "chartLabel": "مخطط مقارنة الإيرادات والمصروفات",
+        "revenue": "الإيرادات",
+        "expenses": "المصروفات",
+        "net": "صافي الربح",
+        "expenseCategories": "فئات المصروفات",
+        "expenseCategoriesHint": "توزيع الإنفاق التشغيلي",
+        "roomPerformance": "أداء الغرف",
+        "roomPerformanceHint": "إشغال الغرف حسب النوع",
+        "roomsCount": "{count} غرفة",
+        "occupancy": "إشغال",
+        "roomRevenue": "إيراد"
+      },
+      "months": {
+        "december": "ديسمبر",
+        "september": "سبتمبر",
+        "june": "يونيو",
+        "march": "مارس",
+        "january": "يناير"
+      },
+      "paymentMethods": {
+        "cash": "نقدي",
+        "instapay": "إنستاباي",
+        "card": "فودافون كاش"
+      },
+      "categories": {
+        "room_booking": "حجز الغرف",
+        "cleaning_supplies": "مستلزمات التنظيف",
+        "utilities": "كهرباء ومياه",
+        "maintenance_supplies": "مستلزمات الصيانة",
+        "other": "أخرى"
+      },
+      "roomTypes": {
+        "regular": "الغرف العادية",
+        "vip": "غرف VIP"
+      },
+      "types": {
+        "revenue": "إيراد",
+        "expense": "مصروف"
+      },
+      "status": {
+        "completed": "مكتمل",
+        "pending": "معلق"
+      },
+      "table": {
+        "title": "سجل المعاملات المالية",
+        "subtitle": "تفاصيل الإيرادات والمصروفات المسجلة",
+        "count": "{count} معاملة",
+        "id": "رقم المعاملة",
+        "description": "البيان",
+        "category": "الفئة",
+        "room": "الغرفة",
+        "date": "التاريخ",
+        "amount": "المبلغ",
+        "status": "الحالة",
+        "pagination": "التنقل بين صفحات المعاملات"
+      },
+      "drawer": {
+        "eyebrow": "تخصيص التقرير",
+        "title": "فلاتر متقدمة",
+        "close": "إغلاق الفلاتر",
+        "dateRange": "نطاق التاريخ",
+        "dateFrom": "من التاريخ",
+        "dateTo": "إلى التاريخ",
+        "category": "الفئة",
+        "allCategories": "كل الفئات",
+        "paymentMethod": "طرق الدفع",
+        "allMethods": "كل الطرق",
+        "floor": "الطابق",
+        "allFloors": "جميع الطوابق",
+        "roomType": "نوع الغرفة",
+        "allRoomTypes": "كل أنواع الغرف",
+        "roomStatus": "حالة الغرفة",
+        "allRoomStatuses": "كل الحالات",
+        "occupied": "مشغولة",
+        "maintenance": "صيانة",
+        "shift": "الوردية",
+        "allShifts": "جميع الورديات",
+        "morning": "صباحية",
+        "evening": "مسائية",
+        "night": "ليلية",
+        "expenseCategory": "المصروف",
+        "period": "الفترة",
+        "apply": "تطبيق الفلاتر",
+        "reset": "إعادة ضبط"
+      }
+    },
+    "profile": {
+      "title": "الملف الشخصي",
+      "eyebrow": "حساب إداري",
+      "accountTitle": "حساب المدير الفرعي",
+      "role": "مدير الفندق",
+      "hotel": "Al Amin Hotel",
+      "location": "أسوان، مصر",
+      "editBtn": "تعديل الملف",
+      "notificationBtn": "تفضيلات الإشعارات",
+      "stats": {
+        "employeesTitle": "الموظفون المُدارون",
+        "employeesValue": "18",
+        "employeesSubtitle": "جميع الأقسام",
+        "roomsTitle": "الغرف المُدارة",
+        "roomsValue": "36",
+        "roomsSubtitle": "3 طوابق",
+        "reportsTitle": "التقارير المُنشأة",
+        "reportsValue": "28",
+        "reportsSubtitle": "هذا الشهر",
+        "tasksTitle": "مهام الإدارة",
+        "tasksValue": "12",
+        "tasksSubtitle": "9 مكتملة"
+      },
+      "accountInfo": {
+        "title": "معلومات الحساب",
+        "subtitle": "بيانات التواصل والوصول",
+        "roleLabel": "الدور",
+        "roleValue": "المدير الفرعي",
+        "accountLabel": "الحساب",
+        "accountValue": "حساب المدير الفرعي",
+        "emailLabel": "البريد",
+        "phoneLabel": "الهاتف",
+        "lastLoginLabel": "آخر دخول",
+        "lastLoginValue": "اليوم، 08:12 ص",
+        "statusLabel": "حالة الحساب",
+        "statusValue": "نشط"
+      },
+      "actions": {
+        "logout": "تسجيل الخروج",
+        "notifications": "تفضيلات الإشعارات",
+        "changePassword": "تغيير كلمة المرور"
+      },
+      "editDrawer": {
+        "title": "تعديل الملف الشخصي",
+        "nameLabel": "الاسم الكامل",
+        "namePlaceholder": "أدخل الاسم الكامل",
+        "emailLabel": "البريد الإلكتروني",
+        "emailPlaceholder": "manager@alaminhotel.com",
+        "phoneLabel": "رقم الهاتف",
+        "phonePlaceholder": "+20 100 000 0000",
+        "save": "حفظ التغييرات",
+        "cancel": "إلغاء",
+        "successToast": "تم تحديث الملف الشخصي بنجاح",
+        "errNameRequired": "الاسم مطلوب",
+        "errEmailRequired": "البريد الإلكتروني مطلوب",
+        "errEmailInvalid": "البريد الإلكتروني غير صالح",
+        "errPhoneRequired": "رقم الهاتف مطلوب"
+      },
+      "passwordDrawer": {
+        "title": "تغيير كلمة المرور",
+        "currentPasswordLabel": "كلمة المرور الحالية",
+        "newPasswordLabel": "كلمة المرور الجديدة",
+        "confirmPasswordLabel": "تأكيد كلمة المرور الجديدة",
+        "submit": "تحديث كلمة المرور",
+        "cancel": "إلغاء",
+        "successToast": "تم تغيير كلمة المرور بنجاح",
+        "errCurrentRequired": "كلمة المرور الحالية مطلوبة",
+        "errNewRequired": "كلمة المرور الجديدة مطلوبة",
+        "errNewLength": "يجب ألا تقل كلمة المرور عن 6 أحرف",
+        "errConfirmMismatch": "كلمتا المرور غير متطابقتين"
+      }
+    },
+    "settings": {
+      "title": "الإعدادات",
+      "eyebrow": "تفضيلات النظام",
+      "subtitle": "إدارة معلومات الفندق والإشعارات والورديات وتفضيلات النظام",
+      "save": "حفظ التغييرات",
+      "saving": "جارٍ الحفظ...",
+      "export": "تصدير",
+      "saved": "محفوظ تلقائي",
+      "loading": "جارٍ تحميل الإعدادات...",
+      "loadError": "تعذر تحميل الإعدادات",
+      "retry": "إعادة المحاولة",
+      "saveSuccess": "تم حفظ التغييرات بنجاح",
+      "saveError": "تعذر حفظ الإعدادات",
+      "exportSuccess": "تم تصدير الإعدادات بنجاح",
+      "unsavedWarning": "لديك تغييرات غير محفوظة. هل أنت متأكد من مغادرة الصفحة؟",
+      "enabled": "مفعّل",
+      "disabled": "متوقف",
+      "validation": {
+        "hotelName": "أدخل اسم الفندق",
+        "location": "أدخل موقع الفندق",
+        "positiveInteger": "أدخل عددًا صحيحًا أكبر من صفر"
+      },
+      "export": {
+        "field": "الإعداد",
+        "value": "القيمة"
+      },
+      "hotel": {
+        "title": "معلومات الفندق",
+        "subtitle": "إعدادات الإدارة الأساسية لفندق الأمين",
+        "name": "اسم الفندق",
+        "location": "الموقع",
+        "floors": "عدد الطوابق",
+        "rooms": "إجمالي الغرف"
+      },
+      "shifts": {
+        "title": "تكوين الورديات",
+        "subtitle": "أوقات العمل المعتمدة",
+        "time": "توقيت الوردية",
+        "morning": "الصباحية",
+        "evening": "المسائية",
+        "night": "الليلية"
+      },
+      "notifications": {
+        "title": "الإشعارات",
+        "subtitle": "اختر التنبيهات التي تريد استقبالها",
+        "payments": "المدفوعات",
+        "paymentsDescription": "إشعارات فورية وتحديثات مهمة",
+        "reports": "التقارير",
+        "reportsDescription": "إشعارات فورية وتحديثات مهمة"
+      },
+      "appearance": {
+        "label": "المظهر",
+        "light": "فاتح",
+        "dark": "داكن",
+        "system": "النظام"
+      },
+      "language": {
+        "label": "اللغة",
+        "arabic": "العربية",
+        "english": "English",
+        "ar": "العربية",
+        "en": "English"
       }
     }
   }

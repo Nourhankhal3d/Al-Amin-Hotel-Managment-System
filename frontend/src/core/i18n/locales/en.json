@@ -214,7 +214,7 @@
     "title": "Room management",
     "description": "Manage room status and guest information with ease and clarity.",
     "addActivity": "Add room activity",
-    "export": "Export",
+    "exportButton": "Export",
     "stats": {
       "total": "Total rooms",
       "available": "Available",
@@ -400,6 +400,10 @@
   "splashSubtitle": "Smart Hotel Management System",
   "loginTitle": "Welcome Back",
   "loginSubtitle": "Enter your credentials to access dashboard",
+  "demoLogin": {
+    "or": "or",
+    "subManager": "Demo Login as Sub-Manager"
+  },
   "registerTitle": "Create New Account",
   "registerSubtitle": "Fill in the details below to register",
   "usernameLabel": "Username",
@@ -2732,6 +2736,493 @@
         "NOT_FOUND": "This request no longer exists.",
         "VALIDATION_ERROR": "Some details are missing or invalid. Check the amount and the notes.",
         "CONFLICT": "The refund couldn't be recorded: either nothing is left to refund on this booking, or no front-desk shift is open to record it. Check the booking and try again."
+      }
+    }
+  },
+  "submanager": {
+    "shell": {
+      "section": "Financial Follow-up",
+      "brand": "Al-Amin",
+      "location": "Aswan Hotel",
+      "nav": {
+        "dashboard": "Dashboard",
+        "finance": "Finance",
+        "reports": "Financial Reports",
+        "profile": "Profile",
+        "settings": "Settings"
+      },
+      "statusCard": {
+        "title": "Hotel is Active",
+        "subtitle": "Financial follow-up only"
+      },
+      "logout": "Logout",
+      "topbar": {
+        "searchPlaceholder": "Search for room, task, or guest",
+        "searchShortcut": "⌘ K",
+        "userName": "Sub-Manager",
+        "userRole": "Financial Follow-up",
+        "userAvatar": "SM",
+        "languageToggle": "Toggle Language",
+        "notifications": "Notifications"
+      }
+    },
+    "login": {
+      "title": "Login",
+      "subtitle": "Enter your credentials to access the control panel",
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "Enter username",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPasswordLink": "Forgot password?",
+      "submitButton": "Login",
+      "forgot": {
+        "title": "Recover Access",
+        "subtitle": "Send a request to the manager to review your account and issue a temporary password.",
+        "usernameLabel": "Username",
+        "usernamePlaceholder": "Enter username",
+        "employeeNumberLabel": "Employee Number",
+        "employeeNumberPlaceholder": "e.g. EMP-018",
+        "submitButton": "Send Request for Help",
+        "backToLogin": "Back to login",
+        "successTitle": "Request Sent for Review",
+        "successSubtitle": "Your request will appear to the manager",
+        "successAction": "Back to login"
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "placeholder": "Sub-Manager Dashboard page is under development by Member B.",
+      "eyebrow": "Financial Reports",
+      "reportTitle": "Daily Report",
+      "description": "A daily financial and operational summary.",
+      "downloadPdf": "Download PDF",
+      "loading": "Loading daily report",
+      "loadError": "Could not load the daily report",
+      "retry": "Try again",
+      "emptyTitle": "No financial data",
+      "emptyDescription": "Financial metrics will appear here when records are available.",
+      "stats": {
+        "revenue": "Revenue",
+        "revenueHint": "Period total",
+        "expenses": "Expenses",
+        "expensesHint": "Operating expenses",
+        "net": "Net profit",
+        "netHint": "After expenses",
+        "operations": "Operations",
+        "operationsHint": "Financial records"
+      },
+      "summary": {
+        "title": "Daily analysis",
+        "caption": "Net balance after operating expenses",
+        "chartLabel": "Cumulative revenue across shift hours",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "net": "Net profit",
+        "refunded": "Refunded",
+        "paymentMethods": "Revenue by payment method",
+        "expenseSources": "Expenses by source"
+      },
+      "paymentMethods": {
+        "instapay": "InstaPay",
+        "cash": "Cash",
+        "vodafone_cash": "Vodafone Cash"
+      },
+      "expenseSources": {
+        "cleaning_supplies": "Cleaning supplies",
+        "maintenance_supplies": "Maintenance supplies",
+        "electricity": "Electricity",
+        "emergency": "Emergency"
+      }
+    },
+    "finance": {
+      "title": "Finance",
+      "placeholder": "Sub-Manager Finance page is under development by Member B.",
+      "eyebrow": "Shift accounts",
+      "pageTitle": "Financial Monitoring",
+      "description": "Review the recorded transactions and expenses for this shift.",
+      "viewReports": "View reports",
+      "loading": "Loading finance ledger",
+      "loadError": "Could not load the finance ledger",
+      "retry": "Try again",
+      "stats": {
+        "revenue": "Total revenue",
+        "expenses": "Total expenses",
+        "net": "Shift net"
+      },
+      "summary": {
+        "title": "Shift revenue",
+        "caption": "Net balance after operating expenses",
+        "chartLabel": "Cumulative revenue across shift hours"
+      },
+      "tabs": {
+        "revenues": "Revenue",
+        "expenses": "Expenses",
+        "label": "Finance ledger"
+      },
+      "filters": {
+        "searchRevenues": "Search guest or transaction ID",
+        "searchExpenses": "Search category or notes",
+        "paymentMethod": "Payment method",
+        "status": "Status",
+        "category": "Category",
+        "date": "Date",
+        "all": "All",
+        "reset": "Reset"
+      },
+      "revenueTable": {
+        "title": "Revenue log",
+        "count": "{count} transactions",
+        "summary": "Showing {rows} of {total} transactions",
+        "empty": "No matching revenue records",
+        "emptyDescription": "Try changing the search or filters.",
+        "transaction": "Transaction ID",
+        "room": "Room",
+        "guest": "Guest",
+        "amount": "Amount",
+        "method": "Payment method",
+        "time": "Received at",
+        "status": "Status",
+        "open": "Open transaction {id}"
+      },
+      "expenseTable": {
+        "title": "Shift expenses",
+        "count": "{count} expenses",
+        "empty": "No matching expenses",
+        "emptyDescription": "Try changing the search or filters.",
+        "record": "Record ID",
+        "category": "Category",
+        "amount": "Amount",
+        "date": "Date",
+        "time": "Time",
+        "notes": "Notes",
+        "recordedBy": "Recorded by",
+        "open": "Open expense {id}"
+      },
+      "status": {
+        "completed": "Completed",
+        "pending": "Pending",
+        "refunded": "Refunded",
+        "cancelled": "Cancelled"
+      },
+      "details": {
+        "paymentEyebrow": "Payment details",
+        "expenseEyebrow": "Expense details",
+        "amount": "Amount received",
+        "room": "Room",
+        "guest": "Guest name",
+        "method": "Payment method",
+        "time": "Received at",
+        "reference": "Reference number",
+        "employee": "Employee",
+        "notes": "Notes",
+        "statusUpdate": "Update payment status",
+        "saveStatus": "Save status",
+        "close": "Close",
+        "category": "Category",
+        "date": "Date",
+        "recordedBy": "Recorded by",
+        "edit": "Edit record",
+        "saveEdit": "Save changes",
+        "cancelEdit": "Cancel",
+        "amountPlaceholder": "Enter amount",
+        "datePlaceholder": "Choose date",
+        "timePlaceholder": "Choose time",
+        "notesPlaceholder": "Enter expense notes",
+        "categoryPlaceholder": "Choose category",
+        "amountError": "Enter an amount greater than zero",
+        "categoryError": "Choose an expense category",
+        "dateError": "Enter a valid date",
+        "timeError": "Enter a valid time",
+        "notesError": "Enter expense notes"
+      },
+      "actions": {
+        "exportCsv": "Export CSV",
+        "exported": "Records exported successfully",
+        "noExport": "There are no records to export",
+        "paymentUpdated": "Payment status updated",
+        "expenseUpdated": "Expense record updated",
+        "updateFailed": "Could not save your changes"
+      }
+    },
+    "reports": {
+      "title": "Reports",
+      "placeholder": "Sub-Manager Financial Reports page is under development by Member C.",
+      "eyebrow": "Financial Reports",
+      "hotelName": "Al-Amin Hotel - Aswan",
+      "subtitle": "Long-term operational and financial reports for clear decision-making.",
+      "loading": "Loading financial reports",
+      "loadError": "Could not load the financial report",
+      "emptyTitle": "No financial data",
+      "emptyDescription": "No transactions match the selected filters. Try changing the date range or category.",
+      "actions": {
+        "create": "Create report",
+        "export": "Export",
+        "print": "Print",
+        "date": "Date range",
+        "filters": "Filters",
+        "retry": "Try again"
+      },
+      "period": {
+        "label": "Reporting period",
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year"
+      },
+      "daily": {
+        "eyebrow": "Daily performance summary",
+        "title": "Daily financial report",
+        "subtitle": "Daily performance summary",
+        "updated": "Updated just now",
+        "periodEnding": "Period ending {date}"
+      },
+      "kpis": {
+        "label": "Financial metrics",
+        "secondaryLabel": "Additional performance metrics",
+        "revenue": "Total revenue",
+        "revenueHint": "Compared with previous period",
+        "expenses": "Total expenses",
+        "expensesHint": "Compared with previous period",
+        "expensesBudgetHint": "Operating budget",
+        "profit": "Net profit",
+        "profitHint": "After expenses",
+        "net": "Net profit",
+        "collection": "Collection rate",
+        "collectionHint": "Of total invoices",
+        "margin": "Profit margin",
+        "vip": "VIP room performance",
+        "regular": "Regular room performance",
+        "transactions": "Transactions",
+        "transactionsHint": "9 completed tasks"
+      },
+      "charts": {
+        "payments": "Payment breakdown",
+        "paymentsHint": "By payment method",
+        "methods": "Payment methods",
+        "revenueExpenses": "Revenue, expenses and net profit",
+        "revenueExpensesHint": "Performance comparison for the period",
+        "stableGrowth": "Stable growth",
+        "totalPayments": "Total payments",
+        "paymentUnit": "EGP",
+        "chartLabel": "Revenue and expense comparison chart",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "expenseCategories": "Expense categories",
+        "expenseCategoriesHint": "Operating expense distribution",
+        "roomPerformance": "Room performance",
+        "roomPerformanceHint": "Occupancy by room type",
+        "roomsCount": "{count} rooms",
+        "occupancy": "occupied",
+        "roomRevenue": "Revenue"
+      },
+      "months": {
+        "december": "December",
+        "september": "September",
+        "june": "June",
+        "march": "March",
+        "january": "January"
+      },
+      "paymentMethods": {
+        "cash": "Cash",
+        "instapay": "InstaPay",
+        "card": "Vodafone Cash"
+      },
+      "categories": {
+        "room_booking": "Room bookings",
+        "cleaning_supplies": "Cleaning supplies",
+        "utilities": "Electricity and water",
+        "maintenance_supplies": "Maintenance supplies",
+        "other": "Other"
+      },
+      "roomTypes": {
+        "regular": "Regular rooms",
+        "vip": "VIP rooms"
+      },
+      "types": {
+        "revenue": "Revenue",
+        "expense": "Expense"
+      },
+      "status": {
+        "completed": "Completed",
+        "pending": "Pending"
+      },
+      "table": {
+        "title": "Financial transactions",
+        "subtitle": "Recorded revenue and expense details",
+        "count": "{count} transactions",
+        "id": "Transaction ID",
+        "description": "Description",
+        "category": "Category",
+        "room": "Room",
+        "date": "Date",
+        "amount": "Amount",
+        "status": "Status",
+        "pagination": "Transaction pages"
+      },
+      "drawer": {
+        "eyebrow": "Customize report",
+        "title": "Advanced filters",
+        "close": "Close filters",
+        "dateRange": "Date range",
+        "dateFrom": "From date",
+        "dateTo": "To date",
+        "category": "Category",
+        "allCategories": "All categories",
+        "paymentMethod": "Payment method",
+        "allMethods": "All methods",
+        "floor": "Floor",
+        "allFloors": "All floors",
+        "roomType": "Room type",
+        "allRoomTypes": "All room types",
+        "roomStatus": "Room status",
+        "allRoomStatuses": "All statuses",
+        "occupied": "Occupied",
+        "maintenance": "Maintenance",
+        "shift": "Shift",
+        "allShifts": "All shifts",
+        "morning": "Morning",
+        "evening": "Evening",
+        "night": "Night",
+        "expenseCategory": "Expense category",
+        "period": "Period",
+        "apply": "Apply filters",
+        "reset": "Reset"
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "eyebrow": "Administrative Account",
+      "accountTitle": "Sub-Manager Account",
+      "role": "Hotel Manager",
+      "hotel": "Al Amin Hotel",
+      "location": "Aswan, Egypt",
+      "editBtn": "Edit Profile",
+      "notificationBtn": "Notification Preferences",
+      "stats": {
+        "employeesTitle": "Managed Employees",
+        "employeesValue": "18",
+        "employeesSubtitle": "All Departments",
+        "roomsTitle": "Managed Rooms",
+        "roomsValue": "36",
+        "roomsSubtitle": "3 Floors",
+        "reportsTitle": "Reports Created",
+        "reportsValue": "28",
+        "reportsSubtitle": "This Month",
+        "tasksTitle": "Management Tasks",
+        "tasksValue": "12",
+        "tasksSubtitle": "9 Completed"
+      },
+      "accountInfo": {
+        "title": "Account Information",
+        "subtitle": "Contact & Access Details",
+        "roleLabel": "Role",
+        "roleValue": "Sub-Manager",
+        "accountLabel": "Account",
+        "accountValue": "Sub-Manager Account",
+        "emailLabel": "Email",
+        "phoneLabel": "Phone",
+        "lastLoginLabel": "Last Login",
+        "lastLoginValue": "Today, 08:12 AM",
+        "statusLabel": "Account Status",
+        "statusValue": "Active"
+      },
+      "actions": {
+        "logout": "Logout",
+        "notifications": "Notification Preferences",
+        "changePassword": "Change Password"
+      },
+      "editDrawer": {
+        "title": "Edit Profile",
+        "nameLabel": "Full Name",
+        "namePlaceholder": "Enter full name",
+        "emailLabel": "Email Address",
+        "emailPlaceholder": "manager@alaminhotel.com",
+        "phoneLabel": "Phone Number",
+        "phonePlaceholder": "+20 100 000 0000",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "successToast": "Profile updated successfully",
+        "errNameRequired": "Name is required",
+        "errEmailRequired": "Email is required",
+        "errEmailInvalid": "Invalid email address",
+        "errPhoneRequired": "Phone number is required"
+      },
+      "passwordDrawer": {
+        "title": "Change Password",
+        "currentPasswordLabel": "Current Password",
+        "newPasswordLabel": "New Password",
+        "confirmPasswordLabel": "Confirm New Password",
+        "submit": "Update Password",
+        "cancel": "Cancel",
+        "successToast": "Password updated successfully",
+        "errCurrentRequired": "Current password is required",
+        "errNewRequired": "New password is required",
+        "errNewLength": "Password must be at least 6 characters",
+        "errConfirmMismatch": "Passwords do not match"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "eyebrow": "SYSTEM PREFERENCES",
+      "subtitle": "Manage hotel information, notifications, shifts, and system preferences.",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "export": "Export",
+      "saved": "Saved automatically",
+      "loading": "Loading settings...",
+      "loadError": "Could not load settings",
+      "retry": "Try again",
+      "saveSuccess": "Changes saved successfully",
+      "saveError": "Could not save settings",
+      "exportSuccess": "Settings exported successfully",
+      "unsavedWarning": "You have unsaved changes. Are you sure you want to leave?",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "validation": {
+        "hotelName": "Enter the hotel name",
+        "location": "Enter the hotel location",
+        "positiveInteger": "Enter a whole number greater than zero"
+      },
+      "export": {
+        "field": "Setting",
+        "value": "Value"
+      },
+      "hotel": {
+        "title": "Hotel Information",
+        "subtitle": "Core management settings for Al-Amin Hotel.",
+        "name": "Hotel name",
+        "location": "Location",
+        "floors": "Number of floors",
+        "rooms": "Total rooms"
+      },
+      "shifts": {
+        "title": "Shift Configuration",
+        "subtitle": "Approved working hours.",
+        "time": "Shift time",
+        "morning": "Morning",
+        "evening": "Evening",
+        "night": "Night"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "subtitle": "Choose which notifications you want to receive.",
+        "payments": "Payments",
+        "paymentsDescription": "Instant notifications and important updates.",
+        "reports": "Reports",
+        "reportsDescription": "Instant notifications and important updates."
+      },
+      "appearance": {
+        "label": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "language": {
+        "label": "Language",
+        "arabic": "العربية",
+        "english": "English",
+        "ar": "Arabic",
+        "en": "English"
       }
     }
   }

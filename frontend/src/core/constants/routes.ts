@@ -24,6 +24,14 @@ export const ROUTES = {
   managerRoomTypes: '/manager/room-types',
   managerProfile: '/manager/profile',
   managerSettings: '/manager/settings',
+
+  // Sub-Manager routes
+  subManager: '/sub-manager',
+  subManagerDashboard: '/sub-manager/dashboard',
+  subManagerFinance: '/sub-manager/finance',
+  subManagerReports: '/sub-manager/reports',
+  subManagerProfile: '/sub-manager/profile',
+  subManagerSettings: '/sub-manager/settings',
 } as const;
 
 export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

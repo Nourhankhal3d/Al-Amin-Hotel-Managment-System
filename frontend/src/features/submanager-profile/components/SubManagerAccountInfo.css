@@ -1,0 +1,68 @@
+.submanager-account-info {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 4px 18px rgba(65, 58, 43, 0.04);
+}
+
+.submanager-account-info__header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.submanager-account-info__title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-ink, #2F2F2F);
+}
+
+.submanager-account-info__subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted, #7D827E);
+}
+
+.submanager-account-info__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.submanager-account-info__tile {
+  background: #FAF8F4;
+  border: 1px solid var(--color-border, #EBE8E0);
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.submanager-account-info__label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #9DA19E;
+}
+
+.submanager-account-info__value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink, #2F2F2F);
+  word-break: break-all;
+}
+
+.submanager-account-info__status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2E9E52;
+}
+
+@media (max-width: 640px) {
+  .submanager-account-info__grid {
+    grid-template-columns: 1fr;
+  }
+}
+

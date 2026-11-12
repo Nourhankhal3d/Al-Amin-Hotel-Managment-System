@@ -1,0 +1,54 @@
+.finance-expense-drawer__content {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.finance-expense-drawer__amount {
+  justify-content: center;
+  min-height: 7rem;
+  text-align: center;
+}
+
+.finance-expense-drawer__amount .drawer-details__summary-text {
+  justify-items: center;
+}
+
+.finance-expense-drawer__amount strong {
+  font-size: var(--font-size-display);
+  line-height: 1.15;
+}
+
+.finance-expense-drawer__notes h3 {
+  margin-block-end: var(--space-2);
+}
+
+.finance-expense-drawer__form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.finance-expense-drawer__field {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.finance-expense-drawer__field small,
+.finance-expense-drawer .ui-select__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}
+
+.finance-expense-drawer [aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.finance-expense-drawer .drawer__footer .ui-button { min-height: 2.875rem; }
+
+@media (max-width: 32rem) {
+  .finance-expense-drawer .drawer__header { margin-inline: var(--space-4); }
+  .finance-expense-drawer .drawer__content { padding-inline: var(--space-4); }
+  .finance-expense-drawer .drawer__footer { margin-inline: var(--space-4); }
+  .finance-expense-drawer__content .drawer-details__grid { grid-template-columns: minmax(0, 1fr); }
+}

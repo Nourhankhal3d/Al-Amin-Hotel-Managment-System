@@ -13,6 +13,9 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   if (role === 'manager' || role === 'admin') {
     return <Navigate to={ROUTES.managerDashboard} replace />;
   }
+  if (role === 'submanager' || role === 'sub_manager') {
+    return <Navigate to={ROUTES.subManagerDashboard} replace />;
+  }
 
   return <>{children}</>;
 }

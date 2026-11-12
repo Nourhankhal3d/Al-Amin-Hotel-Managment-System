@@ -1,0 +1,39 @@
+.finance-payment-drawer__content {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.finance-payment-drawer__amount {
+  justify-content: center;
+  min-height: 7rem;
+  text-align: center;
+}
+
+.finance-payment-drawer__amount .drawer-details__summary-text {
+  justify-items: center;
+}
+
+.finance-payment-drawer__amount strong {
+  font-size: var(--font-size-display);
+  line-height: 1.15;
+}
+
+.finance-payment-drawer__notes h3 {
+  margin-block-end: var(--space-2);
+}
+
+.finance-payment-drawer__status {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.finance-payment-drawer .drawer__footer .ui-button { min-height: 2.875rem; }
+
+@media (max-width: 32rem) {
+  .finance-payment-drawer .drawer__header { margin-inline: var(--space-4); }
+  .finance-payment-drawer .drawer__content { padding-inline: var(--space-4); }
+  .finance-payment-drawer .drawer__footer { margin-inline: var(--space-4); }
+  .finance-payment-drawer__content .drawer-details__grid { grid-template-columns: minmax(0, 1fr); }
+}
