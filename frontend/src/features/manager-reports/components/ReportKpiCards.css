@@ -1,0 +1,55 @@
+/* Report 4 Small KPI Cards */
+.report-kpi-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.report-kpi-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-5) var(--space-6);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 140px;
+}
+
+.report-kpi-card__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  margin-block-end: 8px;
+}
+
+.report-kpi-card__value {
+  font-size: 2.25rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  line-height: 1.1;
+  margin-block-end: 8px;
+}
+
+.report-kpi-card__hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .report-kpi-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .report-kpi-cards {
+    grid-template-columns: 1fr;
+  }
+}

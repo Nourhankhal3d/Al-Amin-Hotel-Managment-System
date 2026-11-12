@@ -1,0 +1,97 @@
+/* Three decisions side by side: full approval (green), partial (white), reject (soft red), as in the design */
+.refund-review__actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.refund-review__actions .ui-button {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.refund-review__actions .refund-review__reject {
+  border-color: transparent;
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
+.refund-review__actions .refund-review__reject:hover:not(:disabled) {
+  border-color: var(--color-danger);
+}
+
+.refund-review__footer--single { grid-template-columns: minmax(0, 1fr); }
+
+.refund-review__digits {
+  direction: ltr;
+  unicode-bidi: isolate;
+  letter-spacing: 0.02em;
+}
+
+.refund-review__field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.refund-review__label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.refund-review__input {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  outline: none;
+}
+
+.refund-review__input:focus-visible,
+.refund-review__field .drawer-details__textarea:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+  outline: none;
+}
+
+.refund-review__control--error { border-color: var(--color-danger); }
+
+.refund-review__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}
+
+.refund-review__hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+/* The amount field that appears after "partial approval" */
+.refund-review__partial {
+  padding: var(--space-4);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-card);
+  background: var(--color-primary-softer);
+}
+
+@media (max-width: 30rem) {
+  .refund-review__actions { grid-template-columns: 1fr; }
+}
+
+/* The reject confirmation: red confirm button (scoped to this dialog only) */
+.refund-review__confirm .ui-dialog .ui-button.ui-button--danger {
+  color: var(--color-surface);
+  background: var(--color-danger);
+  box-shadow: none;
+}
+
+.refund-review__confirm .ui-dialog__icon {
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}

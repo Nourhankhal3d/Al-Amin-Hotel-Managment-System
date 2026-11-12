@@ -1,0 +1,166 @@
+/* Expense Details Drawer Styles */
+.expense-details-drawer .ui-drawer-title {
+  font-weight: var(--font-weight-bold);
+  font-size: 1.25rem;
+}
+
+.expense-drawer__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-block: var(--space-2);
+}
+
+/* 1. Amount Card (Gold-tinted) */
+.expense-drawer__amount-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
+  background: linear-gradient(
+    135deg,
+    rgba(201, 167, 104, 0.14) 0%,
+    rgba(201, 167, 104, 0.05) 100%
+  );
+  border: 1px solid rgba(201, 167, 104, 0.28);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.expense-drawer__amount-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-gold-ink);
+  font-weight: var(--font-weight-medium);
+}
+
+.expense-drawer__amount-val-wrapper {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-1);
+}
+
+.expense-drawer__amount-val {
+  font-size: 2.25rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+  line-height: 1.1;
+}
+
+.expense-drawer__amount-currency {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.expense-drawer__category-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 14px;
+  background-color: var(--color-gold-soft);
+  color: var(--color-gold-ink);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(201, 167, 104, 0.25);
+  margin-block-start: var(--space-1);
+}
+
+/* 2. Tiles Grid */
+.expense-drawer__tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+/* 3. Section and Notes Box */
+.expense-drawer__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.expense-drawer__section-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.expense-drawer__notes-box {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-ink);
+  line-height: 1.5;
+  min-height: 48px;
+}
+
+/* 4. Edit Form */
+.expense-drawer__edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.expense-drawer__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.expense-drawer__form-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+}
+
+.expense-drawer__input--error {
+  border-color: var(--color-danger) !important;
+}
+
+.expense-drawer__field-error {
+  font-size: var(--font-size-xs);
+  color: var(--color-danger);
+  margin-block-start: 2px;
+}
+
+.expense-drawer__textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.expense-drawer__textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+/* Footer Actions */
+.expense-drawer__footer-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.expense-drawer__primary-btn {
+  flex: 1;
+}
+
+.expense-drawer__secondary-btn {
+  flex: 1;
+}

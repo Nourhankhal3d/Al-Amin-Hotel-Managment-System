@@ -16,7 +16,6 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { RoleRoute } from './RoleRoute';
 import { ManagerLayout } from '../../layouts/ManagerLayout';
 import { SubManagerLayout } from '../../layouts/SubManagerLayout';
-import { ComingSoonPage } from '../../components/common/ComingSoonPage';
 import { ManagerDashboardPage } from '../../features/manager-dashboard';
 import { ManagerRoomsPage } from '../../features/manager-rooms';
 import { ManagerEmployeesPage } from '../../features/manager-employees';
@@ -25,6 +24,11 @@ import { ManagerPasswordRequestsPage } from '../../features/manager-password-req
 import { ManagerRoomTypesPage } from '../../features/manager-room-types';
 import { ManagerProfilePage } from '../../features/manager-profile';
 import { ManagerSettingsPage } from '../../features/manager-settings';
+import { ManagerHousekeepingPage } from '../../features/manager-housekeeping';
+import { ManagerMaintenancePage } from '../../features/manager-maintenance';
+import { ManagerFinancePage } from '../../features/manager-finance';
+import { ManagerReportsPage } from '../../features/manager-reports';
+import { ManagerRefundsPage } from '../../features/manager-refunds';
 import { SubManagerDashboardPage } from '../../features/submanager-dashboard';
 import { SubManagerFinancePage } from '../../features/submanager-finance';
 import { SubManagerReportsPage } from '../../features/submanager-reports';
@@ -53,11 +57,11 @@ export function AppRouter() {
           <Route path={ROUTES.managerDashboard} element={<ManagerDashboardPage />} />
           <Route path={ROUTES.managerRooms} element={<ManagerRoomsPage />} />
           <Route path={ROUTES.managerEmployees} element={<ManagerEmployeesPage />} />
-          <Route path={ROUTES.managerHousekeeping} element={<ComingSoonPage />} />
-          <Route path={ROUTES.managerMaintenance} element={<ComingSoonPage />} />
-          <Route path={ROUTES.managerFinance} element={<ComingSoonPage />} />
-          <Route path={ROUTES.managerReports} element={<ComingSoonPage />} />
-          <Route path={ROUTES.managerRefunds} element={<ComingSoonPage />} />
+          <Route path={ROUTES.managerHousekeeping} element={<ManagerHousekeepingPage />} />
+          <Route path={ROUTES.managerMaintenance} element={<ManagerMaintenancePage />} />
+          <Route path={ROUTES.managerFinance} element={<ManagerFinancePage />} />
+          <Route path={ROUTES.managerReports} element={<ManagerReportsPage />} />
+          <Route path={ROUTES.managerRefunds} element={<ManagerRefundsPage />} />
           <Route path={ROUTES.managerPasswordRequests} element={<ManagerPasswordRequestsPage />} />
           <Route path={ROUTES.managerShifts} element={<ManagerShiftsPage />} />
           <Route path={ROUTES.managerRoomTypes} element={<ManagerRoomTypesPage />} />

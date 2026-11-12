@@ -1,0 +1,39 @@
+/* Report Toolbar Card Styles */
+.manager-reports-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-card);
+  flex-wrap: wrap;
+}
+
+.manager-reports-toolbar__periods {
+  display: flex;
+  align-items: center;
+}
+
+.manager-reports-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.manager-reports-toolbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  padding: 0.5rem 0.875rem;
+  white-space: nowrap;
+}
+
+.manager-reports-toolbar__btn--primary {
+  font-weight: var(--font-weight-semibold);
+}

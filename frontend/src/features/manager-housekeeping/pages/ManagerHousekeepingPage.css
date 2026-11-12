@@ -1,0 +1,46 @@
+.manager-housekeeping {
+  min-width: 0;
+}
+
+/* 4 cards in one row (the API has no "in progress" status, so that card is left out) */
+.manager-housekeeping__stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Icon colors sampled from the design: green icons use the brand green, gold ones the darker gold ink */
+.manager-housekeeping__stats .ui-stat-card--green .ui-stat-card__icon { color: var(--color-primary); }
+.manager-housekeeping__stats .ui-stat-card--gold .ui-stat-card__icon { color: var(--color-gold-ink); }
+
+/* Search on its own row, then the four filters and the reset link */
+.manager-housekeeping__filters {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.manager-housekeeping__filters > .common-search {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.manager-housekeeping__selects {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: var(--space-4);
+}
+
+.manager-housekeeping__selects .ui-select__trigger {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+@media (max-width: 72rem) {
+  .manager-housekeeping__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .manager-housekeeping__selects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .manager-housekeeping__selects .filter-bar__reset { justify-self: start; }
+}
+
+@media (max-width: 36rem) {
+  .manager-housekeeping__stats,
+  .manager-housekeeping__selects { grid-template-columns: 1fr; }
+}

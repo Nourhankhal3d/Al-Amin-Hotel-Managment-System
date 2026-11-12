@@ -1,0 +1,27 @@
+.hk-table__person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.hk-table__muted { color: var(--color-text-muted); }
+
+.hk-table td,
+.hk-table th { white-space: nowrap; }
+
+.hk-table__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.hk-table__updated {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
