@@ -160,6 +160,15 @@ describe('Feature 12: Security Hardening (tests/security.test.js)', () => {
         if (m === 'patch') return { priority: 'urgent' };
       }
       if (p.includes('/reservations')) {
+                if (p === '/reservations/walk-in' && m === 'post') {
+          return {
+            guest_id: dummyId,
+            room_id: dummyId,
+            check_in: '2026-10-25T12:00:00.000Z',
+            check_out: '2026-10-26T12:00:00.000Z',
+            payment: { amount: 100, payment_method: 'cash' },
+          };
+        }
         if (m === 'post' && !p.includes('/check-in') && !p.includes('/extend') && !p.includes('/check-out') && !p.includes('/cancel')) {
           return { guest_id: dummyId, room_id: dummyId, check_in: '2026-10-25T12:00:00.000Z', check_out: '2026-10-26T12:00:00.000Z' };
         }

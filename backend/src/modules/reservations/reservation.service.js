@@ -8,6 +8,8 @@ const {
   CleaningTask,
   Payment,
 } = require('../../db/models');
+const { createGuest } = require('../guests/guest.service');
+const { createPayment } = require('../payments/payment.service');
 const { withSession } = require('../../utils/transaction');
 const { E } = require('../../utils/errors');
 const { isObjectId } = require('../../utils/ids');
@@ -28,8 +30,7 @@ function toCairoDay(value, field) {
   return cairoDate(d);
 }
 
-async function createReservation({ guest_id, room_id, check_in, check_out, staff, ip, now, session: externalSession }) {
-  const readSession = externalSession || null;
+async function createReservation({ guest_id, room_id, check_in, check_out, early_arrival = false, staff, ip, now, session: externalSession }) {  const readSession = externalSession || null;
 
   // a. الضيف والغرفة لازم يكونوا موجودين
   if (!isObjectId(guest_id) || !(await Guest.exists({ _id: guest_id }).session(readSession))) {
@@ -64,7 +65,7 @@ async function createReservation({ guest_id, room_id, check_in, check_out, staff
     price_per_night_snapshot: room.price_per_night,
     half_day_price_snapshot: room.half_day_price,
     half_day_extensions: 0,
-    early_arrival: false,
+      early_arrival: early_arrival === true,
     paid_cache: 0,
   };
   fields.total_amount = computeTotal(fields);
@@ -256,7 +257,72 @@ async function checkIn({ reservation_id, early_arrival, staff, shift, ip, now })
 
   return toReservationDto(updatedReservation.toObject());
 }
+// Instant walk-in stay: guest (if new) + reservation + first payment + check-in, all in ONE transaction.
+async function createWalkInReservation({
+  guest_id, new_guest, room_id, check_in, check_out, early_arrival, payment,
+  staff, shift, ip, now, idempotencyKey,
+}) {
+  if (Boolean(guest_id) === Boolean(new_guest)) {
+    throw E.validation('Send exactly one of guest_id or new_guest');
+  }
+  if (!payment) throw E.validation('payment is required');
 
+  const reservationId = await withSession(null, async (session) => {
+    // 1. the room must exist and be available right now
+    const room = isObjectId(room_id) ? await Room.findById(room_id).session(session).lean() : null;
+    if (!room) throw E.notFound('Room not found');
+    if (room.status !== 'available') {
+      throw E.conflict(`Room is not available (current status: ${room.status}).`);
+    }
+
+    // 2. guest: use the existing one or create a new one inside the same transaction
+    let guestId = guest_id;
+    if (new_guest) {
+      const guest = await createGuest(new_guest, staff._id, ip, { session });
+      guestId = guest.guest_id;
+    }
+
+    // 3. reservation (the early-arrival fee is already inside total_amount)
+    const created = await createReservation({
+      guest_id: guestId,
+      room_id,
+      check_in,
+      check_out,
+      early_arrival: early_arrival === true,
+      staff,
+      ip,
+      now,
+      session,
+    });
+
+    // 4. arrival rules: same function the normal check-in uses
+    const reservation = await Reservation.findById(created.reservation_id).session(session);
+    const isEarly = resolveArrival(reservation, early_arrival, now);
+    const newTotal = computeTotal({ ...reservation.toObject(), early_arrival: isEarly });
+
+    // 5. first payment (rejects an amount above the remaining amount)
+    await createPayment({
+      reservation_id: created.reservation_id,
+      amount: payment.amount,
+      payment_method: payment.payment_method,
+      notes: payment.notes,
+      staff,
+      shift,
+      ip,
+      now,
+      idempotencyKey,
+      session,
+    });
+
+    // 6. check-in: reservation -> checked_in, room -> occupied, history + audit
+    await applyCheckIn({ reservation, room, isEarly, newTotal, staff, shift, now, ip }, session);
+
+    return created.reservation_id;
+  });
+
+  // read the final result after the transaction is committed
+  return getReservation({ reservation_id: reservationId, now });
+}
 async function resolveReservationForActiveStay(identifier) {
   if (isObjectId(identifier)) {
     const r = await Reservation.findById(identifier);
@@ -540,4 +606,5 @@ module.exports = {
   resolveReservationByIdentifier,
   resolveArrival,
   applyCheckIn,
+createWalkInReservation,
 };

@@ -14,6 +14,7 @@ router.get('/', reservationController.listReservations);
 router.get('/:reservation_id', reservationController.getReservation);
 router.get('/:reservation_id/payments', paymentController.listReservationPayments);
 router.post('/', requireShift, idempotent(), reservationController.createReservation);
+router.post('/walk-in', requireShift, idempotent(), reservationController.createWalkInReservation);
 router.post('/:reservation_id/check-in', requireShift, idempotent(), reservationController.checkIn);
 router.post('/:reservation_id/extend', requireShift, idempotent(), reservationController.extendStay);
 router.post('/:reservation_id/check-out', requireShift, idempotent(), reservationController.checkOut);

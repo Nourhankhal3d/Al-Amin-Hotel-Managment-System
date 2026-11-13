@@ -19,6 +19,29 @@ async function createReservation(req, res, next) {
   }
 }
 
+async function createWalkInReservation(req, res, next) {
+  try {
+    const { guest_id, new_guest, room_id, check_in, check_out, early_arrival, payment } = req.body;
+    const result = await reservationService.createWalkInReservation({
+      guest_id,
+      new_guest,
+      room_id,
+      check_in,
+      check_out,
+      early_arrival,
+      payment,
+      staff: req.auth.staff,
+      shift: req.shift,
+      ip: req.ip,
+      now: getNow(req),
+      idempotencyKey: req.get('Idempotency-Key'),
+    });
+    res.status(201).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function listReservations(req, res, next) {
   try {
     const { status, room_id, guest_id, check_in_from, check_in_to, page, limit } = req.query;
@@ -107,4 +130,5 @@ module.exports = {
   checkIn,
   extendStay,
   checkOut,
+ createWalkInReservation,
 };

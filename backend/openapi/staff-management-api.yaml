@@ -574,6 +574,42 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+  /reservations/walk-in:
+    post:
+      tags: [Reservations]
+      operationId: createWalkInReservation
+      summary: Instant walk-in stay
+      description: |
+        In one transaction: creates the guest (if new_guest is sent), creates the reservation, records the first payment and checks the guest in. The room becomes occupied.
+        For a guest arriving before 12:00 Cairo time, either use the stay day that started yesterday (no fee), or check_in = today with early_arrival: true. The half-day fee is then included in total_amount at creation, so the full amount can be paid in this request.
+        Returns 409 CONFLICT if the room is not available, on a double booking, or if new_guest.id_number already belongs to another guest. Returns 400 if the payment is above the remaining amount.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationWalkInCreate'
+      responses:
+        '201':
+          description: Walk-in reservation created, paid and checked in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /reservations/{reservation_id}:
     get:
       tags: [Reservations]
@@ -1977,6 +2013,48 @@ components:
         notes:
           type: string
           maxLength: 500
+    WalkInPayment:
+      type: object
+      required: [amount, payment_method]
+      properties:
+        amount:
+          type: number
+          format: double
+          exclusiveMinimum: true
+          minimum: 0
+        payment_method:
+          $ref: '#/components/schemas/PaymentMethod'
+        notes:
+          type: string
+          maxLength: 500
+    ReservationWalkInCreate:
+      type: object
+      required: [room_id, check_in, check_out, payment]
+      oneOf:
+        - required: [guest_id]
+        - required: [new_guest]
+      properties:
+        guest_id:
+          type: string
+          description: Existing guest. Exactly one of guest_id or new_guest is required.
+        new_guest:
+          $ref: '#/components/schemas/GuestCreate'
+        room_id:
+          type: string
+        check_in:
+          type: string
+          format: date-time
+          description: Stay day start, always noon Cairo time.
+        check_out:
+          type: string
+          format: date-time
+          description: Noon Cairo time. Must be after check_in.
+        early_arrival:
+          type: boolean
+          default: false
+          description: Send true when the guest arrives before 12:00 Cairo time and the room is free. Adds one half-day price to total_amount at creation.
+        payment:
+          $ref: '#/components/schemas/WalkInPayment'
     ExpenseCategory:
       type: string
       enum: [electricity, water, maintenance_supplies, cleaning_supplies, internet, emergency, other]
