@@ -92,10 +92,18 @@ async function login({ username, password, ip, reqTime }) {
   const shiftInfo = await resolveLoginShift(staff, now, reqTime);
 
   // 6. Invalidate any existing sessions (one device per receptionist)
-  await Session.updateMany(
+  const revoked = await Session.updateMany(
     { staff_id: staff._id, revoked_at: null },
     { revoked_at: now }
   );
+  if (revoked.modifiedCount > 0) {
+    await audit({
+      action: 'SESSION_REPLACED',
+      actorStaffId: staff._id,
+      ip,
+      details: { revoked_sessions: revoked.modifiedCount },
+    });
+  }
 
   // 7. Generate random 48-byte refresh token & hash
   const refreshToken = crypto.randomBytes(48).toString('base64url');

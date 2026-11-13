@@ -11,7 +11,7 @@ async function getDashboard(authSession, now) {
   for (const s of statusMap.values()) roomsByStatus[s] += 1;
 
   // الأعطال المفتوحة من كل الورديات
-  const openIssues = await MaintenanceIssue.countDocuments({ status: { $ne: 'resolved' } });
+ const openIssues = await MaintenanceIssue.countDocuments({ status: mongoose.trusted({ $ne: 'resolved' }) });
 
   // دفعات الوردية الحالية بس (أصفار لو الجلسة قراءة فقط)
   const totals = { cash: 0, instapay: 0, vodafone_cash: 0 };

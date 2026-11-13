@@ -5,6 +5,7 @@ const { E } = require('../../utils/errors');
 const { paginate } = require('../../utils/paginate');
 const { sanitizeText } = require('../../utils/arabic');
 const { audit } = require('../audit/audit.service');
+const { recomputeRoomStatus } = require('../rooms/room.status');
 const { toCleaningTaskDto } = require('./cleaning.dto');
 
 async function createCleaningTask({ room_id, priority, cleaner_name, notes, staff, shift, now, ip }) {
@@ -24,32 +25,71 @@ async function createCleaningTask({ room_id, priority, cleaner_name, notes, staf
 
   const assignedByStaffId = cleanedCleanerName ? staff._id : null;
   const shiftId = shift ? shift._id : null;
+  const at = now || new Date();
 
-  const task = await CleaningTask.create({
-    room_id: room._id,
-    shift_id: shiftId,
-    assigned_by_staff_id: assignedByStaffId,
-    priority: priority || 'medium',
-    status: 'pending',
-    notes: cleanedNotes,
-    cleaner_name: cleanedCleanerName,
-    assigned_at: now || new Date(),
-    finished_at: null,
-  });
+  let task;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const fresh = await Room.findById(room._id).session(session);
+      if (!fresh) {
+        throw E.notFound('Room not found');
+      }
+      if (fresh.status === 'occupied') {
+        throw E.conflict(
+          'A cleaning task cannot be created while the room is occupied',
+          'INVALID_STATUS_TRANSITION'
+        );
+      }
 
-  await audit({
-    action: 'CLEANING_CREATED',
-    actorStaffId: staff._id,
-    entity: 'CleaningTask',
-    entityId: task._id,
-    details: {
-      room_id: String(task.room_id),
-      cleaner_name: task.cleaner_name,
-      priority: task.priority,
-      shift_id: shiftId ? String(shiftId) : null,
-    },
-    ip,
-  });
+      const [created] = await CleaningTask.create(
+        [
+          {
+            room_id: room._id,
+            shift_id: shiftId,
+            assigned_by_staff_id: assignedByStaffId,
+            priority: priority || 'medium',
+            status: 'pending',
+            notes: cleanedNotes,
+            cleaner_name: cleanedCleanerName,
+            assigned_at: at,
+            finished_at: null,
+          },
+        ],
+        { session }
+      );
+      task = created;
+
+      await audit(
+        {
+          action: 'CLEANING_CREATED',
+          actorStaffId: staff._id,
+          entity: 'CleaningTask',
+          entityId: task._id,
+          details: {
+            room_id: String(task.room_id),
+            cleaner_name: task.cleaner_name,
+            priority: task.priority,
+            shift_id: shiftId ? String(shiftId) : null,
+          },
+          ip,
+        },
+        { session }
+      );
+
+      await recomputeRoomStatus({
+        roomId: room._id,
+        staff,
+        shift,
+        now: at,
+        ip,
+        session,
+        note: 'Cleaning request created',
+      });
+    });
+  } finally {
+    await session.endSession();
+  }
 
   task.room_id = { _id: room._id, room_number: room.room_number };
   return toCleaningTaskDto(task);
@@ -112,6 +152,7 @@ async function updateCleaningTask({ taskId, cleaner_name, priority, notes, statu
     throw E.conflict('Task is already done');
   }
 
+  const at = now || new Date();
   const updates = {};
   const details = {};
 
@@ -139,31 +180,54 @@ async function updateCleaningTask({ taskId, cleaner_name, priority, notes, statu
       throw E.validation('Invalid status transition');
     }
     updates.status = 'done';
-    updates.finished_at = now || new Date();
+    updates.finished_at = at;
     details.status = 'done';
-    details.finished_at = (now || new Date()).toISOString();
+    details.finished_at = at.toISOString();
   }
 
-  const res = await CleaningTask.updateOne(
-    { _id: task._id, status: 'pending' },
-    { $set: updates }
-  );
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const res = await CleaningTask.updateOne(
+        { _id: task._id, status: 'pending' },
+        { $set: updates },
+        { session }
+      );
 
-  if (res.modifiedCount !== 1) {
-    throw E.conflict('Task is already done');
+      if (res.modifiedCount !== 1) {
+        throw E.conflict('Task is already done');
+      }
+
+      await audit(
+        {
+          action: 'CLEANING_UPDATED',
+          actorStaffId: staff._id,
+          entity: 'CleaningTask',
+          entityId: task._id,
+          details: {
+            ...details,
+            shift_id: shift ? String(shift._id) : null,
+          },
+          ip,
+        },
+        { session }
+      );
+
+      if (updates.status === 'done') {
+        await recomputeRoomStatus({
+          roomId: task.room_id,
+          staff,
+          shift,
+          now: at,
+          ip,
+          session,
+          note: 'Cleaning task done',
+        });
+      }
+    });
+  } finally {
+    await session.endSession();
   }
-
-  await audit({
-    action: 'CLEANING_UPDATED',
-    actorStaffId: staff._id,
-    entity: 'CleaningTask',
-    entityId: task._id,
-    details: {
-      ...details,
-      shift_id: shift ? String(shift._id) : null,
-    },
-    ip,
-  });
 
   const updatedTask = await CleaningTask.findById(task._id).populate('room_id', 'room_number');
   return toCleaningTaskDto(updatedTask);

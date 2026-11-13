@@ -8,6 +8,7 @@ const {
   CleaningTask,
   Payment,
 } = require('../../db/models');
+const { withSession } = require('../../utils/transaction');
 const { E } = require('../../utils/errors');
 const { isObjectId } = require('../../utils/ids');
 const { cairoDate, stayDay, noonCairo, nightsBetween, stayDays } = require('../../utils/time');
@@ -27,12 +28,14 @@ function toCairoDay(value, field) {
   return cairoDate(d);
 }
 
-async function createReservation({ guest_id, room_id, check_in, check_out, staff, ip, now }) {
+async function createReservation({ guest_id, room_id, check_in, check_out, staff, ip, now, session: externalSession }) {
+  const readSession = externalSession || null;
+
   // a. الضيف والغرفة لازم يكونوا موجودين
-  if (!isObjectId(guest_id) || !(await Guest.exists({ _id: guest_id }))) {
+  if (!isObjectId(guest_id) || !(await Guest.exists({ _id: guest_id }).session(readSession))) {
     throw E.notFound('Guest not found');
   }
-  const room = isObjectId(room_id) ? await Room.findById(room_id).lean() : null;
+  const room = isObjectId(room_id) ? await Room.findById(room_id).session(readSession).lean() : null;
   if (!room) throw E.notFound('Room not found');
 
   // b. الأيام والليالي (بتوقيت القاهرة)
@@ -68,11 +71,9 @@ async function createReservation({ guest_id, room_id, check_in, check_out, staff
 
   // e. كله جوه transaction واحدة
   let reservation;
-  const session = await mongoose.startSession();
   try {
-    await session.withTransaction(async () => {
+    reservation = await withSession(externalSession, async (session) => {
       const [created] = await Reservation.create([fields], { session });
-      reservation = created;
 
       await RoomNight.insertMany(
         stayDays(inDay, nights).map((day) => ({
@@ -94,13 +95,13 @@ async function createReservation({ guest_id, room_id, check_in, check_out, staff
         },
         { session }
       );
+
+      return created;
     });
   } catch (err) {
     // f. الـ unique index على RoomNight منع الحجز المزدوج
     if (isDuplicateKey(err)) throw E.conflict('Room is already booked for these dates');
     throw err;
-  } finally {
-    await session.endSession();
   }
 
   return toReservationDto(reservation.toObject());
@@ -143,6 +144,79 @@ async function resolveReservationForCheckIn(identifier, now = new Date()) {
   throw E.notFound('Reservation not found');
 }
 
+function resolveArrival(reservation, early_arrival, now) {
+  const cNow = cairoDate(now);
+  const cCheckIn = cairoDate(reservation.check_in_at);
+
+  if (now >= reservation.check_in_at) {
+    if (early_arrival === true) {
+      throw E.conflict('Arrival is not early; do not send early_arrival: true');
+    }
+    return false;
+  }
+  if (cNow === cCheckIn) {
+    if (!early_arrival) {
+      throw E.conflict('Guest arrived before scheduled time. Confirm early arrival to proceed.');
+    }
+    return true;
+  }
+  throw E.conflict('Too early: change the reservation dates first');
+}
+
+async function applyCheckIn({ reservation, room, isEarly, newTotal, staff, shift, now, ip }, session) {
+  const resUpd = await Reservation.updateOne(
+    { _id: reservation._id, status: 'confirmed' },
+    {
+      status: 'checked_in',
+      check_in_staff_id: staff._id,
+      check_in_shift_id: shift._id,
+      early_arrival: isEarly,
+      total_amount: newTotal,
+    },
+    { session }
+  );
+  if (resUpd.modifiedCount !== 1) {
+    throw E.conflict('Reservation is no longer confirmed');
+  }
+
+  const roomUpd = await Room.updateOne(
+    { _id: room._id, status: 'available' },
+    { status: 'occupied' },
+    { session }
+  );
+  if (roomUpd.modifiedCount !== 1) {
+    throw E.conflict('Room is no longer available');
+  }
+
+  await RoomStatusHistory.create(
+    [
+      {
+        room_id: room._id,
+        shift_id: shift._id,
+        staff_id: staff._id,
+        status: 'occupied',
+        notes: isEarly ? 'Early check-in' : 'Check-in',
+        changed_at: now,
+      },
+    ],
+    { session }
+  );
+
+  await audit(
+    {
+      action: AUDIT.CHECK_IN,
+      actorStaffId: staff._id,
+      entity: 'Reservation',
+      entityId: String(reservation._id),
+      details: { room_id: String(room._id), early_arrival: isEarly },
+      ip,
+    },
+    { session }
+  );
+
+  return Reservation.findById(reservation._id).session(session);
+}
+
 async function checkIn({ reservation_id, early_arrival, staff, shift, ip, now }) {
   const reservation = await resolveReservationForCheckIn(reservation_id, now);
 
@@ -156,26 +230,7 @@ async function checkIn({ reservation_id, early_arrival, staff, shift, ip, now })
     throw E.conflict(`Room is not available (current status: ${room.status}). Finish cleaning first.`);
   }
 
-  const cNow = cairoDate(now);
-  const cCheckIn = cairoDate(reservation.check_in_at);
-
-  let isEarly = false;
-  if (now >= reservation.check_in_at) {
-    if (early_arrival === true) {
-      throw E.conflict('Arrival is not early; do not send early_arrival: true');
-    }
-    isEarly = false;
-  } else {
-    // now < check_in_at
-    if (cNow === cCheckIn) {
-      if (!early_arrival) {
-        throw E.conflict('Guest arrived before scheduled time. Confirm early arrival to proceed.');
-      }
-      isEarly = true;
-    } else {
-      throw E.conflict('Too early: change the reservation dates first');
-    }
-  }
+  const isEarly = resolveArrival(reservation, early_arrival, now);
 
   const newTotal = computeTotal({
     ...reservation.toObject(),
@@ -190,57 +245,10 @@ async function checkIn({ reservation_id, early_arrival, staff, shift, ip, now })
   const session = await mongoose.startSession();
   try {
     await session.withTransaction(async () => {
-      const resUpd = await Reservation.updateOne(
-        { _id: reservation._id, status: 'confirmed' },
-        {
-          status: 'checked_in',
-          check_in_staff_id: staff._id,
-          check_in_shift_id: shift._id,
-          early_arrival: isEarly,
-          total_amount: newTotal,
-        },
-        { session }
+      updatedReservation = await applyCheckIn(
+        { reservation, room, isEarly, newTotal, staff, shift, now, ip },
+        session
       );
-      if (resUpd.modifiedCount !== 1) {
-        throw E.conflict('Reservation is no longer confirmed');
-      }
-
-      const roomUpd = await Room.updateOne(
-        { _id: room._id, status: 'available' },
-        { status: 'occupied' },
-        { session }
-      );
-      if (roomUpd.modifiedCount !== 1) {
-        throw E.conflict('Room is no longer available');
-      }
-
-      await RoomStatusHistory.create(
-        [
-          {
-            room_id: room._id,
-            shift_id: shift._id,
-            staff_id: staff._id,
-            status: 'occupied',
-            notes: isEarly ? 'Early check-in' : 'Check-in',
-            changed_at: now,
-          },
-        ],
-        { session }
-      );
-
-      await audit(
-        {
-          action: AUDIT.CHECK_IN,
-          actorStaffId: staff._id,
-          entity: 'Reservation',
-          entityId: String(reservation._id),
-          details: { room_id: String(room._id), early_arrival: isEarly },
-          ip,
-        },
-        { session }
-      );
-
-      updatedReservation = await Reservation.findById(reservation._id).session(session);
     });
   } finally {
     await session.endSession();
@@ -530,4 +538,6 @@ module.exports = {
   getReservation,
   listReservations,
   resolveReservationByIdentifier,
+  resolveArrival,
+  applyCheckIn,
 };

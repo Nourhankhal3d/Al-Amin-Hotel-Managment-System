@@ -5,6 +5,7 @@ const { E } = require('../../utils/errors');
 const { paginate } = require('../../utils/paginate');
 const { sanitizeText } = require('../../utils/arabic');
 const { audit } = require('../audit/audit.service');
+const { recomputeRoomStatus } = require('../rooms/room.status');
 const { toMaintenanceIssueDto } = require('./maintenance.dto');
 
 async function createMaintenanceIssue({ room_id, problem, priority, notes, staff, shift, now, ip }) {
@@ -22,32 +23,61 @@ async function createMaintenanceIssue({ room_id, problem, priority, notes, staff
   const cleanProblem = sanitizeText(problem);
   const cleanNotes = notes !== undefined && notes !== null ? sanitizeText(notes) : '';
   const shiftId = shift ? shift._id : null;
+  const at = now || new Date();
 
-  const issue = await MaintenanceIssue.create({
-    room_id: room._id,
-    shift_id: shiftId,
-    staff_id: staff._id,
-    problem: cleanProblem,
-    priority: priority || 'medium',
-    status: 'open',
-    notes: cleanNotes,
-    created_at: now || new Date(),
-    resolved_at: null,
-  });
+  let issue;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const [created] = await MaintenanceIssue.create(
+        [
+          {
+            room_id: room._id,
+            shift_id: shiftId,
+            staff_id: staff._id,
+            problem: cleanProblem,
+            priority: priority || 'medium',
+            status: 'open',
+            notes: cleanNotes,
+            created_at: at,
+            resolved_at: null,
+          },
+        ],
+        { session }
+      );
+      issue = created;
 
-  await audit({
-    action: 'MAINTENANCE_CREATED',
-    actorStaffId: staff._id,
-    entity: 'MaintenanceIssue',
-    entityId: issue._id,
-    details: {
-      room_id: String(issue.room_id),
-      problem: issue.problem,
-      priority: issue.priority,
-      shift_id: shiftId ? String(shiftId) : null,
-    },
-    ip,
-  });
+      await audit(
+        {
+          action: 'MAINTENANCE_CREATED',
+          actorStaffId: staff._id,
+          entity: 'MaintenanceIssue',
+          entityId: issue._id,
+          details: {
+            room_id: String(issue.room_id),
+            problem: issue.problem,
+            priority: issue.priority,
+            shift_id: shiftId ? String(shiftId) : null,
+          },
+          ip,
+        },
+        { session }
+      );
+
+      // NEW: the room status is recomputed in the same transaction
+      await recomputeRoomStatus({
+        roomId: room._id,
+        staff,
+        shift,
+        now: at,
+        ip,
+        session,
+        note: 'Maintenance issue reported',
+      });
+    });
+  } finally {
+    await session.endSession();
+  }
 
   issue.room_id = { _id: room._id, room_number: room.room_number };
   return toMaintenanceIssueDto(issue);
@@ -105,6 +135,7 @@ async function updateMaintenanceIssue({ issueId, priority, notes, status, staff,
     throw E.conflict('Maintenance issue is already resolved and cannot be modified');
   }
 
+  const at = now || new Date();
   const updates = {};
   const details = {};
   let condition = { _id: issue._id };
@@ -134,9 +165,9 @@ async function updateMaintenanceIssue({ issueId, priority, notes, status, staff,
       }
       condition.status = issue.status;
       updates.status = 'resolved';
-      updates.resolved_at = now || new Date();
+      updates.resolved_at = at;
       details.status = 'resolved';
-      details.resolved_at = (now || new Date()).toISOString();
+      details.resolved_at = at.toISOString();
     } else {
       throw E.validation(`Invalid status: ${status}`);
     }
@@ -144,22 +175,45 @@ async function updateMaintenanceIssue({ issueId, priority, notes, status, staff,
     condition.status = issue.status;
   }
 
-  const res = await MaintenanceIssue.updateOne(condition, { $set: updates });
-  if (res.modifiedCount !== 1) {
-    throw E.conflict('Issue could not be updated or was modified concurrently');
-  }
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const res = await MaintenanceIssue.updateOne(condition, { $set: updates }, { session });
+      if (res.modifiedCount !== 1) {
+        throw E.conflict('Issue could not be updated or was modified concurrently');
+      }
 
-  await audit({
-    action: 'MAINTENANCE_UPDATED',
-    actorStaffId: staff._id,
-    entity: 'MaintenanceIssue',
-    entityId: issue._id,
-    details: {
-      ...details,
-      shift_id: shift ? String(shift._id) : null,
-    },
-    ip,
-  });
+      await audit(
+        {
+          action: 'MAINTENANCE_UPDATED',
+          actorStaffId: staff._id,
+          entity: 'MaintenanceIssue',
+          entityId: issue._id,
+          details: {
+            ...details,
+            shift_id: shift ? String(shift._id) : null,
+          },
+          ip,
+        },
+        { session }
+      );
+
+      // NEW: when the issue is resolved, recompute the room status in the same transaction
+      if (updates.status === 'resolved') {
+        await recomputeRoomStatus({
+          roomId: issue.room_id,
+          staff,
+          shift,
+          now: at,
+          ip,
+          session,
+          note: 'Maintenance issue resolved',
+        });
+      }
+    });
+  } finally {
+    await session.endSession();
+  }
 
   const updatedIssue = await MaintenanceIssue.findById(issue._id).populate('room_id', 'room_number');
   return toMaintenanceIssueDto(updatedIssue);

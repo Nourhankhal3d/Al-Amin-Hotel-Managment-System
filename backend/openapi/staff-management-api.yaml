@@ -806,7 +806,7 @@ paths:
       tags: [Cleaning tasks]
       operationId: createCleaningTask
       summary: Record a room that needs cleaning
-      description: The receptionist assigns the cleaner because housekeeping has no system access, so `cleaner_name` is free text. The server sets `status=pending`, `assigned_date`, the shift and the staff member.
+      description: The receptionist assigns the cleaner because housekeeping has no system access, so `cleaner_name` is free text. The server sets `status=pending`, `assigned_date`, the shift and the staff member. The server also sets the room status to `cleaning` (and writes a status history row) unless a maintenance issue is already open on the room. A room that is `occupied` cannot be cleaned and returns `409 INVALID_STATUS_TRANSITION`.
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
         - $ref: '#/components/parameters/TestTimeHeader'
@@ -901,7 +901,7 @@ paths:
       tags: [Cleaning tasks]
       operationId: updateCleaningTask
       summary: Assign a cleaner, change priority or notes, or mark done
-      description: Setting `status` to `done` makes the server fill `finished_date`. A task created at check-out has no cleaner name and shows as pending until one is assigned. A `done` task cannot go back to `pending`.
+      description: Setting `status` to `done` makes the server fill `finished_date`. A task created at check-out has no cleaner name and shows as pending until one is assigned. A `done` task cannot go back to `pending`. When the task becomes `done` the server recomputes the room status from the requests still open on the room (maintenance open or in progress gives `maintenance`, otherwise a pending cleaning task gives `cleaning`, otherwise `available`). An `occupied` room is never changed.
       parameters:
         - $ref: '#/components/parameters/TaskId'
         - $ref: '#/components/parameters/AuthorizationHeader'
@@ -936,7 +936,7 @@ paths:
       tags: [Maintenance issues]
       operationId: createMaintenanceIssue
       summary: Report a maintenance problem
-      description: The server sets `status=open`, `created_date`, the shift and the reporting staff member.
+      description: The server sets `status=open`, `created_date`, the shift and the reporting staff member. Unless the room is `occupied`, the server also sets the room status to `maintenance` and writes a status history row. An `occupied` room stays `occupied` and the issue is only recorded.
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
         - $ref: '#/components/parameters/TestTimeHeader'
@@ -1033,6 +1033,7 @@ paths:
       summary: Update an issue or mark it resolved
       description: |
         Resolving is a PATCH with `{ "status": "resolved" }`. The server fills `resolved_date`. A `resolved` issue cannot be reopened by the receptionist.
+                  When the issue is `resolved` the server recomputes the room status from the requests still open on the room (maintenance open or in progress gives `maintenance`, otherwise a pending cleaning task gives `cleaning`, otherwise `available`). An `occupied` room is never changed.
       parameters:
         - $ref: '#/components/parameters/IssueId'
         - $ref: '#/components/parameters/AuthorizationHeader'

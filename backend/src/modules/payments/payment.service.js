@@ -9,7 +9,7 @@ const { paginate } = require('../../utils/paginate');
 const { audit } = require('../audit/audit.service');
 const { AUDIT } = require('../audit/audit.actions');
 const { toPaymentDto } = require('./payment.dto');
-
+const { withSession } = require('../../utils/transaction');
 const OPEN = ['confirmed', 'checked_in'];
 const isDuplicateKey = (err) => err && err.code === 11000;
 
@@ -65,14 +65,13 @@ async function resolveReservation({ reservation_id, room_id, now }, session) {
 
 async function createPayment({
   reservation_id, room_id, amount: rawAmount, payment_method, notes,
-  staff, shift, ip, now, idempotencyKey,
+  staff, shift, ip, now, idempotencyKey, session: externalSession,
 }) {
   const amount = parseAmount(rawAmount);
 
   let result;
-  const session = await mongoose.startSession();
   try {
-    await session.withTransaction(async () => {
+    result = await withSession(externalSession, async (session) => {
       const r = await resolveReservation({ reservation_id, room_id, now }, session);
 
       if (!OPEN.includes(r.status)) throw E.conflict('Reservation is not open for payments');
@@ -126,7 +125,7 @@ async function createPayment({
       );
 
       const after = await Reservation.findById(r._id).session(session).lean();
-      result = {
+      return {
         payment: toPaymentDto(payment.toObject()),
         paid_amount: toEgp(after.paid_cache),
         remaining_amount: toEgp(after.total_amount - after.paid_cache),
@@ -135,8 +134,6 @@ async function createPayment({
   } catch (err) {
     if (isDuplicateKey(err)) throw E.conflict('This payment was already recorded');
     throw err;
-  } finally {
-    await session.endSession();
   }
 
   return result;

@@ -3,6 +3,9 @@ const env = require('../config/env');
 const { Staff, Session } = require('../db/models');
 const { E } = require('../utils/errors');
 
+// نحدّث last_seen_at مرة كل دقيقة بس (مش في كل طلب)
+const LAST_SEEN_THROTTLE_MS = 60 * 1000;
+
 async function authenticate(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
@@ -18,19 +21,25 @@ async function authenticate(req, res, next) {
       throw E.unauthorized('Invalid or expired token');
     }
 
-    const session = await Session.findById(decoded.sid);
+    // الجلسة والموظف مستقلين عن بعض (رقم كل واحد جوه الـ token)، فبنجيبهم مع بعض
+    const [session, staff] = await Promise.all([
+      Session.findById(decoded.sid),
+      Staff.findById(decoded.sub),
+    ]);
+
     if (!session || session.revoked_at || session.expires_at <= new Date()) {
       throw E.unauthorized('Session has been revoked or expired');
     }
 
-    const staff = await Staff.findById(decoded.sub);
     if (!staff || !staff.active) {
       throw E.unauthorized('User inactive or not found');
     }
 
-    // Update last_seen_at
-    session.last_seen_at = new Date();
-    await session.save();
+    // تحديث last_seen_at: مرة كل دقيقة، ومن غير ما نستنى النتيجة
+    const now = new Date();
+    if (!session.last_seen_at || now - session.last_seen_at > LAST_SEEN_THROTTLE_MS) {
+      Session.updateOne({ _id: session._id }, { $set: { last_seen_at: now } }).catch(() => {});
+    }
 
     req.auth = {
       staff,

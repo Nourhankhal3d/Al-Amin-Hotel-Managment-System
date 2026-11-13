@@ -279,7 +279,7 @@ describe('Feature 10: Cleaning Tasks and Maintenance Issues', () => {
       expect(retryRes.body.error.message).toContain('already done');
     });
 
-    test('completing cleaning task does NOT change room status', async () => {
+        test('completing the only cleaning task returns the room to available', async () => {
       const room = await createRoom({ room_number: '105', status: 'cleaning' });
       const task = await CleaningTask.create({
         room_id: room._id,
@@ -297,9 +297,9 @@ describe('Feature 10: Cleaning Tasks and Maintenance Issues', () => {
 
       expect(res.status).toBe(200);
 
-      // Verify room remains in cleaning status
+      // The server returns the room to available when no request is left open
       const roomDoc = await Room.findById(room._id);
-      expect(roomDoc.status).toBe('cleaning');
+      expect(roomDoc.status).toBe('available');
     });
 
     test('empty PATCH body returns 400 VALIDATION_ERROR', async () => {
@@ -428,10 +428,9 @@ describe('Feature 10: Cleaning Tasks and Maintenance Issues', () => {
       expect(res.body.staff_id).toBe(String(staff._id));
       expect(res.body.shift_id).toBe(String(shift.shift_id));
 
-      // Verify room remains available (reporting issue does not automatically change room status)
+           // Verify room becomes maintenance automatically (a non-occupied room with an unresolved issue)
       const roomDoc = await Room.findById(room._id);
-      expect(roomDoc.status).toBe('available');
-
+      expect(roomDoc.status).toBe('maintenance');
       // Verify audit log
       const log = await AuditLog.findOne({
         action: 'MAINTENANCE_CREATED',

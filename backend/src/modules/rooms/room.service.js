@@ -130,7 +130,7 @@ async function checkAvailability({ check_in, check_out, room_type }, now) {
   // يوم الخروج مش بيتحسب: حجز تاني ممكن يبدأ فيه
   const bookedRoomIds = await RoomNight.distinct('room_id', { day: { $in: stayDays(inDay, nights) } });
 
-  const filter = { _id: { $nin: bookedRoomIds }, status: { $ne: 'maintenance' } };
+const filter = { _id: mongoose.trusted({ $nin: bookedRoomIds }), status: mongoose.trusted({ $ne: 'maintenance' }) };
   if (room_type) filter.room_type = String(room_type);
   const rooms = await Room.find(filter).lean();
   return { data: await toDtos(rooms, now) };

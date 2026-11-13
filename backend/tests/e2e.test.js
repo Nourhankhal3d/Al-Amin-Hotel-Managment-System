@@ -289,14 +289,11 @@ describe('Feature 14: E2E Lifecycle Flow (tests/e2e.test.js)', () => {
     expect(resTask.body.status).toBe('done');
     expect(resTask.body.finished_date).toBeDefined();
 
-    // Verify room status update
+      // The server returns the room to available by itself
     const resRoom = await request(app)
-      .patch(`/api/v1/rooms/${room._id}/status`)
+      .get(`/api/v1/rooms/${room._id}`)
       .set(auth())
-      .set('x-test-time', Cairo13)
-      .send({
-        status: 'available',
-      });
+      .set('x-test-time', Cairo13);
 
     expect(resRoom.status).toBe(200);
     expect(resRoom.body.status).toBe('available');

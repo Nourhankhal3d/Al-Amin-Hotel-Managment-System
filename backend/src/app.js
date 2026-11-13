@@ -39,7 +39,7 @@ app.use(express.json({ limit: '100kb' }));
 app.use(cookieParser());
 app.use(
   pinoHttp({
-    redact: ['req.headers.authorization', 'req.headers.cookie'],
+  redact: ['req.headers.authorization', 'req.headers.cookie', 'res.headers["set-cookie"]'],
     level: env.nodeEnv === 'test' ? 'silent' : 'info',
   })
 );

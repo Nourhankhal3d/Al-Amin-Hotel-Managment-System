@@ -12,7 +12,7 @@ const { audit } = require('../audit/audit.service');
 const { AUDIT } = require('../audit/audit.actions');
 const { normalizePhone, escapeRegex } = require('./guest.utils');
 const { isObjectId } = require('../../utils/ids');
-
+const { withSession } = require('../../utils/transaction');
 function toGuestDto(guest) {
   return {
     guest_id: String(guest._id),
@@ -39,7 +39,7 @@ async function handleDuplicateKey(err, hash) {
   throw err;
 }
 
-async function createGuest(payload, actorStaffId, ip) {
+async function createGuest(payload, actorStaffId, ip, { session: externalSession } = {}) {
   const name = sanitizeText(payload.name || '');
   const phone = normalizePhone(payload.phone || '');
   const idNorm = normalizeIdNumber(payload.id_number || '');
@@ -54,7 +54,7 @@ async function createGuest(payload, actorStaffId, ip) {
   }
 
   const hash = blindIndex(idNorm);
-  const existing = await Guest.findOne({ id_number_hash: hash });
+  const existing = await Guest.findOne({ id_number_hash: hash }).session(externalSession || null);
 
   if (existing) {
     const err = E.conflict('A guest with this ID number already exists.');
@@ -63,9 +63,8 @@ async function createGuest(payload, actorStaffId, ip) {
   }
 
   let guest;
-  const session = await mongoose.startSession();
   try {
-    await session.withTransaction(async () => {
+    guest = await withSession(externalSession, async (session) => {
       const [created] = await Guest.create(
         [
           {
@@ -79,7 +78,6 @@ async function createGuest(payload, actorStaffId, ip) {
         ],
         { session }
       );
-      guest = created;
 
       await audit(
         {
@@ -92,6 +90,8 @@ async function createGuest(payload, actorStaffId, ip) {
         },
         { session }
       );
+
+      return created;
     });
   } catch (err) {
     if (err && err.code === 11000) {
@@ -99,8 +99,6 @@ async function createGuest(payload, actorStaffId, ip) {
     }
 
     throw err;
-  } finally {
-    await session.endSession();
   }
 
   return toGuestDto(guest);
