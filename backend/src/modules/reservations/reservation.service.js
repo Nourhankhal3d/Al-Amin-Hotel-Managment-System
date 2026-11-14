@@ -574,14 +574,16 @@ async function listReservations({
     }
     filter.room_id = targetRoomId;
   }
+  
   if (check_in_from || check_in_to) {
-    filter.check_in_at = {};
+    const range = {};
     if (check_in_from) {
-      filter.check_in_at.$gte = new Date(check_in_from);
+      range.$gte = new Date(check_in_from);
     }
     if (check_in_to) {
-      filter.check_in_at.$lte = new Date(check_in_to);
+      range.$lte = new Date(check_in_to);
     }
+    filter.check_in_at = mongoose.trusted(range);
   }
 
   return paginate(
