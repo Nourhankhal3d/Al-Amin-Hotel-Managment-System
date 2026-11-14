@@ -108,20 +108,21 @@
 
 .payment-form__footer .ui-button { min-height: 3.25rem; border-radius: var(--radius-card); }
 
-@media (max-width: 30rem) {
-  .payment-form__pay-remaining {
+ .payment-form__pay-remaining {
   align-self: flex-start;
-  padding: 0;
+  padding: var(--space-3) var(--space-5);
   border: 0;
-  background: none;
-  color: var(--color-primary-dark);
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-primary);
+  color: var(--color-on-primary, #fff);
   font: inherit;
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  text-decoration: underline;
   cursor: pointer;
 }
 
 .payment-form__pay-remaining:disabled { opacity: 0.6; cursor: default; }
+
+@media (max-width: 30rem) {
   .payment-form__row { grid-template-columns: 1fr; }
 }
