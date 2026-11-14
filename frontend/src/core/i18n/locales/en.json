@@ -305,6 +305,24 @@
       "305": "Inspect the fan",
       "312": "Late departure"
     },
+        "stay": {
+      "title": "Current stay",
+      "loading": "Loading stay details...",
+      "none": "No stay is recorded for this room",
+      "guest": "Guest",
+      "total": "Stay total",
+      "paid": "Paid",
+      "remaining": "Remaining",
+      "recordPayment": "Record payment",
+      "savePayment": "Save payment",
+      "paymentSaved": "Payment recorded",
+      "checkOut": "Check out",
+      "checkedOut": "Guest checked out",
+      "balanceBlocked": "Check-out is blocked until the balance is fully paid.",
+      "confirmTitle": "Confirm check-out",
+      "confirmMessage": "The room will move to cleaning and a cleaning task will be created.",
+      "confirmYes": "Confirm check-out"
+    },
         "walkIn": {
       "eyebrow": "Instant stay",
       "blocked": "Save or undo the status change first, then register the guest.",

@@ -1,0 +1,79 @@
+.current-stay { display: grid; gap: var(--space-4); }
+.current-stay h3 { margin: 0; font-size: var(--font-size-md); }
+.current-stay h4 { margin: 0; font-size: var(--font-size-sm); }
+
+.current-stay__summary {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.current-stay__summary > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.current-stay__summary span { color: var(--color-text-muted); }
+
+.current-stay__remaining {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+.current-stay__remaining strong { font-size: var(--font-size-md); }
+
+.current-stay__payment { display: grid; gap: var(--space-3); }
+
+.current-stay__pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.current-stay__field {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.current-stay__field-error { color: var(--color-danger); font-size: var(--font-size-xs); }
+.current-stay__note { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+
+.current-stay__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-control);
+  color: var(--color-danger);
+  background: var(--color-surface);
+  font-size: var(--font-size-sm);
+}
+
+.current-stay__error svg { flex: 0 0 1.25rem; width: 1.25rem; height: 1.25rem; }
+
+.current-stay__confirm {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.current-stay__confirm p { margin: 0; font-size: var(--font-size-sm); }
+.current-stay__confirm > div { display: flex; gap: var(--space-3); }
+.current-stay__confirm .ui-button { flex: 1; }
+
+@media (max-width: 32rem) {
+  .current-stay__pair { grid-template-columns: 1fr; }
+}

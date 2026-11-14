@@ -12,6 +12,7 @@ import { ROOM_STATUS_TRANSITIONS } from '../constants/roomOptions';
 import type { Room, RoomStatus } from '../types/room.types';
 import { RoomStatusBadge } from './RoomStatusBadge';
 import { RoomExtrasSections } from './RoomExtrasSections';
+import { CurrentStaySection } from './CurrentStaySection';
 import './RoomDetailsDrawer.css';
 
 interface RoomDetailsDrawerProps {
@@ -117,6 +118,10 @@ export function RoomDetailsDrawer({
         </section>
       )}
 
+      {room.status === 'occupied' && (
+        <CurrentStaySection room={room} language={language} onCheckedOut={onClose} />
+      )}
+      
       <div className="room-details-drawer__status-select">
         <Select
           label={t('rooms.drawer.newStatus')}
