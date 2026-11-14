@@ -1,13 +1,21 @@
-import { useRef, useState } from 'react';
-import { Check, Receipt, Sparkles } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
+import { Check, Sparkles } from 'lucide-react';
 import { Timeline } from '../../../components/common/Timeline';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { Drawer } from '../../../components/ui/Drawer';
+import { Input } from '../../../components/ui/Input';
+import { Select } from '../../../components/ui/Select';
 import { getTranslation, type Language } from '../../../core/i18n';
 import { formatNumber } from '../../../utils/format';
-import { PRIORITY_LABEL_KEY, PRIORITY_TONE, STATUS_LABEL_KEY } from '../constants/housekeeping.constants';
-import type { HousekeepingTask } from '../types/housekeeping.types';
+import {
+  HK_CLEANER_MAX_LENGTH,
+  PRIORITY_LABEL_KEY,
+  PRIORITY_OPTIONS,
+  PRIORITY_TONE,
+  STATUS_LABEL_KEY,
+} from '../constants/housekeeping.constants';
+import type { HousekeepingTask, Priority } from '../types/housekeeping.types';
 import { formatTaskTime } from '../utils/housekeepingDisplay';
 import './TaskDetailsDrawer.css';
 
@@ -19,17 +27,52 @@ interface TaskDetailsDrawerProps {
   onClose: () => void;
   onComplete: () => void;
   isSaving: boolean;
+  onSaveCleaner: (cleanerName: string) => void;
+  isSavingCleaner: boolean;
+  onSavePriority: (priority: Priority) => void;
+  isSavingPriority: boolean;
 }
 
-// The parent gives this component a `key` per task, so the confirm step resets when another task opens.
-export function TaskDetailsDrawer({ task, language, onClose, onComplete, isSaving }: TaskDetailsDrawerProps) {
+// The parent gives this component a `key` per task, so the confirm step and the typed values reset when another task opens.
+export function TaskDetailsDrawer({
+  task,
+  language,
+  onClose,
+  onComplete,
+  isSaving,
+  onSaveCleaner,
+  isSavingCleaner,
+  onSavePriority,
+  isSavingPriority,
+}: TaskDetailsDrawerProps) {
   const t = (key: string) => getTranslation(language, key);
-  const statusRef = useRef<HTMLDivElement>(null);
-  const logRef = useRef<HTMLElement>(null);
   // Marking a task done cannot be undone, so it takes a second click to confirm
   const [confirming, setConfirming] = useState(false);
+  // The name typed in the "assign cleaner" box; it starts from the name already saved on the task
+  const [cleanerDraft, setCleanerDraft] = useState(task?.cleaner_name ?? '');
+  // The priority picked in the "change priority" box; it starts from the saved priority
+  const [priorityDraft, setPriorityDraft] = useState<Priority>(task?.priority ?? 'medium');
 
-  const scrollTo = (element: HTMLElement | null) => element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Saving the name is allowed only for a non-empty name that differs from the saved one
+  const cleanerValue = cleanerDraft.trim();
+  const canSaveCleaner = cleanerValue.length > 0 && cleanerValue !== (task?.cleaner_name ?? '') && !isSavingCleaner;
+
+  // Saving the priority is allowed only when it differs from the saved one
+  const canSavePriority = task !== null && priorityDraft !== task.priority && !isSavingPriority;
+  const priorityOptions = PRIORITY_OPTIONS.map((priority) => ({
+    value: priority,
+    label: t(PRIORITY_LABEL_KEY[priority]),
+  }));
+
+  function submitCleaner(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (canSaveCleaner) onSaveCleaner(cleanerValue);
+  }
+
+  function submitPriority(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (canSavePriority) onSavePriority(priorityDraft);
+  }
 
   // Log built from the two dates the API sends: when the task was created and when it was finished
   const logItems = task
@@ -79,7 +122,7 @@ export function TaskDetailsDrawer({ task, language, onClose, onComplete, isSavin
           </section>
 
           <div className="task-details__grid">
-            <div ref={statusRef} className="task-details__info">
+            <div className="task-details__info">
               <span>{t('statusLabel')}</span>
               <strong>{t(STATUS_LABEL_KEY[task.status])}</strong>
             </div>
@@ -93,26 +136,49 @@ export function TaskDetailsDrawer({ task, language, onClose, onComplete, isSavin
             </div>
           </div>
 
+          {task.status === 'pending' && (
+            <section>
+              <h3 className="task-details__heading">{t('hkAssignCleaner')}</h3>
+              <form className="task-details__assign" onSubmit={submitCleaner}>
+                <Input
+                  value={cleanerDraft}
+                  maxLength={HK_CLEANER_MAX_LENGTH}
+                  placeholder={t('hkCleanerNamePh')}
+                  aria-label={t('hkCleaner')}
+                  onChange={(event) => setCleanerDraft(event.target.value)}
+                />
+                <Button type="submit" variant="secondary" disabled={!canSaveCleaner}>
+                  {t('hkSaveCleaner')}
+                </Button>
+              </form>
+            </section>
+          )}
+
+          {task.status === 'pending' && (
+            <section>
+              <h3 className="task-details__heading">{t('hkChangePriority')}</h3>
+              <form className="task-details__assign" onSubmit={submitPriority}>
+                <Select
+                  value={priorityDraft}
+                  options={priorityOptions}
+                  onChange={(value) => setPriorityDraft(value as Priority)}
+                />
+                <Button type="submit" variant="secondary" disabled={!canSavePriority}>
+                  {t('hkSavePriority')}
+                </Button>
+              </form>
+            </section>
+          )}
+
           <section>
             <h3 className="task-details__heading">{t('hkNotes')}</h3>
             <p className="task-details__box">{task.notes || EMPTY_VALUE}</p>
           </section>
 
-          <section ref={logRef}>
+          <section>
             <h3 className="task-details__heading">{t('hkLog')}</h3>
             <Timeline items={logItems} />
           </section>
-
-          <div className="task-details__actions">
-            <button type="button" className="task-details__action" onClick={() => scrollTo(statusRef.current)}>
-              <Check aria-hidden="true" />
-              {t('followStatus')}
-            </button>
-            <button type="button" className="task-details__action" onClick={() => scrollTo(logRef.current)}>
-              <Receipt aria-hidden="true" />
-              {t('viewLog')}
-            </button>
-          </div>
         </div>
       )}
     </Drawer>

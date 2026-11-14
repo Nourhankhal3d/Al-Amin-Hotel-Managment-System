@@ -27,6 +27,8 @@ import {
   STATUS_OPTIONS,
 } from '../constants/housekeeping.constants';
 import {
+    useAssignCleaner,
+      useChangeTaskPriority,
   useCompleteHousekeepingTask,
   useCreateHousekeepingTask,
   useHousekeepingTasks,
@@ -70,6 +72,8 @@ export function HousekeepingPage() {
   const tasksQuery = useHousekeepingTasks();
   const createTask = useCreateHousekeepingTask();
   const completeTask = useCompleteHousekeepingTask();
+    const assignCleaner = useAssignCleaner();
+      const changePriority = useChangeTaskPriority();
   const roomsQuery = useRoomNumbers();
   const tasks = useMemo(() => tasksQuery.data ?? [], [tasksQuery.data]);
 
@@ -164,6 +168,26 @@ export function HousekeepingPage() {
       await completeTask.mutateAsync(selectedTask.task_id);
       closeDrawers();
       toast.notify(t('hkToastDone'), 'success');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
+    }
+  }
+
+    async function saveCleaner(cleanerName: string) {
+    if (!selectedTask) return;
+    try {
+      await assignCleaner.mutateAsync({ taskId: selectedTask.task_id, cleanerName });
+      toast.notify(t('hkToastCleanerSaved'), 'success');
+    } catch (error) {
+      toast.notify(getErrorMessage(error, language), 'error');
+    }
+  }
+
+    async function savePriority(priority: Priority) {
+    if (!selectedTask) return;
+    try {
+      await changePriority.mutateAsync({ taskId: selectedTask.task_id, priority });
+      toast.notify(t('hkToastPrioritySaved'), 'success');
     } catch (error) {
       toast.notify(getErrorMessage(error, language), 'error');
     }
@@ -271,6 +295,10 @@ export function HousekeepingPage() {
         onClose={closeDrawers}
         onComplete={() => { void markDone(); }}
         isSaving={completeTask.isPending}
+                onSaveCleaner={(cleanerName) => { void saveCleaner(cleanerName); }}
+        isSavingCleaner={assignCleaner.isPending}
+                onSavePriority={(priority) => { void savePriority(priority); }}
+        isSavingPriority={changePriority.isPending}
       />
       <TaskFormDrawer
         key={isFormOpen ? 'form-open' : 'form-closed'}

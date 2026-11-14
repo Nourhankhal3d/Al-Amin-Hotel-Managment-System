@@ -128,3 +128,25 @@
 
 /* A single "mark as cleaned" button takes the whole row */
 .task-details__footer--single { grid-template-columns: 1fr; }
+
+/* Cleaner name: the input and the save button on one row */
+.task-details__assign {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.task-details__assign .ui-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-details__assign .ui-button {
+  flex-shrink: 0;
+}
+
+/* The priority select shares the row with its save button */
+.task-details__assign .ui-select {
+  flex: 1;
+  min-width: 0;
+}
