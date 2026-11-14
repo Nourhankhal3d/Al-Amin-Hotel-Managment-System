@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import { Check, Receipt, Wrench } from 'lucide-react';
+import { Wrench } from 'lucide-react';
 import { Timeline } from '../../../components/common/Timeline';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
@@ -35,7 +35,6 @@ export function MaintenanceDetailsDrawer({ request, language, onClose, onSave, i
   const t = (key: string) => getTranslation(language, key);
   const statusSelectId = useId();
   const statusRef = useRef<HTMLDivElement>(null);
-  const logRef = useRef<HTMLElement>(null);
   const [isEditingStatus, setIsEditingStatus] = useState(false);
   const [draftStatus, setDraftStatus] = useState<NextStatus | ''>('');
   const [statusError, setStatusError] = useState<string>();
@@ -146,21 +145,12 @@ export function MaintenanceDetailsDrawer({ request, language, onClose, onSave, i
             <p className="maintenance-details__box">{request.notes || EMPTY_VALUE}</p>
           </section>
 
-          <section ref={logRef}>
+                    <section>
             <h3 className="maintenance-details__heading">{t('mtLog')}</h3>
             <Timeline items={logItems} />
           </section>
 
-          <div className="maintenance-details__actions">
-            <button type="button" className="maintenance-details__action" onClick={() => scrollTo(statusRef.current)}>
-              <Check aria-hidden="true" />
-              {t('followStatus')}
-            </button>
-            <button type="button" className="maintenance-details__action" onClick={() => scrollTo(logRef.current)}>
-              <Receipt aria-hidden="true" />
-              {t('viewLog')}
-            </button>
-          </div>
+    
         </div>
       )}
     </Drawer>

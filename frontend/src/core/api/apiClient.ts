@@ -15,9 +15,19 @@ export function getAccessToken(): string | null {
 }
 
 // ---------- الـ axios instance الوحيد في المشروع ----------
+function serializeParams(params: Record<string, unknown>): string {
+  const search = new URLSearchParams();
+  Object.entries(params ?? {}).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+    search.append(key, String(value));
+  });
+  return search.toString();
+}
+
 const http = axios.create({
   baseURL: appConfig.apiBaseUrl,
   withCredentials: true, // عشان الـ refresh cookie
+  paramsSerializer: serializeParams,
 });
 
 http.interceptors.request.use((config) => {

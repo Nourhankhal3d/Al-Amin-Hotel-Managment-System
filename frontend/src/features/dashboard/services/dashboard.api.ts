@@ -1,4 +1,6 @@
 import { ROUTES } from '../../../core/constants/routes';
+import { getCairoNow } from '../../rooms/utils/walkInDates';
+import { getRooms } from '../../rooms/services/rooms.api';
 import { request } from '../../../core/api/apiClient';
 import { mockShiftSummary } from '../../../mocks/dashboard';
 import type { DashboardSummary } from '../types/dashboard.types';
@@ -56,6 +58,31 @@ export const mockDashboardSummary: DashboardSummary = {
   pulse: { revenue: 24850, pendingTasks: 5, completedTasks: 14, arrivals: 18 },
 };
 
+interface Paginated<T> {
+  data: T[];
+  meta: { page: number; limit: number; total: number };
+}
+
+interface ApiCleaningTask {
+  task_id: string;
+  room_id: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  notes?: string;
+}
+
+interface ApiMaintenanceIssue {
+  issue_id: string;
+  room_id: string;
+  problem: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+}
+
+function severityFromPriority(priority: string): 'critical' | 'high' | 'normal' {
+  if (priority === 'urgent') return 'critical';
+  if (priority === 'high') return 'high';
+  return 'normal';
+}
+
 interface DashboardApiResponse {
   total_rooms: number;
   rooms_by_status: {
@@ -76,7 +103,23 @@ interface DashboardApiResponse {
 }
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  const response = await request<DashboardApiResponse>('/dashboard');
+  const { date: today } = getCairoNow();
+
+  const [response, pendingCleaning, doneCleaning, openIssues, todaysReservations, rooms] = await Promise.all([
+    request<DashboardApiResponse>('/dashboard'),
+    request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'pending', limit: 1 } }),
+    request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'done', limit: 1 } }),
+    request<Paginated<ApiMaintenanceIssue>>('/maintenance-issues', { params: { status: 'open', limit: 3 } }),
+    request<Paginated<unknown>>('/reservations', { params: { check_in_from: `${today}T00:00:00+03:00`, check_in_to: `${today}T23:59:59+03:00`, limit: 1 } }),
+    getRooms(),
+  ]);
+
+  const roomNumberById = new Map(rooms.map((room) => [String(room.id), room.number]));
+
+  const checkedOutToday = await request<Paginated<unknown>>('/reservations', {
+    params: { status: 'checked_out', check_in_from: `${today}T00:00:00+03:00`, check_in_to: `${today}T23:59:59+03:00`, limit: 1 },
+  });
+
   const stats = mockDashboardSummary.stats.map((stat) => {
     switch (stat.id) {
       case 'rooms-prepared':
@@ -87,22 +130,39 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
         return { ...stat, value: response.open_maintenance_issues };
       case 'revenue':
         return { ...stat, value: response.shift_payments_total.total };
+      case 'pending-tasks':
+                return { ...stat, value: pendingCleaning.meta.total + openIssues.meta.total };
+      case 'completed-tasks':
+        return { ...stat, value: doneCleaning.meta.total };
+      case 'checkins':
+        return { ...stat, value: todaysReservations.meta.total };
+      case 'checkouts':
+        return { ...stat, value: checkedOutToday.meta.total };
       default:
-        // TODO: confirm with backend; check-in/out and task totals are absent from this response.
         return stat;
     }
   });
 
+  const needsAttention = openIssues.data.map((issue) => ({
+    id: `issue-${issue.issue_id}`,
+    titleKey: issue.problem,
+    detailKey: `غرفة ${roomNumberById.get(String(issue.room_id)) ?? issue.room_id}`,
+    severity: severityFromPriority(issue.priority),
+    icon: 'wrench' as const,
+  }));
   return {
     ...mockDashboardSummary,
     revenueTotal: response.shift_payments_total.total,
     cashRevenue: response.shift_payments_total.cash,
     digitalRevenue: response.shift_payments_total.instapay + response.shift_payments_total.vodafone_cash,
     stats,
+    needsAttention: needsAttention.length > 0 ? needsAttention : mockDashboardSummary.needsAttention,
     pulse: {
       ...mockDashboardSummary.pulse,
       revenue: response.shift_payments_total.total,
-      // TODO: confirm with backend; pending/completed tasks and arrivals are absent from this response.
+      pendingTasks: pendingCleaning.meta.total,
+      completedTasks: doneCleaning.meta.total,
+      arrivals: todaysReservations.meta.total,
     },
   };
 }
