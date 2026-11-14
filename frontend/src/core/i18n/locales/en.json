@@ -193,16 +193,6 @@
       "maintenance": "Maintenance",
       "housekeeping": "Housekeeping"
     },
-    "pulse": {
-      "title": "Shift pulse",
-      "headline": "A smooth start to the day",
-      "message": "Most operations are on track. Keep an eye on the items that need follow-up.",
-      "revenue": "Revenue",
-      "pending": "Pending tasks",
-      "completed": "Tasks completed",
-      "arrivals": "Arrivals",
-      "openSummary": "Open shift summary"
-    },
     "empty": "No data to display right now",
     "loadError": "Could not load dashboard data"
   },
@@ -620,8 +610,6 @@
   "notesLabel": "Notes",
   "colRoom": "Room",
   "colActions": "Actions",
-  "followStatus": "Follow status",
-  "viewLog": "View log",
   "updateStatus": "Update status",
   "selectRoom": "Select room",
   "selectPriority": "Select priority",
