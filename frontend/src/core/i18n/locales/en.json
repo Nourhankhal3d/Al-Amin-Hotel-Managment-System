@@ -210,7 +210,6 @@
     "eyebrow": "Rooms",
     "title": "Room management",
     "description": "Manage room status and guest information with ease and clarity.",
-    "addActivity": "Add room activity",
     "export": "Export",
     "stats": {
       "total": "Total rooms",
@@ -306,6 +305,43 @@
       "305": "Inspect the fan",
       "312": "Late departure"
     },
+        "walkIn": {
+      "eyebrow": "Instant stay",
+      "blocked": "Save or undo the status change first, then register the guest.",
+      "title": "Register a new guest",
+      "guestSection": "Guest details",
+      "guestName": "Guest name",
+      "guestNamePlaceholder": "Enter the guest name",
+      "staySection": "Stay",
+      "earlyArrival": "Early arrival before 12:00 (with fee)",
+      "earlyArrivalHint": "Left off, the stay starts from yesterday at no fee. Turned on, it starts today and a half-day fee is added.",
+      "checkIn": "Check-in date",
+      "checkOut": "Check-out date",
+      "paymentSection": "First payment",
+      "methodPlaceholder": "Choose a payment method",
+      "amount": "Amount (EGP)",
+      "notes": "Notes",
+      "notesPlaceholder": "Add notes about the payment",
+      "nights": "Nights",
+      "earlyFee": "Early arrival fee",
+      "expectedTotal": "Expected total",
+      "submit": "Check in and pay",
+      "success": "Guest, payment and check-in recorded",
+      "conflict": "Could not complete the request:",
+      "discardTitle": "Discard what you typed?",
+      "discardMessage": "If you close now, the data you entered will be lost.",
+      "discardConfirm": "Discard and close",
+      "discardKeep": "Keep editing",
+      "errors": {
+        "name": "Guest name is required",
+        "phone": "Phone number is not valid (7 to 15 digits, may start with +)",
+        "idNumber": "ID number is not valid (5 to 20 letters or digits)",
+        "checkOut": "Check-out must be after check-in",
+        "method": "Choose a payment method",
+        "amount": "Enter an amount above zero (max 2 decimals)",
+        "amountHigh": "Amount is above the total ({max})"
+      }
+    },
     "drawer": {
       "detailsEyebrow": "Room details",
       "roomTitle": "Room {number}",
@@ -370,10 +406,12 @@
         "resolved": "Resolved"
       },
       "paymentMethod": {
+        "label": "Payment method",
         "cash": "Cash",
         "instapay": "InstaPay",
         "vodafone_cash": "Vodafone Cash"
       }
+      
     },
     "validation": {
       "roomRequired": "Choose a room",
@@ -382,7 +420,6 @@
     },
     "toast": {
       "roomSaved": "Room changes saved",
-      "activitySaved": "Room activity added",
       "exported": "Exported {count} rooms",
       "noExportRows": "There are no rooms to export"
     },

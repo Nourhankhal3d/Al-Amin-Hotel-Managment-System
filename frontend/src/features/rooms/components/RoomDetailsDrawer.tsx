@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from 'react';
-import { BedDouble } from 'lucide-react';
+import { BedDouble, UserPlus } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { Drawer } from '../../../components/ui/Drawer';
 import { Select } from '../../../components/ui/Select';
@@ -20,6 +19,7 @@ interface RoomDetailsDrawerProps {
   language: Language;
   onClose: () => void;
   onSave: (status: RoomStatus, notes: string) => void;
+  onWalkIn: (room: Room) => void;
   isSaving: boolean;
 }
 
@@ -28,6 +28,7 @@ export function RoomDetailsDrawer({
   language,
   onClose,
   onSave,
+  onWalkIn,
   isSaving,
 }: RoomDetailsDrawerProps) {
   const [draftStatus, setDraftStatus] = useState<RoomStatus | undefined>(room?.status);
@@ -97,6 +98,25 @@ export function RoomDetailsDrawer({
         <RoomStatusBadge status={currentStatus} language={language} />
       </section>
 
+      {room.status === 'available' && (
+        <section className="room-details-drawer__walk-in">
+          <Button
+            variant="gold"
+            type="button"
+            disabled={changed || isSaving}
+            onClick={() => onWalkIn(room)}
+          >
+            <UserPlus aria-hidden="true" />
+            {t('rooms.walkIn.title')}
+          </Button>
+          {changed && (
+            <p className="room-details-drawer__empty-log">
+              {t('rooms.walkIn.blocked')}
+            </p>
+          )}
+        </section>
+      )}
+
       <div className="room-details-drawer__status-select">
         <Select
           label={t('rooms.drawer.newStatus')}
@@ -122,7 +142,7 @@ export function RoomDetailsDrawer({
         </div>
         <div>
           <span>{t('rooms.drawer.lastUpdated')}</span>
-               <strong>{formatRelativeTime(room.updatedAt, language)}</strong>
+          <strong>{formatRelativeTime(room.updatedAt, language)}</strong>
         </div>
       </section>
 

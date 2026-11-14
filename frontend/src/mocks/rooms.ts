@@ -1,5 +1,4 @@
-import type { AddRoomActivityInput, Room, RoomLogEntry, RoomStats, RoomStatus, UpdateRoomInput } from '../features/rooms/types/room.types';
-import { appendShiftActivity } from './data/shiftActivity';
+import type { Room, RoomLogEntry, RoomStats, RoomStatus, UpdateRoomInput } from '../features/rooms/types/room.types'; 
 
 const statusByNumber: Record<string, RoomStatus> = {
   '101': 'available', '102': 'available', '103': 'available', '105': 'available', '106': 'available', '107': 'available', '109': 'available',
@@ -111,22 +110,6 @@ export function updateMockRoom(input: UpdateRoomInput): Room | undefined {
     room.guestNameKey = undefined;
   }
   room.log.unshift(createLog('rooms.log.statusUpdate', 'rooms.log.changesSaved', time));
-  return getMockRoom(room.id);
-}
-
-export function addMockRoomActivity(input: AddRoomActivityInput): Room | undefined {
-  const room = rooms.find((item) => item.id === input.roomId);
-  if (!room) return undefined;
-
-  const time = new Date().toISOString();
-  room.status = input.status;
-  room.notes = input.notes;
-  room.notesKey = undefined;
-  room.guestName = input.status === 'available' ? undefined : input.guestName.trim() || undefined;
-  room.guestNameKey = undefined;
-  room.updatedAt = time;
-  room.log.unshift(createLog('rooms.log.activityAdded', 'rooms.log.activityAddedDescription', time));
-  appendShiftActivity({ id: `shift-${Date.now()}`, roomId: room.id, roomNumber: room.number, status: room.status, guestName: room.guestName, notes: input.notes, time });
   return getMockRoom(room.id);
 }
 

@@ -1,7 +1,16 @@
 import { request } from '../../../core/api/apiClient';
 import type { Language } from '../../../core/i18n';
 import type { Paginated } from '../../../core/api/api.types';
-import type { AddRoomActivityInput, Room, RoomFilters, RoomFloor, RoomStats, RoomStatus, UpdateRoomInput } from '../types/room.types';
+import type {
+  Room,
+  RoomFilters,
+  RoomFloor,
+  RoomStats,
+  RoomStatus,
+  UpdateRoomInput,
+  WalkInInput,
+  WalkInResult,
+} from '../types/room.types';
 import { filterAndSortRooms } from '../utils/roomDisplay';
 
 export interface RoomListResult {
@@ -45,7 +54,7 @@ interface ApiRoomStatusHistory {
 }
 
 function mapApiRoom(room: ApiRoom): Room {
-  // floor now comes from the backend; values outside 1-3 fall back to 1 until RoomFloor is widened.
+  // floor now comes from the backend; values outside 1-3 fallback to 1 until RoomFloor is widened.
   const floor = (room.floor !== null && room.floor >= 1 && room.floor <= 3 ? room.floor : 1) as RoomFloor;
 
   return {
@@ -60,8 +69,11 @@ function mapApiRoom(room: ApiRoom): Room {
     notes: room.description,
     updatedAt: room.updated_at ?? '',
     log: [],
+    pricePerNight: room.price_per_night,
+    halfDayPrice: room.half_day_price,
   };
 }
+
 function mapStatusHistory(row: ApiRoomStatusHistory) {
   return {
     id: String(row.history_id),
@@ -69,7 +81,6 @@ function mapStatusHistory(row: ApiRoomStatusHistory) {
     descriptionKey: row.notes ?? '—',
     time: row.changed_at,
   };
-  
 }
 
 export async function getRooms(): Promise<Room[]> {
@@ -109,7 +120,6 @@ export async function getRoomStats(): Promise<RoomStats> {
     maintenance: rooms.filter((room) => room.status === 'maintenance').length,
     vip: rooms.filter((room) => room.type === 'vip').length,
   };
-
 }
 
 export async function saveRoom(input: UpdateRoomInput): Promise<ApiRoomStatusHistory> {
@@ -119,7 +129,25 @@ export async function saveRoom(input: UpdateRoomInput): Promise<ApiRoomStatusHis
   });
 }
 
-export async function saveRoomActivity(input: AddRoomActivityInput): Promise<ApiRoomStatusHistory> {
-  // TODO: confirm with backend; guestName is not accepted by PATCH /rooms/{room_id}/status.
-  return saveRoom({ id: input.roomId, status: input.status, notes: input.notes });
+export async function createWalkIn(input: WalkInInput): Promise<WalkInResult> {
+  return request<WalkInResult>('/reservations/walk-in', {
+    method: 'POST',
+    idempotencyKey: input.idempotencyKey,
+    body: {
+      new_guest: {
+        name: input.guest.name,
+        phone: input.guest.phone,
+        id_number: input.guest.idNumber,
+      },
+      room_id: input.roomId,
+      check_in: input.checkIn,
+      check_out: input.checkOut,
+      ...(input.earlyArrival ? { early_arrival: true } : {}),
+      payment: {
+        amount: input.payment.amount,
+        payment_method: input.payment.method,
+        ...(input.payment.notes ? { notes: input.payment.notes } : {}),
+      },
+    },
+  });
 }

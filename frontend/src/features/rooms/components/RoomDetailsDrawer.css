@@ -80,3 +80,9 @@
   .room-details-drawer .drawer__content { padding: var(--space-4); }
   .room-details-drawer__info-grid { gap: var(--space-2); }
 }
+.room-details-drawer__walk-in {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.room-details-drawer__walk-in .ui-button { width: 100%; }

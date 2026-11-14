@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getRoom, getRooms, roomQueryKeys, saveRoom, saveRoomActivity } from './rooms.api';
-import type { RoomFilters, UpdateRoomInput, AddRoomActivityInput } from '../types/room.types';
+import { createWalkIn, getRoom, getRooms, roomQueryKeys, saveRoom } from './rooms.api';
 import type { Language } from '../../../core/i18n';
+import type { RoomFilters, UpdateRoomInput, WalkInInput } from '../types/room.types';
 import { ROOM_PAGE_SIZE } from '../constants/roomOptions';
 
 import { filterAndSortRooms } from '../utils/roomDisplay';
@@ -67,6 +67,6 @@ export function useUpdateRoom() {
   return useRoomMutation<UpdateRoomInput>(saveRoom);
 }
 
-export function useAddRoomActivity() {
-  return useRoomMutation<AddRoomActivityInput>(saveRoomActivity);
+export function useWalkIn() {
+  return useRoomMutation<WalkInInput>(createWalkIn);
 }

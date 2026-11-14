@@ -24,6 +24,10 @@ export interface Room {
   notesKey?: string;
   updatedAt: string;
   log: RoomLogEntry[];
+  /** بالجنيه المصري (الباك إند بيرجّعها بعد toEgp) */
+  pricePerNight?: number;
+  /** سعر نصف اليوم / الوصول المبكر بالجنيه */
+  halfDayPrice?: number;
 }
 
 export interface RoomFilters {
@@ -50,9 +54,19 @@ export interface UpdateRoomInput {
   notes: string;
 }
 
-export interface AddRoomActivityInput {
+ export type PaymentMethod = 'cash' | 'instapay' | 'vodafone_cash';
+
+export interface WalkInInput {
   roomId: string;
-  status: RoomStatus;
-  guestName: string;
-  notes: string;
+  guest: { name: string; phone: string; idNumber: string };
+  checkIn: string;
+  checkOut: string;
+  earlyArrival: boolean;
+  payment: { amount: number; method: PaymentMethod; notes?: string };
+  idempotencyKey: string;
+}
+
+export interface WalkInResult {
+  reservation_id: string;
+  status: string;
 }

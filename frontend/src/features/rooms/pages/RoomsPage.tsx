@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { FileText, Plus } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { useSearchParams, useOutletContext } from 'react-router-dom';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { Button } from '../../../components/ui/Button';
@@ -14,12 +14,12 @@ import { useToast } from '../../../components/ui/ToastContext';
 import { exportCsv } from '../../../utils/exportCsv';
 import { formatDate } from '../../../utils/date';
 import { formatNumber } from '../../../utils/format';
-import { useAddRoomActivity, useAllRooms, useRoom, useRooms, useRoomStats, useUpdateRoom } from '../services/useRooms';
+import { useAllRooms, useRoom, useRooms, useRoomStats, useUpdateRoom } from '../services/useRooms';
 import { ROOM_PAGE_SIZE } from '../constants/roomOptions';
-import type { AddRoomActivityInput, Room, RoomAvailability, RoomFilters, RoomFloor, RoomStatus, RoomType } from '../types/room.types';
+import type { Room, RoomAvailability, RoomFilters, RoomFloor, RoomStatus, RoomType } from '../types/room.types';
 import { getRoomGuestName, getRoomNotes } from '../utils/roomDisplay';
-import { AddRoomActivityDrawer } from '../components/AddRoomActivityDrawer';
 import { RoomDetailsDrawer } from '../components/RoomDetailsDrawer';
+import { WalkInDrawer } from '../components/WalkInDrawer';
 import { RoomsFilters } from '../components/RoomsFilters';
 import { RoomsStatsRow } from '../components/RoomsStatsRow';
 import { RoomsGrid } from '../components/RoomsGrid';
@@ -38,7 +38,7 @@ function parseFilters(params: URLSearchParams): RoomFilters {
     type: type === 'standard' || type === 'vip' ? type as RoomType : '',
     status: ['available', 'occupied', 'reserved', 'cleaning', 'maintenance'].includes(status) ? status as RoomStatus : '',
     floor: ['1', '2', '3'].includes(floor) ? Number(floor) as RoomFloor : '',
-    availability: availability === 'available' || availability === 'unavailable' ? availability as RoomAvailability : 'all',
+    availability: availability === 'available' || availability=== 'unavailable' ? availability as RoomAvailability : 'all',
     page: Number.isFinite(page) && page > 0 ? page : 1,
   };
 }
@@ -66,15 +66,13 @@ export function RoomsPage() {
   const statsQuery = useRoomStats();
   const selectedRoomId = searchParams.get('id') ?? undefined;
   const selectedRoomQuery = useRoom(selectedRoomId);
+  const walkInRoomId = searchParams.get('walkin') ?? undefined;
+  const walkInRoomQuery = useRoom(walkInRoomId);
   const updateRoom = useUpdateRoom();
-  const addRoomActivity = useAddRoomActivity();
-  const allRooms = useMemo(() => allRoomsQuery.data ?? [], [allRoomsQuery.data]);
   const stats = statsQuery.data;
   const filteredRooms = roomsQuery.data?.matchingRooms ?? [];
   const totalPages = Math.max(1, Math.ceil(filteredRooms.length / ROOM_PAGE_SIZE));
   const effectivePage = Math.min(filters.page, totalPages);
-  
-  const isActivityOpen = searchParams.get('activity') === 'new';
 
   const setParam = useCallback((name: string, value: string, replace = false) => {
     setSearchParams((current) => {
@@ -125,9 +123,9 @@ export function RoomsPage() {
     next.set('availability', 'all');
     next.set('page', '1');
     const roomId = searchParams.get('id');
-    const activity = searchParams.get('activity');
+    const walkIn = searchParams.get('walkin');
     if (roomId) next.set('id', roomId);
-    if (activity) next.set('activity', activity);
+    if (walkIn) next.set('walkin', walkIn);
     setSearchDraft('');
     setSearchParams(next);
   }
@@ -136,7 +134,7 @@ export function RoomsPage() {
     setSearchParams((current) => {
       const next = new URLSearchParams(current);
       next.delete('id');
-      next.delete('activity');
+      next.delete('walkin');
       return next;
     });
   }
@@ -144,17 +142,17 @@ export function RoomsPage() {
   function openRoom(roomId: string) {
     setSearchParams((current) => {
       const next = createDefaultParams(current);
-      next.delete('activity');
+      next.delete('walkin');
       next.set('id', roomId);
       return next;
     });
   }
 
-  function openActivity() {
+  function openWalkIn(room: Room) {
     setSearchParams((current) => {
       const next = createDefaultParams(current);
       next.delete('id');
-      next.set('activity', 'new');
+      next.set('walkin', room.id);
       return next;
     });
   }
@@ -165,16 +163,6 @@ export function RoomsPage() {
       await updateRoom.mutateAsync({ id: selectedRoomId, status, notes });
       closeDrawers();
       toast.notify(t('rooms.toast.roomSaved'), 'success');
-    } catch (error) {
-      toast.notify(getErrorMessage(error, language), 'error');
-    }
-  }
-
-  async function saveActivity(input: AddRoomActivityInput) {
-    try {
-      await addRoomActivity.mutateAsync(input);
-      closeDrawers();
-      toast.notify(t('rooms.toast.activitySaved'), 'success');
     } catch (error) {
       toast.notify(getErrorMessage(error, language), 'error');
     }
@@ -234,9 +222,8 @@ export function RoomsPage() {
 
   return (
     <div className="feature-page rooms-page">
-        <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.heroDescription')}>
+      <PageHero eyebrow={t('rooms.eyebrow')} title={t('rooms.title')} description={t('rooms.heroDescription')}>
         <Button variant="glass" type="button" className="rooms-page__hero-export" onClick={downloadCsv}><FileText aria-hidden="true" />{t('rooms.export')}</Button>
-        <Button variant="gold" type="button" className="rooms-page__hero-add" onClick={openActivity}><Plus aria-hidden="true" />{t('rooms.addActivity')}</Button>
       </PageHero>
 
       <RoomsStatsRow stats={stats} language={language} />
@@ -249,12 +236,20 @@ export function RoomsPage() {
         <EmptyState title={t('rooms.table.empty')} description={t('rooms.table.emptyDescription')} action={<Button variant="secondary" type="button" onClick={resetFilters}>{t('rooms.table.resetFilters')}</Button>} />
       ) : (
         <div ref={tableRef}>
-            <RoomsGrid rooms={filteredRooms} language={language} onOpenRoom={openRoom} />
+          <RoomsGrid rooms={filteredRooms} language={language} onOpenRoom={openRoom} />
         </div>
       )}
 
-      <RoomDetailsDrawer room={selectedRoomQuery.data} language={language} onClose={closeDrawers} onSave={(status, notes) => { void saveDetails(status, notes); }} isSaving={updateRoom.isPending} />
-      <AddRoomActivityDrawer open={isActivityOpen} rooms={allRooms} language={language} onClose={closeDrawers} onSave={(input) => { void saveActivity(input); }} isSaving={addRoomActivity.isPending} />
+      <RoomDetailsDrawer room={selectedRoomQuery.data} language={language} onClose={closeDrawers} onSave={(status, notes) => { void saveDetails(status, notes); }} onWalkIn={openWalkIn} isSaving={updateRoom.isPending} />
+      {walkInRoomQuery.data && (
+        <WalkInDrawer
+          key={walkInRoomQuery.data.id}
+          room={walkInRoomQuery.data}
+          language={language}
+          onClose={closeDrawers}
+          onSuccess={closeDrawers}
+        />
+      )}
     </div>
   );
 }
