@@ -70,3 +70,25 @@ export interface WalkInResult {
   reservation_id: string;
   status: string;
 }
+
+export interface CurrentStay {
+  reservationId: string;
+  checkIn: string;
+  checkOut: string;
+  totalAmount: number;
+  paidAmount: number;
+  remainingAmount: number;
+}
+
+export interface RecordPaymentInput {
+  reservationId: string;
+  amount: number;
+  method: PaymentMethod;
+  notes?: string;
+  idempotencyKey: string;
+}
+
+export interface CheckOutInput {
+  reservationId: string;
+  idempotencyKey: string;
+}

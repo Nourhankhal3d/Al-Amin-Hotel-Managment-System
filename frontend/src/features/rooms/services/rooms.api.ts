@@ -10,6 +10,9 @@ import type {
   UpdateRoomInput,
   WalkInInput,
   WalkInResult,
+  CheckOutInput,
+  CurrentStay,
+  RecordPaymentInput,
 } from '../types/room.types';
 import { filterAndSortRooms } from '../utils/roomDisplay';
 
@@ -26,6 +29,7 @@ export const roomQueryKeys = {
   list: (filters: RoomFilters, language: Language) => [...roomQueryKeys.lists(), filters, language] as const,
   stats: () => [...roomQueryKeys.all, 'stats'] as const,
   detail: (id: string) => [...roomQueryKeys.all, 'detail', id] as const,
+    stay: (roomId: string) => [...roomQueryKeys.all, 'stay', roomId] as const,
 };
 
 const ROOM_FETCH_LIMIT = 100;
@@ -149,5 +153,49 @@ export async function createWalkIn(input: WalkInInput): Promise<WalkInResult> {
         ...(input.payment.notes ? { notes: input.payment.notes } : {}),
       },
     },
+  });
+}
+interface ApiReservation {
+  reservation_id: string;
+  check_in: string;
+  check_out: string;
+  total_amount: number;
+  paid_amount: number;
+  remaining_amount: number;
+}
+
+export async function getCurrentStay(roomId: string): Promise<CurrentStay | undefined> {
+  const response = await request<Paginated<ApiReservation>>('/reservations', {
+    params: { room_id: roomId, status: 'checked_in', page: 1, limit: 1 },
+  });
+  const reservation = response.data[0];
+  if (!reservation) return undefined;
+  return {
+    reservationId: reservation.reservation_id,
+    checkIn: reservation.check_in,
+    checkOut: reservation.check_out,
+    totalAmount: reservation.total_amount,
+    paidAmount: reservation.paid_amount,
+    remainingAmount: reservation.remaining_amount,
+  };
+}
+
+export async function recordPayment(input: RecordPaymentInput): Promise<unknown> {
+  return request('/payments', {
+    method: 'POST',
+    idempotencyKey: input.idempotencyKey,
+    body: {
+      reservation_id: input.reservationId,
+      amount: input.amount,
+      payment_method: input.method,
+      ...(input.notes ? { notes: input.notes } : {}),
+    },
+  });
+}
+
+export async function checkOutReservation(input: CheckOutInput): Promise<unknown> {
+  return request(`/reservations/${input.reservationId}/check-out`, {
+    method: 'POST',
+    idempotencyKey: input.idempotencyKey,
   });
 }

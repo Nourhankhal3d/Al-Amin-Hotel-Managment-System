@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createWalkIn, getRoom, getRooms, roomQueryKeys, saveRoom } from './rooms.api';
+import { checkOutReservation, createWalkIn, getCurrentStay, getRoom, getRooms, recordPayment, roomQueryKeys, saveRoom } from './rooms.api';
 import type { Language } from '../../../core/i18n';
-import type { RoomFilters, UpdateRoomInput, WalkInInput } from '../types/room.types';
+import type { CheckOutInput, RecordPaymentInput, RoomFilters, UpdateRoomInput, WalkInInput } from '../types/room.types';
 import { ROOM_PAGE_SIZE } from '../constants/roomOptions';
 
 import { filterAndSortRooms } from '../utils/roomDisplay';
@@ -69,4 +69,19 @@ export function useUpdateRoom() {
 
 export function useWalkIn() {
   return useRoomMutation<WalkInInput>(createWalkIn);
+}
+export function useCurrentStay(roomId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: roomQueryKeys.stay(roomId ?? ''),
+    queryFn: () => getCurrentStay(roomId ?? ''),
+    enabled: Boolean(roomId) && enabled,
+  });
+}
+
+export function useRecordPayment() {
+  return useRoomMutation<RecordPaymentInput>(recordPayment);
+}
+
+export function useCheckOut() {
+  return useRoomMutation<CheckOutInput>(checkOutReservation);
 }
