@@ -13,8 +13,11 @@ const {
 const { hashPassword } = require('../../src/utils/password');
 const { signAccess } = require('../../src/modules/auth/auth.service');
 const { todayCairo, shiftWindow } = require('../../src/utils/time');
+const { DateTime } = require('luxon');
 const { ensureBaseline } = require('../../src/modules/manager/common/schedule.service');
 
+const daysAhead = (n) =>
+  DateTime.now().setZone('Africa/Cairo').plus({ days: n }).toFormat('yyyy-MM-dd');
 describe('Manager Feature M6: Shift Schedule', () => {
   let manager, receptionist, inactiveStaff;
   let managerToken, receptionistToken;
@@ -112,7 +115,7 @@ describe('Manager Feature M6: Shift Schedule', () => {
         .set('Authorization', `Bearer ${managerToken}`)
         .send({
           staff_id: String(inactiveStaff._id),
-          business_date: '2026-11-10',
+          business_date: daysAhead(10),
           shift_type: 'MORNING',
         });
       expect(resInactive.status).toBe(400);
@@ -131,7 +134,7 @@ describe('Manager Feature M6: Shift Schedule', () => {
     });
 
     it('rejects shift overlapping with existing scheduled shift with 409 SHIFT_OVERLAP', async () => {
-      const futureDate = '2026-11-15';
+      const futureDate = daysAhead(15);
       const win = shiftWindow(futureDate, 'morning');
 
       await ShiftSchedule.create({
@@ -153,13 +156,13 @@ describe('Manager Feature M6: Shift Schedule', () => {
           start_at: win.start_at.toISOString(),
           end_at: win.end_at.toISOString(),
         });
-
+      
       expect(res.status).toBe(409);
       expect(res.body.error?.code || res.body.code).toBe('SHIFT_OVERLAP');
     });
 
     it('rejects shift if staff has approved leave on that date with 409 CONFLICT', async () => {
-      const leaveDate = '2026-11-20';
+      const leaveDate = daysAhead(20);
       await LeaveRequest.create({
         staff_id: receptionist._id,
         leave_type: 'ANNUAL',
@@ -181,7 +184,7 @@ describe('Manager Feature M6: Shift Schedule', () => {
     });
 
     it('reactivates an existing CANCELLED row instead of failing on unique index', async () => {
-      const futureDate = '2026-11-25';
+      const futureDate = daysAhead(25);
       const win = shiftWindow(futureDate, 'morning');
 
       const cancelled = await ShiftSchedule.create({
