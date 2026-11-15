@@ -14,12 +14,10 @@ export type DashboardIconKey =
 export interface DashboardStat {
   id: string;
   labelKey: string;
-  captionKey: string;
   value: number;
   format: 'number' | 'currency';
   icon: DashboardIconKey;
   tone: 'green' | 'gold';
-  marker: 'open' | 'warning';
 }
 
 export interface RevenuePoint {

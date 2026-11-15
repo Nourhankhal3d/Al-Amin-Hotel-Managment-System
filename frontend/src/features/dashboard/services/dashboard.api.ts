@@ -21,15 +21,12 @@ export const mockDashboardSummary: DashboardSummary = {
     { dayKey: 'thursday', value: 13700 },
     { dayKey: 'friday', value: 17200 },
   ],
-  stats: [
-    { id: 'rooms-prepared', labelKey: 'dashboard.stats.roomsPrepared.label', captionKey: 'dashboard.stats.roomsPrepared.caption', value: 12, format: 'number', icon: 'bed', tone: 'green', marker: 'open' },
-    { id: 'cleaning-requests', labelKey: 'dashboard.stats.cleaning.label', captionKey: 'dashboard.stats.cleaning.caption', value: 8, format: 'number', icon: 'sparkles', tone: 'green', marker: 'open' },
-    { id: 'maintenance-reports', labelKey: 'dashboard.stats.maintenance.label', captionKey: 'dashboard.stats.maintenance.caption', value: 3, format: 'number', icon: 'wrench', tone: 'gold', marker: 'warning' },
-    { id: 'revenue', labelKey: 'dashboard.stats.revenue.label', captionKey: 'dashboard.stats.revenue.caption', value: 24850, format: 'currency', icon: 'wallet', tone: 'gold', marker: 'open' },
-    { id: 'pending-tasks', labelKey: 'dashboard.stats.pending.label', captionKey: 'dashboard.stats.pending.caption', value: 5, format: 'number', icon: 'clock', tone: 'gold', marker: 'warning' },
-    { id: 'completed-tasks', labelKey: 'dashboard.stats.completed.label', captionKey: 'dashboard.stats.completed.caption', value: 14, format: 'number', icon: 'check', tone: 'green', marker: 'open' },
-    { id: 'checkins', labelKey: 'dashboard.stats.checkins.label', captionKey: 'dashboard.stats.checkins.caption', value: 6, format: 'number', icon: 'transfer', tone: 'green', marker: 'open' },
-    { id: 'checkouts', labelKey: 'dashboard.stats.checkouts.label', captionKey: 'dashboard.stats.checkouts.caption', value: 4, format: 'number', icon: 'login', tone: 'gold', marker: 'open' },
+   stats: [
+    { id: 'rooms-prepared', labelKey: 'dashboard.stats.roomsPrepared.label', value: 12, format: 'number', icon: 'bed', tone: 'green' },
+    { id: 'checkins', labelKey: 'dashboard.stats.checkins.label', value: 6, format: 'number', icon: 'transfer', tone: 'green' },
+    { id: 'checkouts', labelKey: 'dashboard.stats.checkouts.label', value: 4, format: 'number', icon: 'login', tone: 'gold' },
+    { id: 'pending-tasks', labelKey: 'dashboard.stats.pending.label', value: 5, format: 'number', icon: 'clock', tone: 'gold' },
+    { id: 'revenue', labelKey: 'dashboard.stats.revenue.label', value: 24850, format: 'currency', icon: 'wallet', tone: 'gold' },
   ],
   // TODO: confirm with backend; the dashboard endpoint has no recent-activity feed.
   activity: [
@@ -120,20 +117,14 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
     params: { status: 'checked_out', check_in_from: `${today}T00:00:00+03:00`, check_in_to: `${today}T23:59:59+03:00`, limit: 1 },
   });
 
-  const stats = mockDashboardSummary.stats.map((stat) => {
+    const stats = mockDashboardSummary.stats.map((stat) => {
     switch (stat.id) {
       case 'rooms-prepared':
         return { ...stat, value: response.rooms_by_status?.available ?? response.total_rooms };
-      case 'cleaning-requests':
-        return { ...stat, value: response.rooms_needing_cleaning };
-      case 'maintenance-reports':
-        return { ...stat, value: response.open_maintenance_issues };
       case 'revenue':
         return { ...stat, value: response.shift_payments_total.total };
       case 'pending-tasks':
-                return { ...stat, value: pendingCleaning.meta.total + openIssues.meta.total };
-      case 'completed-tasks':
-        return { ...stat, value: doneCleaning.meta.total };
+        return { ...stat, value: pendingCleaning.meta.total + openIssues.meta.total };
       case 'checkins':
         return { ...stat, value: todaysReservations.meta.total };
       case 'checkouts':
@@ -142,7 +133,7 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
         return stat;
     }
   });
-
+  
   const needsAttention = openIssues.data.map((issue) => ({
     id: `issue-${issue.issue_id}`,
     titleKey: issue.problem,

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useOutletContext } from 'react-router-dom';
-import { ArrowLeft, ArrowLeftRight, ArrowUpRight, BedDouble, Check, CircleAlert, Clock, FileText, LogIn, MoreHorizontal, Sparkles, Wallet, Wrench, type LucideIcon } from 'lucide-react';import { Card } from '../../../components/ui/Card';
-import { EmptyState } from '../../../components/common/EmptyState';
+import { ArrowLeft, ArrowLeftRight, BedDouble, Check, Clock, FileText, LogIn, MoreHorizontal, Sparkles, Wallet, Wrench, type LucideIcon } from 'lucide-react';import { EmptyState } from '../../../components/common/EmptyState';
+import { Card } from '../../../components/ui/Card';
 import { ErrorState } from '../../../components/common/ErrorState';
 import { LoadingState } from '../../../components/common/LoadingState';
 import { getErrorMessage } from '../../../core/errors/getErrorMessage';
@@ -156,14 +156,10 @@ export function DashboardPage() {
           {data.stats.map((stat) => (
             <Card className={`dashboard-page__stat-card dashboard-page__stat-card--${stat.tone}`} key={stat.id}>
               <span className="dashboard-page__stat-icon"><DashboardIcon name={stat.icon} /></span>
-              <div className="dashboard-page__stat-value-row">
+                           <div className="dashboard-page__stat-value-row">
                 <strong>{stat.format === 'currency' ? formatCurrency(stat.value, language) : formatNumber(stat.value, language)}</strong>
-                <span className={`dashboard-page__stat-marker dashboard-page__stat-marker--${stat.marker}`} aria-label={t(`dashboard.stats.${stat.marker}`)}>
-                  {stat.marker === 'warning' ? <CircleAlert aria-hidden="true" /> : <ArrowUpRight aria-hidden="true" />}
-                </span>
               </div>
               <span className="dashboard-page__stat-label">{t(stat.labelKey)}</span>
-              <span className="dashboard-page__stat-caption">{t(stat.captionKey)}</span>
             </Card>
           ))}
         </div>
