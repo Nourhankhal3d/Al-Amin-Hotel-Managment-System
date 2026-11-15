@@ -152,7 +152,9 @@
     "attention": {
       "title": "يحتاج إلى انتباهك",
       "caption": "المهام ذات الأولوية في الفندق",
-      "openCount": "٣ مفتوحة",
+      "openCount": "{value} مفتوحة",
+      "empty": "لا يوجد ما يحتاج إلى انتباهك الآن",
+      "cleaningTask": "مهمة تنظيف",
       "critical": "حرج",
       "high": "مرتفع",
       "normal": "متوسط",

@@ -152,7 +152,9 @@
     "attention": {
       "title": "Needs your attention",
       "caption": "Priority items around the hotel",
-      "openCount": "3 open",
+      "openCount": "{value} open",
+      "empty": "Nothing needs your attention right now",
+      "cleaningTask": "Cleaning task",
       "critical": "Critical",
       "high": "High",
       "normal": "Normal",

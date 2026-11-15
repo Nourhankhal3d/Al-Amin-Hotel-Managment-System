@@ -226,16 +226,20 @@ export function DashboardPage() {
         <Card className="dashboard-page__panel dashboard-page__attention-panel">
           <div className="dashboard-page__panel-heading">
             <div><h2>{t('dashboard.attention.title')}</h2><p>{t('dashboard.attention.caption')}</p></div>
-            <span className="dashboard-page__open-pill">{t('dashboard.attention.openCount')}</span>
+            <span className="dashboard-page__open-pill">{t('dashboard.attention.openCount').replace('{value}', formatNumber(data.attentionOpenCount, language))}</span>
           </div>
-          <ul className="dashboard-page__attention-list">
-            {data.needsAttention.map((item) => (
-              <li className={`dashboard-page__attention-item dashboard-page__attention-item--${item.severity}`} key={item.id}>
-                <div><strong>{t(item.titleKey)}</strong><span>{t(item.detailKey)}</span></div>
-                <span className="dashboard-page__attention-icon"><DashboardIcon name={item.icon} /></span>
-              </li>
-            ))}
-          </ul>
+           {data.needsAttention.length === 0 ? (
+            <p className="dashboard-page__attention-empty">{t('dashboard.attention.empty')}</p>
+          ) : (
+            <ul className="dashboard-page__attention-list">
+              {data.needsAttention.map((item) => (
+                <li className={`dashboard-page__attention-item dashboard-page__attention-item--${item.severity}`} key={item.id}>
+                  <div><strong>{t(item.titleKey)}</strong><span>{t(item.detailKey)}</span></div>
+                  <span className="dashboard-page__attention-icon"><DashboardIcon name={item.icon} /></span>
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="dashboard-page__attention-legend">
             <strong>{t('dashboard.attention.legend')}</strong>
             <span><i className="dashboard-page__legend-dot dashboard-page__legend-dot--danger" />{t('dashboard.attention.critical')}</span>

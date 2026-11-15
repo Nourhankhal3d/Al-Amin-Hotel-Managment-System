@@ -59,6 +59,7 @@ export interface DashboardSummary {
   stats: DashboardStat[];
   activity: DashboardActivityItem[];
   needsAttention: NeedsAttentionItem[];
+  attentionOpenCount: number;
   quickActions: DashboardQuickAction[];
   shift: {
     progressPercent: number;

@@ -36,11 +36,8 @@ export const mockDashboardSummary: DashboardSummary = {
     { id: 'activity-4', titleKey: 'dashboard.activity.items.cleaning.title', descriptionKey: 'dashboard.activity.items.cleaning.description', timeMinutesAgo: 41, icon: 'bed', tone: 'green' },
   ],
   // TODO: confirm with backend; the dashboard endpoint has no needs-attention list.
-  needsAttention: [
-    { id: 'attention-1', titleKey: 'dashboard.attention.items.critical.title', detailKey: 'dashboard.attention.items.critical.detail', severity: 'critical', icon: 'wrench' },
-    { id: 'attention-2', titleKey: 'dashboard.attention.items.high.title', detailKey: 'dashboard.attention.items.high.detail', severity: 'high', icon: 'sparkles' },
-    { id: 'attention-3', titleKey: 'dashboard.attention.items.normal.title', detailKey: 'dashboard.attention.items.normal.detail', severity: 'normal', icon: 'bed' },
-  ],
+  needsAttention: [],
+  attentionOpenCount: 0,
   // TODO: confirm with backend; quick actions are UI configuration, not API data.
   quickActions: [
     { id: 'quick-add-task', labelKey: 'dashboard.quickActions.addTask', icon: 'check', route: ROUTES.shiftHandover, primary: true },
@@ -104,9 +101,9 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
 
   const [response, pendingCleaning, doneCleaning, openIssues, todaysReservations, rooms] = await Promise.all([
     request<DashboardApiResponse>('/dashboard'),
-    request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'pending', limit: 1 } }),
+    request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'pending', limit: 20 } }),
     request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'done', limit: 1 } }),
-    request<Paginated<ApiMaintenanceIssue>>('/maintenance-issues', { params: { status: 'open', limit: 3 } }),
+    request<Paginated<ApiMaintenanceIssue>>('/maintenance-issues', { params: { status: 'open', limit: 20 } }),
     request<Paginated<unknown>>('/reservations', { params: { check_in_from: `${today}T00:00:00+03:00`, check_in_to: `${today}T23:59:59+03:00`, limit: 1 } }),
     getRooms(),
   ]);
@@ -133,21 +130,35 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
         return stat;
     }
   });
-  
-  const needsAttention = openIssues.data.map((issue) => ({
+
+  const severityRank = { critical: 0, high: 1, normal: 2 } as const;
+
+  const maintenanceItems = openIssues.data.map((issue) => ({
     id: `issue-${issue.issue_id}`,
     titleKey: issue.problem,
     detailKey: `غرفة ${roomNumberById.get(String(issue.room_id)) ?? issue.room_id}`,
     severity: severityFromPriority(issue.priority),
     icon: 'wrench' as const,
   }));
+
+  const cleaningItems = pendingCleaning.data.map((task) => ({
+    id: `cleaning-${task.task_id}`,
+    titleKey: task.notes || 'dashboard.attention.cleaningTask',
+    detailKey: `غرفة ${roomNumberById.get(String(task.room_id)) ?? task.room_id}`,
+    severity: severityFromPriority(task.priority),
+    icon: 'sparkles' as const,
+  }));
+
+  const needsAttention = [...maintenanceItems, ...cleaningItems]
+    .sort((a, b) => severityRank[a.severity] - severityRank[b.severity]);
   return {
     ...mockDashboardSummary,
     revenueTotal: response.shift_payments_total.total,
     cashRevenue: response.shift_payments_total.cash,
     digitalRevenue: response.shift_payments_total.instapay + response.shift_payments_total.vodafone_cash,
     stats,
-    needsAttention: needsAttention.length > 0 ? needsAttention : mockDashboardSummary.needsAttention,
+    needsAttention,
+    attentionOpenCount: openIssues.meta.total + pendingCleaning.meta.total,
     pulse: {
       ...mockDashboardSummary.pulse,
       revenue: response.shift_payments_total.total,
