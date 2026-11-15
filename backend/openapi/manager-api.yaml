@@ -902,6 +902,174 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+  /hotel-settings:
+    get:
+      summary: Hotel settings
+      operationId: getHotelSettings
+      responses:
+        '200':
+          description: Hotel settings with the live room count
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HotelSettings'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    patch:
+      summary: Update hotel settings
+      description: |
+        `floors_count` cannot be lower than the highest room floor.
+      operationId: updateHotelSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                location:
+                  type: string
+                  maxLength: 200
+                floors_count:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+      responses:
+        '200':
+          description: Updated hotel settings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HotelSettings'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /shift-settings:
+    get:
+      summary: Shift hours
+      operationId: getShiftSettings
+      responses:
+        '200':
+          description: Current shift hours (whole hours, 0-23)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftSettings'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    patch:
+      summary: Update shift hours
+      description: |
+        The merged result must cover exactly 24 hours with no gap or overlap. By default future untouched shifts are moved to the new window.
+      operationId: updateShiftSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                morning:
+                  $ref: '#/components/schemas/ShiftHours'
+                evening:
+                  $ref: '#/components/schemas/ShiftHours'
+                night:
+                  $ref: '#/components/schemas/ShiftHours'
+                apply_to_future:
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: Updated shift hours
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/ShiftSettings'
+                      - type: object
+                        properties:
+                          updated_future_shifts:
+                            type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /search:
+    get:
+      summary: Search rooms, staff and shift reports
+      description: |
+        A 14-digit `q` is looked up as a national ID and only the masked ID is returned.
+      operationId: search
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 50
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 5
+      responses:
+        '200':
+          description: Grouped search results
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SearchResults'
+                  meta:
+                    type: object
+                    properties:
+                      q:
+                        type: string
+                        nullable: true
+                      limit:
+                        type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 components:
   securitySchemes:
     bearerAuth:
@@ -955,6 +1123,99 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    HotelSettings:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        floors_count:
+          type: integer
+          nullable: true
+        total_rooms:
+          type: integer
+        updated_at:
+          type: string
+          nullable: true
+    ShiftHours:
+      type: object
+      required: [start, end]
+      properties:
+        start:
+          type: integer
+          minimum: 0
+          maximum: 23
+        end:
+          type: integer
+          minimum: 0
+          maximum: 23
+    ShiftSettings:
+      type: object
+      properties:
+        morning:
+          $ref: '#/components/schemas/ShiftHours'
+        evening:
+          $ref: '#/components/schemas/ShiftHours'
+        night:
+          $ref: '#/components/schemas/ShiftHours'
+    SearchResults:
+      type: object
+      properties:
+        rooms:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              room_number:
+                type: string
+              floor:
+                type: integer
+                nullable: true
+              room_type_name:
+                type: string
+              physical_status:
+                type: string
+              occupancy_status:
+                type: string
+        staff:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              full_name:
+                type: string
+              staff_type:
+                type: string
+              department:
+                type: string
+                nullable: true
+              is_active:
+                type: boolean
+              national_id:
+                type: string
+                nullable: true
+        shift_reports:
+          type: array
+          items:
+            type: object
+            properties:
+              report_id:
+                type: string
+              business_date:
+                type: string
+              shift_type:
+                type: string
+              staff_name:
+                type: string
+              review_status:
+                type: string
     DailyClosingTotals:
       type: object
       properties:

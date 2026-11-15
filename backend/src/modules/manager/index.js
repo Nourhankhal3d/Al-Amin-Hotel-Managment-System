@@ -18,5 +18,10 @@ router.use('/approvals', require('./approvals/approvals.routes'));
 router.use('/shift-reports', require('./shiftReports/shiftReports.routes'));
 router.use('/daily-closings', require('./finance/dailyClosings.routes'));
 router.use('/payments', require('./finance/payments.routes'));
+const settings = require('./settings/settings.routes');
+router.use('/hotel-settings', settings.hotel);
+router.use('/shift-settings', settings.shifts);
+router.use('/shift-settings', settings.shifts);
+router.use('/search', require('./search/search.routes'));
 
 module.exports = router;

@@ -28,9 +28,9 @@ function getShiftHours() {
 }
 
 function setShiftHours(h) {
-  if (h && typeof h === 'object') {
-    SHIFT_HOURS = Object.freeze(JSON.parse(JSON.stringify(h)));
-  }
+  if (!validateHours(h)) return false;
+  SHIFT_HOURS = Object.freeze(JSON.parse(JSON.stringify(h)));
+  return true;
 }
 
 function todayCairo() {
@@ -95,7 +95,23 @@ const stayDays = (inDay, nights) =>
     DateTime.fromISO(inDay).plus({ days: i }).toFormat('yyyy-MM-dd')
   );
 
-module.exports = {
+const ORDER = ['morning', 'evening', 'night'];
+
+function validateHours(h) {
+  if (!h || typeof h !== 'object') return false;
+  let total = 0;
+  for (const k of ORDER) {
+    const { start, end } = h[k] || {};
+    if (!Number.isInteger(start) || !Number.isInteger(end)
+      || start < 0 || start > 23 || end < 0 || end > 23 || start === end) return false;
+    total += (end - start + 24) % 24;
+  }
+  return total === 24
+    && h.morning.end === h.evening.start
+    && h.evening.end === h.night.start
+    && h.night.end === h.morning.start;
+}
+  module.exports = {
   ZONE,
   SHIFTS,
   SHIFT_HOURS,
@@ -105,6 +121,7 @@ module.exports = {
   eachDate,
   shiftWindow,
   getShiftHours,
+  validateHours,
   setShiftHours,
   stayDay,
   noonCairo,
