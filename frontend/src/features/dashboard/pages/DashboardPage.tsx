@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useOutletContext } from 'react-router-dom';
-import { ArrowLeft, ArrowLeftRight, BedDouble, Check, Clock, FileText, LogIn, MoreHorizontal, Sparkles, Wallet, Wrench, type LucideIcon } from 'lucide-react';import { EmptyState } from '../../../components/common/EmptyState';
+import { ArrowLeft, ArrowLeftRight, BedDouble, Check, Clock, FileText, LogIn, MoreHorizontal, Sparkles, Wallet, Wrench, type LucideIcon } from 'lucide-react';
+import { EmptyState } from '../../../components/common/EmptyState';
 import { Card } from '../../../components/ui/Card';
 import { ErrorState } from '../../../components/common/ErrorState';
 import { LoadingState } from '../../../components/common/LoadingState';
