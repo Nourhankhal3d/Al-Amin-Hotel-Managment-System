@@ -132,12 +132,12 @@ describe('Manager Features 0-3 Endpoints', () => {
         .set('Authorization', `Bearer ${managerToken}`)
         .send({
           staff_id: createdStaffId,
-          business_date: '2026-11-15',
+          business_date: new Date(Date.now() + 5 * 86400e3).toISOString().slice(0, 10),
           shift_type: 'MORNING',
         });
 
       expect(res.status).toBe(201);
-      expect(res.body.data).toHaveProperty('business_date', '2026-11-15');
+      expect(res.body.data).toHaveProperty('business_date', new Date(Date.now() + 5 * 86400e3).toISOString().slice(0, 10));
       expect(res.body.data).toHaveProperty('shift_type', 'MORNING');
     });
   });
