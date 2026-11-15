@@ -191,18 +191,32 @@ export function DashboardPage() {
             </div>
             <MoreHorizontal className="dashboard-page__more" aria-hidden="true" />
           </div>
-          <ul className="dashboard-page__activity-list">
-            {data.activity.map((activity) => (
-              <li key={activity.id}>
-                <span className={`dashboard-page__activity-icon dashboard-page__activity-icon--${activity.tone}`}><DashboardIcon name={activity.icon} /></span>
-                <div className="dashboard-page__activity-copy">
-                  <strong>{t(activity.titleKey)}</strong>
-                  <span>{t(activity.descriptionKey)}</span>
-                </div>
-                <time>{t('dashboard.activity.agoMinutes').replace('{value}', formatNumber(activity.timeMinutesAgo, language))}</time>
-              </li>
-            ))}
-          </ul>
+           {data.activity.length === 0 ? (
+            <p className="dashboard-page__attention-empty">{t('dashboard.activity.empty')}</p>
+          ) : (
+            <ul className="dashboard-page__activity-list">
+              {data.activity.map((activity) => {
+                const room = activity.roomNumber ? `${t('roomLabel')} ${activity.roomNumber}` : '';
+                const money = activity.amount !== undefined
+                  ? `${formatCurrency(activity.amount, language)} · ${t(`dashboard.activity.methods.${activity.method}`)}`
+                  : '';
+                const minutes = Math.max(0, Math.floor((now.getTime() - new Date(activity.at).getTime()) / 60000));
+                const ago = minutes < 60
+                  ? t('dashboard.activity.agoMinutes').replace('{value}', formatNumber(minutes, language))
+                  : t('dashboard.activity.agoHours').replace('{value}', formatNumber(Math.floor(minutes / 60), language));
+                return (
+                  <li key={activity.id}>
+                    <span className={`dashboard-page__activity-icon dashboard-page__activity-icon--${activity.tone}`}><DashboardIcon name={activity.icon} /></span>
+                    <div className="dashboard-page__activity-copy">
+                      <strong>{t(`dashboard.activity.kinds.${activity.kind}`)}</strong>
+                      <span>{[room, money].filter(Boolean).join(' · ') || '—'}</span>
+                    </div>
+                    <time>{ago}</time>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
           <Link className="dashboard-page__view-all" to={ROUTES.shiftReport}>{t('dashboard.activity.viewAll')}<ArrowLeft aria-hidden="true" /></Link>
         </Card>
       </section>

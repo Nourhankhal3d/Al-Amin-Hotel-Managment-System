@@ -120,23 +120,19 @@
       "caption": "The latest updates during your shift",
       "viewAll": "View all activity",
       "agoMinutes": "{value} min ago",
-      "items": {
-        "checkin": {
-          "title": "Guest checked in",
-          "description": "Room 204 · Ahmed Al Nuaimi"
-        },
-        "checkout": {
-          "title": "Guest checked out",
-          "description": "Room 118 · Mariam Al Qahtani"
-        },
-        "maintenance": {
-          "title": "Maintenance reported",
-          "description": "Air conditioning in room 305"
-        },
-        "cleaning": {
-          "title": "Room cleaning completed",
-          "description": "Room 412 is ready for its guest"
-        }
+      "agoHours": "{value} h ago",
+      "empty": "No activity in the last 24 hours",
+      "kinds": {
+        "payment": "Payment received",
+        "cleaningAssigned": "Cleaning task created",
+        "cleaningDone": "Cleaning task completed",
+        "maintenanceReported": "Maintenance reported",
+        "maintenanceResolved": "Maintenance resolved"
+      },
+      "methods": {
+        "cash": "Cash",
+        "instapay": "InstaPay",
+        "vodafone_cash": "Vodafone Cash"
       }
     },
     "quickActions": {

@@ -119,24 +119,20 @@
       "title": "نشاط اليوم",
       "caption": "أحدث التحديثات خلال ورديتك",
       "viewAll": "عرض كل الأنشطة",
-      "agoMinutes": "منذ {value} دقيقة",
-      "items": {
-        "checkin": {
-          "title": "تم تسجيل دخول ضيف",
-          "description": "غرفة ٢٠٤ · أحمد النعيمي"
-        },
-        "checkout": {
-          "title": "تم تسجيل مغادرة",
-          "description": "غرفة ١١٨ · مريم القحطاني"
-        },
-        "maintenance": {
-          "title": "تم تسجيل بلاغ صيانة",
-          "description": "تكييف الغرفة ٣٠٥"
-        },
-        "cleaning": {
-          "title": "اكتملت مهمة تنظيف",
-          "description": "الغرفة ٤١٢ جاهزة للضيف"
-        }
+        "agoMinutes": "منذ {value} دقيقة",
+      "agoHours": "منذ {value} ساعة",
+      "empty": "لا توجد أنشطة خلال آخر ٢٤ ساعة",
+      "kinds": {
+        "payment": "تم استلام دفعة",
+        "cleaningAssigned": "تم تسجيل مهمة تنظيف",
+        "cleaningDone": "اكتملت مهمة تنظيف",
+        "maintenanceReported": "تم تسجيل بلاغ صيانة",
+        "maintenanceResolved": "تم حل بلاغ صيانة"
+      },
+      "methods": {
+        "cash": "نقدي",
+        "instapay": "إنستاباي",
+        "vodafone_cash": "فودافون كاش"
       }
     },
     "quickActions": {

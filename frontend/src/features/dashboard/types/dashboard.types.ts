@@ -27,9 +27,11 @@ export interface RevenuePoint {
 
 export interface DashboardActivityItem {
   id: string;
-  titleKey: string;
-  descriptionKey: string;
-  timeMinutesAgo: number;
+  kind: 'payment' | 'cleaningAssigned' | 'cleaningDone' | 'maintenanceReported' | 'maintenanceResolved';
+  roomNumber?: string;
+  amount?: number;
+  method?: string;
+  at: string;
   icon: DashboardIconKey;
   tone: 'green' | 'gold';
 }

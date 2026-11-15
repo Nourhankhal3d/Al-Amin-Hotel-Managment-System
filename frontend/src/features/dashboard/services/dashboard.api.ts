@@ -3,8 +3,7 @@ import { getCairoNow } from '../../rooms/utils/walkInDates';
 import { getRooms } from '../../rooms/services/rooms.api';
 import { request } from '../../../core/api/apiClient';
 import { mockShiftSummary } from '../../../mocks/dashboard';
-import type { DashboardSummary } from '../types/dashboard.types';
-
+import type { DashboardActivityItem, DashboardSummary } from '../types/dashboard.types';
 export const mockDashboardSummary: DashboardSummary = {
   revenueTotal: 24850,
   // TODO: confirm with backend; the dashboard endpoint has no revenue-change field.
@@ -29,12 +28,7 @@ export const mockDashboardSummary: DashboardSummary = {
     { id: 'revenue', labelKey: 'dashboard.stats.revenue.label', value: 24850, format: 'currency', icon: 'wallet', tone: 'gold' },
   ],
   // TODO: confirm with backend; the dashboard endpoint has no recent-activity feed.
-  activity: [
-    { id: 'activity-1', titleKey: 'dashboard.activity.items.checkin.title', descriptionKey: 'dashboard.activity.items.checkin.description', timeMinutesAgo: 12, icon: 'login', tone: 'green' },
-    { id: 'activity-2', titleKey: 'dashboard.activity.items.checkout.title', descriptionKey: 'dashboard.activity.items.checkout.description', timeMinutesAgo: 18, icon: 'transfer', tone: 'green' },
-    { id: 'activity-3', titleKey: 'dashboard.activity.items.maintenance.title', descriptionKey: 'dashboard.activity.items.maintenance.description', timeMinutesAgo: 31, icon: 'wrench', tone: 'gold' },
-    { id: 'activity-4', titleKey: 'dashboard.activity.items.cleaning.title', descriptionKey: 'dashboard.activity.items.cleaning.description', timeMinutesAgo: 41, icon: 'bed', tone: 'green' },
-  ],
+  activity: [],
   // TODO: confirm with backend; the dashboard endpoint has no needs-attention list.
   needsAttention: [],
   attentionOpenCount: 0,
@@ -62,6 +56,8 @@ interface ApiCleaningTask {
   room_id: string;
   priority: 'low' | 'medium' | 'high' | 'urgent';
   notes?: string;
+  assigned_date: string;
+  finished_date?: string | null;
 }
 
 interface ApiMaintenanceIssue {
@@ -69,6 +65,21 @@ interface ApiMaintenanceIssue {
   room_id: string;
   problem: string;
   priority: 'low' | 'medium' | 'high' | 'urgent';
+  created_date: string;
+  resolved_date?: string | null;
+}
+
+interface ApiPayment {
+  payment_id: string;
+  reservation_id: string;
+  amount: number;
+  payment_method: string;
+  payment_datetime: string;
+}
+
+interface ApiReservationRef {
+  reservation_id: string;
+  room_id: string;
 }
 
 function severityFromPriority(priority: string): 'critical' | 'high' | 'normal' {
@@ -99,13 +110,16 @@ interface DashboardApiResponse {
 export async function getDashboardSummary(): Promise<DashboardSummary> {
   const { date: today } = getCairoNow();
 
-  const [response, pendingCleaning, doneCleaning, openIssues, todaysReservations, rooms] = await Promise.all([
+  const [response, pendingCleaning, doneCleaning, openIssues, todaysReservations, rooms, payments, resolvedIssues, allReservations] = await Promise.all([
     request<DashboardApiResponse>('/dashboard'),
     request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'pending', limit: 20 } }),
-    request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'done', limit: 1 } }),
+       request<Paginated<ApiCleaningTask>>('/cleaning-tasks', { params: { status: 'done', limit: 10 } }),
     request<Paginated<ApiMaintenanceIssue>>('/maintenance-issues', { params: { status: 'open', limit: 20 } }),
     request<Paginated<unknown>>('/reservations', { params: { check_in_from: `${today}T00:00:00+03:00`, check_in_to: `${today}T23:59:59+03:00`, limit: 1 } }),
     getRooms(),
+    request<Paginated<ApiPayment>>('/payments', { params: { limit: 10 } }),
+    request<Paginated<ApiMaintenanceIssue>>('/maintenance-issues', { params: { status: 'resolved', limit: 10 } }),
+    request<Paginated<ApiReservationRef>>('/reservations', { params: { limit: 100 } }),
   ]);
 
   const roomNumberById = new Map(rooms.map((room) => [String(room.id), room.number]));
@@ -151,8 +165,74 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
 
   const needsAttention = [...maintenanceItems, ...cleaningItems]
     .sort((a, b) => severityRank[a.severity] - severityRank[b.severity]);
+  const roomNumberByReservation = new Map(
+    allReservations.data.map((reservation) => [String(reservation.reservation_id), roomNumberById.get(String(reservation.room_id))]),
+  );
+
+  const activityEvents: DashboardActivityItem[] = [];
+
+  payments.data.forEach((payment) => activityEvents.push({
+    id: `payment-${payment.payment_id}`,
+    kind: 'payment',
+    roomNumber: roomNumberByReservation.get(String(payment.reservation_id)),
+    amount: payment.amount,
+    method: payment.payment_method,
+    at: payment.payment_datetime,
+    icon: 'wallet',
+    tone: 'gold',
+  }));
+
+  pendingCleaning.data.forEach((task) => activityEvents.push({
+    id: `cleaning-assigned-${task.task_id}`,
+    kind: 'cleaningAssigned',
+    roomNumber: roomNumberById.get(String(task.room_id)),
+    at: task.assigned_date,
+    icon: 'sparkles',
+    tone: 'green',
+  }));
+
+  doneCleaning.data.forEach((task) => {
+    if (!task.finished_date) return;
+    activityEvents.push({
+      id: `cleaning-done-${task.task_id}`,
+      kind: 'cleaningDone',
+      roomNumber: roomNumberById.get(String(task.room_id)),
+      at: task.finished_date,
+      icon: 'check',
+      tone: 'green',
+    });
+  });
+
+  openIssues.data.forEach((issue) => activityEvents.push({
+    id: `issue-reported-${issue.issue_id}`,
+    kind: 'maintenanceReported',
+    roomNumber: roomNumberById.get(String(issue.room_id)),
+    at: issue.created_date,
+    icon: 'wrench',
+    tone: 'gold',
+  }));
+
+  resolvedIssues.data.forEach((issue) => {
+    if (!issue.resolved_date) return;
+    activityEvents.push({
+      id: `issue-resolved-${issue.issue_id}`,
+      kind: 'maintenanceResolved',
+      roomNumber: roomNumberById.get(String(issue.room_id)),
+      at: issue.resolved_date,
+      icon: 'check',
+      tone: 'green',
+    });
+  });
+
+  const since = Date.now() - 24 * 60 * 60 * 1000;
+  const activity = activityEvents
+    .filter((event) => new Date(event.at).getTime() >= since)
+    .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
+    .slice(0, 6);
+
   return {
     ...mockDashboardSummary,
+    activity,
     revenueTotal: response.shift_payments_total.total,
     cashRevenue: response.shift_payments_total.cash,
     digitalRevenue: response.shift_payments_total.instapay + response.shift_payments_total.vodafone_cash,
