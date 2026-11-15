@@ -217,8 +217,7 @@ export function DashboardPage() {
               })}
             </ul>
           )}
-          <Link className="dashboard-page__view-all" to={ROUTES.shiftReport}>{t('dashboard.activity.viewAll')}<ArrowLeft aria-hidden="true" /></Link>
-        </Card>
+       </Card>
       </section>
 
       <section className="dashboard-page__content-grid dashboard-page__actions-grid">
