@@ -117,7 +117,7 @@
     },
     "activity": {
       "title": "Today's activity",
-      "caption": "The latest updates during your shift",
+      "caption": "The latest updates in the last 24 hours",
       "agoMinutes": "{value} min ago",
       "agoHours": "{value} h ago",
       "empty": "No activity in the last 24 hours",
