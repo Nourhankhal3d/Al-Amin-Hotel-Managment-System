@@ -118,7 +118,6 @@
     "activity": {
       "title": "Today's activity",
       "caption": "The latest updates during your shift",
-      "viewAll": "View all activity",
       "agoMinutes": "{value} min ago",
       "agoHours": "{value} h ago",
       "empty": "No activity in the last 24 hours",
