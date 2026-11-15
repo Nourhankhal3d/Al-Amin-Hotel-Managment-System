@@ -81,40 +81,21 @@
     "overviewTitle": "Today at a glance",
     "overviewCaption": "A calm summary of everything happening at your hotel",
     "viewSummary": "View full summary",
-    "stats": {
-      "open": "Open",
-      "warning": "Warning",
+       "stats": {
       "roomsPrepared": {
-        "label": "Rooms prepared",
-        "caption": "2 more than usual"
-      },
-      "cleaning": {
-        "label": "Cleaning requests",
-        "caption": "Requests awaiting an update"
-      },
-      "maintenance": {
-        "label": "Maintenance reports",
-        "caption": "1 report needs attention"
+        "label": "Available rooms"
       },
       "revenue": {
-        "label": "Today's revenue",
-        "caption": "Total income today"
+        "label": "Today's revenue"
       },
       "checkouts": {
-        "label": "Check-outs",
-        "caption": "Departures completed so far"
+        "label": "Check-outs"
       },
       "checkins": {
-        "label": "Check-ins",
-        "caption": "Expected arrivals this shift"
-      },
-      "completed": {
-        "label": "Tasks completed",
-        "caption": "Completed during this shift"
+        "label": "Check-ins"
       },
       "pending": {
-        "label": "Pending tasks",
-        "caption": "Tasks that need follow-up"
+        "label": "Pending tasks"
       }
     },
     "revenue": {
