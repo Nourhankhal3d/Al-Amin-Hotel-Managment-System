@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import {
   ArrowLeftRight,
@@ -23,7 +23,7 @@ import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { AppError } from '../../../core/errors/AppError';
 import { getAuthSession } from '../../../core/auth/authManager';
 import { getTranslation, type Language } from '../../../core/i18n';
-import { formatNumber, formatPercent } from '../../../utils/format';
+import { formatNumber } from '../../../utils/format';
 import type { CleaningTask, MaintenanceIssue, ShiftSummary } from '../types/shift-handover.types';
 import { getShiftReport } from '../services/shift-handover.api';
 import { useHandoverShift, useShiftSummary } from '../hooks/useShiftHandover';
@@ -65,8 +65,14 @@ interface TimelineEntry {
   time: string;
 }
 
-function getTimelineItems(summary: ShiftSummary, t: (key: string) => string, language: Language, roomNumbers: Map<string, string>): TimelineEntry[] {
-    const room = (id: string) => t('handoverPage.timeline.room').replace('{room}', formatClockText(roomNumbers.get(id) ?? '—', language));
+function getTimelineItems(
+  summary: ShiftSummary,
+  t: (key: string) => string,
+  language: Language,
+  roomNumbers: Map<string, string>,
+): TimelineEntry[] {
+  const room = (id: string) =>
+    t('handoverPage.timeline.room').replace('{room}', formatClockText(roomNumbers.get(id) ?? '—', language));
   const items = [
     ...summary.cleaning_tasks.map((task: CleaningTask) => ({
       id: `cleaning-${task.task_id}`,
@@ -104,13 +110,17 @@ export function ShiftHandoverPage() {
   const staffName = getAuthSession()?.staffName || t('topbar.userName');
   const avatarLetter = Array.from(staffName)[0] ?? '';
   const handover = useHandoverShift();
-    const { data: rooms } = useAllRooms();
+  const { data: rooms } = useAllRooms();
   const roomNumbers = new Map<string, string>((rooms ?? []).map((room) => [room.id, room.number]));
   const { data: summary, isLoading, isError, error, refetch } = useShiftSummary(!handover.isSuccess);
   const [notes, setNotes] = useState<string | null>(null);
   const [reportError, setReportError] = useState<unknown>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [acknowledged, setAcknowledged] = useState(false);
+  const [reportDownloaded, setReportDownloaded] = useState(false);
+
+  const isHandedOver = handover.isSuccess || summary?.shift.status === 'handed_over';
 
   async function downloadReport() {
     if (!summary) return;
@@ -124,6 +134,7 @@ export function ShiftHandoverPage() {
       link.download = `shift-${summary.shift.shift_id}-report.pdf`;
       link.click();
       URL.revokeObjectURL(url);
+      setReportDownloaded(true);
     } catch (downloadError) {
       setReportError(downloadError);
     } finally {
@@ -131,14 +142,16 @@ export function ShiftHandoverPage() {
     }
   }
 
-  // The form submit only asks for confirmation; the handover is sent after "confirm and send"
+  // The form submit only opens the confirmation dialog; the handover is sent after "confirm and send"
   function requestHandover(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (handover.isSuccess || handover.isPending) return;
+    setAcknowledged(false);
     setIsConfirming(true);
   }
 
   function confirmHandover() {
+    if (!acknowledged) return;
     setIsConfirming(false);
     handover.mutate({ shift_notes: notes ?? summary?.shift.shift_notes ?? '' });
   }
@@ -147,13 +160,10 @@ export function ShiftHandoverPage() {
     <PageHero eyebrow={t('handoverPage.eyebrow')} title={t('handoverPage.title')} description={t('handoverPage.description')}>
       {actions && (
         <>
-          <Button variant="glass" onClick={() => void downloadReport()} disabled={isDownloading}>
-            <FileText aria-hidden="true" />
-            {isDownloading ? t('handoverPage.preparing') : t('handoverPage.export')}
-          </Button>
-          <Button variant="gold" form="shift-handover-form" type="submit" disabled={handover.isSuccess || handover.isPending}>
+     
+          <Button variant="gold" form="shift-handover-form" type="submit" disabled={isHandedOver || handover.isPending}>
             <ArrowLeftRight aria-hidden="true" />
-            {handover.isPending ? t('handoverPage.submitting') : handover.isSuccess ? t('handoverPage.submitted') : t('handoverPage.submit')}
+            {handover.isPending ? t('handoverPage.submitting') : isHandedOver ? t('handoverPage.submitted') : t('handoverPage.submit')}
           </Button>
         </>
       )}
@@ -201,19 +211,33 @@ export function ShiftHandoverPage() {
   ];
 
   const timelineItems = getTimelineItems(summary, t, language, roomNumbers);
-  const isHandedOver = handover.isSuccess || summary?.shift.status === 'handed_over';
   const shiftNotes = notes ?? summary.shift.shift_notes ?? '';
-  const trackedTasks = [...summary.cleaning_tasks, ...summary.maintenance_issues];
-  const completedTasks = summary.cleaning_tasks.filter((task) => task.status === 'done').length
-    + summary.maintenance_issues.filter((issue) => issue.status === 'resolved').length;
-  const completionPercent = trackedTasks.length ? Math.round((completedTasks / trackedTasks.length) * 100) : 0;
-  const percentText = formatPercent(completionPercent, language);
   const shiftType = t(`handoverPage.shiftType.${summary.shift.shift_type}`);
   const shiftHours = `${formatClockText(summary.shift.start_time, language)} — ${formatClockText(summary.shift.end_time, language)}`;
 
   return (
     <div className="feature-page shift-handover">
       {hero(true)}
+
+      {isHandedOver && (
+        <Card className="shift-handover__report">
+          <div>
+            <span className={`shift-handover__badge ${reportDownloaded ? 'shift-handover__badge--done' : 'shift-handover__badge--pending'}`}>
+              {reportDownloaded ? t('handoverPage.reportDone') : t('handoverPage.reportPending')}
+            </span>
+            <h2>{t('handoverPage.reportTitle')}</h2>
+            <p>{t('handoverPage.reportDesc')}</p>
+          </div>
+          <Button variant="gold" onClick={() => void downloadReport()} disabled={isDownloading}>
+            <FileText aria-hidden="true" />
+            {isDownloading
+              ? t('handoverPage.preparing')
+              : reportDownloaded
+                ? t('handoverPage.reportDownloadAgain')
+                : t('handoverPage.reportDownload')}
+          </Button>
+        </Card>
+      )}
 
       <Card className="shift-handover__info">
         <div className="shift-handover__info-staff">
@@ -223,20 +247,6 @@ export function ShiftHandoverPage() {
         <div><span>{t('handoverPage.info.shift')}</span><strong>{shiftType}</strong></div>
         <div><span>{t('handoverPage.info.hours')}</span><strong>{shiftHours}</strong></div>
         <div><span>{t('handoverPage.info.date')}</span><strong>{formatShiftDate(summary.shift.shift_date, language)}</strong></div>
-        <div className="shift-handover__readiness">
-          <span>{t('handoverPage.info.readiness')}</span>
-          <strong>{percentText}</strong>
-          <div
-            className="shift-handover__progress"
-            role="progressbar"
-            aria-label={t('handoverPage.info.readiness')}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={completionPercent}
-          >
-            <span style={{ width: `${completionPercent}%` }} />
-          </div>
-        </div>
       </Card>
 
       <div className="shift-handover__row shift-handover__row--wide-start">
@@ -337,24 +347,13 @@ export function ShiftHandoverPage() {
         <div className="shift-handover__footer">
           <div className="shift-handover__footer-copy">
             <span>{t('handoverPage.footer.eyebrow')}</span>
-            <strong>{isHandedOver ? t('handoverPage.footer.done') : t('handoverPage.footer.progress').replace('{percent}', percentText)}</strong>
+            {isHandedOver && <strong>{t('handoverPage.footer.done')}</strong>}
             <p>{t('handoverPage.footer.message')}</p>
+            {!isHandedOver && <p className="shift-handover__export-hint">{t('handoverPage.exportHint')}</p>}
           </div>
-          <div
-            className="shift-handover__ring"
-            style={{ '--ring-value': `${completionPercent}%` } as CSSProperties}
-            aria-hidden="true"
-          >
-            <span>{percentText}</span>
-          </div>
-          <div className="shift-handover__footer-actions">
-            <Button variant="glass" disabled title={t('handoverPage.footer.draftUnavailable')}>{t('handoverPage.footer.draft')}</Button>
-            <Button variant="glass" onClick={() => void downloadReport()} disabled={isDownloading}>
-              <FileText aria-hidden="true" />
-              {isDownloading ? t('handoverPage.preparing') : t('handoverPage.footer.report')}
-            </Button>
-            <Button variant="gold" type="submit" disabled={isHandedOver || handover.isPending}>
-              {isHandedOver ? <Check aria-hidden="true" /> : null}
+                    <div className="shift-handover__footer-actions">
+            <Button className="shift-handover__submit" variant="gold" type="submit" disabled={isHandedOver || handover.isPending}>
+              {isHandedOver ? <Check aria-hidden="true" /> : <ArrowLeftRight aria-hidden="true" />}
               {handover.isPending ? t('handoverPage.submitting') : isHandedOver ? t('handoverPage.submitted') : t('handoverPage.submit')}
             </Button>
           </div>
@@ -369,9 +368,19 @@ export function ShiftHandoverPage() {
           confirmLabel={t('handoverPage.confirm.confirm')}
           cancelLabel={t('handoverPage.confirm.cancel')}
           busy={handover.isPending}
+          confirmDisabled={!acknowledged}
           onConfirm={confirmHandover}
           onCancel={() => setIsConfirming(false)}
-        />
+        >
+          <label className="shift-handover__ack">
+            <input
+              type="checkbox"
+              checked={acknowledged}
+              onChange={(event) => setAcknowledged(event.target.checked)}
+            />
+            <span>{t('handoverPage.confirmAck')}</span>
+          </label>
+        </ConfirmDialog>
       )}
     </div>
   );
