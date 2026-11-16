@@ -12,6 +12,10 @@ interface ConfirmDialogProps {
   icon?: ReactNode;
   /** Disables the confirm button (e.g. while saving) */
   busy?: boolean;
+  /** Disables the confirm button until a condition is met (e.g. a checkbox is ticked) */
+  confirmDisabled?: boolean;
+  /** Optional extra content shown under the description (e.g. a checkbox) */
+  children?: ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -24,6 +28,8 @@ export function ConfirmDialog({
   variant = 'default',
   icon,
   busy = false,
+  confirmDisabled = false,
+  children,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -39,9 +45,10 @@ export function ConfirmDialog({
         {icon && <span className="ui-dialog__icon" aria-hidden="true">{icon}</span>}
         <h2>{title}</h2>
         {description && <p>{description}</p>}
+        {children && <div className="ui-dialog__extra">{children}</div>}
         <div className="ui-dialog__actions">
           <Button variant="secondary" onClick={onCancel}>{cancelLabel}</Button>
-          <Button className={variant === 'danger' ? 'ui-button--danger' : ''} onClick={onConfirm} disabled={busy}>
+          <Button className={variant === 'danger' ? 'ui-button--danger' : ''} onClick={onConfirm} disabled={busy || confirmDisabled}>
             {confirmLabel}
           </Button>
         </div>

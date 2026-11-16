@@ -32,3 +32,10 @@
 }
 
 .ui-dialog__icon svg { width: 1.5rem; height: 1.5rem; }
+
+
+.ui-dialog__extra {
+  width: 100%;
+  margin-block-start: var(--space-4);
+  text-align: start;
+}
