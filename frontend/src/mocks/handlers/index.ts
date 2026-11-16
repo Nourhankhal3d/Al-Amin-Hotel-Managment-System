@@ -72,40 +72,40 @@ const rooms: Room[] = [
 
 const cleaningTasks: CleaningTask[] = [
   {
-    task_id: 1,
-    room_id: 103,
+    task_id: '1',
+    room_id: '103',
     priority: 'medium',
     status: 'pending',
     notes: 'Clean room after checkout',
     cleaner_name: 'Demo Cleaner',
     assigned_date: now,
     finished_date: null,
-    shift_id: 41,
-    assigned_by_staff_id: 1,
+    shift_id: '41',
+    assigned_by_staff_id: '1',
   },
 ];
 
 const maintenanceIssues: MaintenanceIssue[] = [
   {
-    issue_id: 1,
-    room_id: 102,
+    issue_id: '1',
+    room_id: '102',
     problem: 'Air conditioning inspection',
     priority: 'medium',
     status: 'open',
     notes: null,
     created_date: now,
     resolved_date: null,
-    shift_id: 41,
-    staff_id: 1,
+    shift_id: '41',
+    staff_id: '1',
   },
 ];
 
 const payments: Payment[] = [
   {
-    payment_id: 900,
-    reservation_id: 55,
-    staff_id: 1,
-    shift_id: 41,
+    payment_id: '900',
+    reservation_id: '55',
+    staff_id: '1',
+    shift_id: '41',
     amount: 1500,
     payment_method: 'cash',
     notes: 'Demo payment',
@@ -196,9 +196,9 @@ const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
 const PAYMENT_METHODS = ['cash', 'instapay', 'vodafone_cash'];
 
 // الحجز التجريبي رقم 55: إجماليه 4500 (السيرفر هو اللي بيحسب الإجمالي، مش العميل)
-const RESERVATION_TOTALS: Record<number, number> = { 55: 4500 };
+const RESERVATION_TOTALS: Record<string, number> = { '55': 4500 };
 
-function reservationTotals(reservationId: number) {
+function reservationTotals(reservationId: string) {
   const total = RESERVATION_TOTALS[reservationId];
   if (total === undefined) return null;
   const paid = payments
@@ -392,23 +392,23 @@ const writeHandlers = [
     }
 
     const task: CleaningTask = {
-      task_id: newId(),
-      room_id: body.room_id,
+      task_id: String(newId()),
+      room_id: String(body.room_id),
       priority: body.priority as CleaningTask['priority'],
       status: 'pending',
       notes: body.notes ?? null,
       cleaner_name: body.cleaner_name ?? null,
       assigned_date: now,
       finished_date: null,
-      shift_id: mockShift.shift_id,
-      assigned_by_staff_id: 1,
+      shift_id: String(mockShift.shift_id),
+      assigned_by_staff_id: '1',
     };
     cleaningTasks.push(task);
     return HttpResponse.json(task, { status: 201 });
   }),
 
   http.get(`${API}/cleaning-tasks/:task_id`, ({ params }) => {
-    const task = cleaningTasks.find((t) => t.task_id === Number(params.task_id));
+    const task = cleaningTasks.find((t) => t.task_id === String(params.task_id));
     if (!task) return errorResponse('NOT_FOUND', 'Task not found.', 404);
     return HttpResponse.json(task);
   }),
@@ -432,7 +432,7 @@ const writeHandlers = [
       return errorResponse('VALIDATION_ERROR', 'Invalid update.', 400);
     }
 
-    const task = cleaningTasks.find((t) => t.task_id === Number(params.task_id));
+    const task = cleaningTasks.find((t) => t.task_id === String(params.task_id));
     if (!task) return errorResponse('NOT_FOUND', 'Task not found.', 404);
 
     if (body.cleaner_name !== undefined) task.cleaner_name = body.cleaner_name;
@@ -476,16 +476,16 @@ const writeHandlers = [
     }
 
     const issue: MaintenanceIssue = {
-      issue_id: newId(),
-      room_id: body.room_id,
+      issue_id: String(newId()),
+      room_id: String(body.room_id),
       problem: body.problem,
       priority: body.priority as MaintenanceIssue['priority'],
       status: 'open',
       notes: body.notes ?? null,
       created_date: now,
       resolved_date: null,
-      shift_id: mockShift.shift_id,
-      staff_id: 1,
+      shift_id: String(mockShift.shift_id),
+      staff_id: '1',
     };
     maintenanceIssues.push(issue);
     return HttpResponse.json(issue, { status: 201 });
@@ -493,7 +493,7 @@ const writeHandlers = [
 
   http.get(`${API}/maintenance-issues/:issue_id`, ({ params }) => {
     const issue = maintenanceIssues.find(
-      (i) => i.issue_id === Number(params.issue_id),
+      (i) => i.issue_id === String(params.issue_id),
     );
     if (!issue) return errorResponse('NOT_FOUND', 'Issue not found.', 404);
     return HttpResponse.json(issue);
@@ -519,7 +519,7 @@ const writeHandlers = [
     }
 
     const issue = maintenanceIssues.find(
-      (i) => i.issue_id === Number(params.issue_id),
+      (i) => i.issue_id === String(params.issue_id),
     );
     if (!issue) return errorResponse('NOT_FOUND', 'Issue not found.', 404);
 
@@ -544,7 +544,7 @@ const writeHandlers = [
 
   // ---- المدفوعات ----
   http.get(`${API}/reservations/:reservation_id/payments`, ({ params }) => {
-    const id = Number(params.reservation_id);
+    const id = String(params.reservation_id);
     const totals = reservationTotals(id);
     if (!totals) return errorResponse('NOT_FOUND', 'Reservation not found.', 404);
     return HttpResponse.json({
@@ -556,7 +556,7 @@ const writeHandlers = [
   http.get(`${API}/payments/room-balance/:room_id`, ({ params }) => {
     const roomParam = String(params.room_id);
     const room = rooms.find((r) => String(r.room_id) === roomParam);
-    const totals = reservationTotals(55);
+    const totals = reservationTotals('55');
     return HttpResponse.json({
       reservation_id: '55',
       room_id: String(room?.room_id ?? '102'),
@@ -609,7 +609,7 @@ const writeHandlers = [
         400,
       );
     }
-    const resId = body.reservation_id ?? 55;
+    const resId = String(body.reservation_id ?? 55);
     const totals = reservationTotals(resId);
     if (!totals) return errorResponse('NOT_FOUND', 'Reservation not found.', 404);
 
@@ -631,12 +631,12 @@ const writeHandlers = [
       );
     }
 
-    const resolvedResId = body.reservation_id ?? 55;
+    const resolvedResId = String(body.reservation_id ?? 55);
     const payment: Payment = {
-      payment_id: newId(),
+      payment_id: String(newId()),
       reservation_id: resolvedResId,
-      staff_id: 1,
-      shift_id: mockShift.shift_id,
+      staff_id: '1',
+      shift_id: String(mockShift.shift_id),
       amount: body.amount,
       payment_method: body.payment_method as Payment['payment_method'],
       notes: body.notes ?? null,
@@ -734,7 +734,7 @@ export const handlers = [
       return (
         (!status || task.status === status) &&
         (!priority || task.priority === priority) &&
-        (!roomId || task.room_id === Number(roomId))
+        (!roomId || task.room_id === roomId)
       );
     });
 
@@ -751,7 +751,7 @@ export const handlers = [
       return (
         (!status || issue.status === status) &&
         (!priority || issue.priority === priority) &&
-        (!roomId || issue.room_id === Number(roomId))
+        (!roomId || issue.room_id === roomId)
       );
     });
 

@@ -27,6 +27,7 @@ import { formatNumber, formatPercent } from '../../../utils/format';
 import type { CleaningTask, MaintenanceIssue, ShiftSummary } from '../types/shift-handover.types';
 import { getShiftReport } from '../services/shift-handover.api';
 import { useHandoverShift, useShiftSummary } from '../hooks/useShiftHandover';
+import { useAllRooms } from '../../rooms/services/useRooms';
 import './ShiftHandoverPage.css';
 
 const locale = (language: Language) => (language === 'ar' ? 'ar-EG' : 'en-EG');
@@ -64,8 +65,8 @@ interface TimelineEntry {
   time: string;
 }
 
-function getTimelineItems(summary: ShiftSummary, t: (key: string) => string, language: Language): TimelineEntry[] {
-  const room = (id: number) => t('handoverPage.timeline.room').replace('{room}', formatNumber(id, language));
+function getTimelineItems(summary: ShiftSummary, t: (key: string) => string, language: Language, roomNumbers: Map<string, string>): TimelineEntry[] {
+    const room = (id: string) => t('handoverPage.timeline.room').replace('{room}', formatClockText(roomNumbers.get(id) ?? '—', language));
   const items = [
     ...summary.cleaning_tasks.map((task: CleaningTask) => ({
       id: `cleaning-${task.task_id}`,
@@ -103,6 +104,8 @@ export function ShiftHandoverPage() {
   const staffName = getAuthSession()?.staffName || t('topbar.userName');
   const avatarLetter = Array.from(staffName)[0] ?? '';
   const handover = useHandoverShift();
+    const { data: rooms } = useAllRooms();
+  const roomNumbers = new Map<string, string>((rooms ?? []).map((room) => [room.id, room.number]));
   const { data: summary, isLoading, isError, error, refetch } = useShiftSummary(!handover.isSuccess);
   const [notes, setNotes] = useState<string | null>(null);
   const [reportError, setReportError] = useState<unknown>(null);
@@ -197,7 +200,7 @@ export function ShiftHandoverPage() {
     { key: 'departures', label: t('handoverPage.completed.departures'), value: summary.check_outs, icon: LogOut },
   ];
 
-  const timelineItems = getTimelineItems(summary, t, language);
+  const timelineItems = getTimelineItems(summary, t, language, roomNumbers);
   const isHandedOver = handover.isSuccess || summary?.shift.status === 'handed_over';
   const shiftNotes = notes ?? summary.shift.shift_notes ?? '';
   const trackedTasks = [...summary.cleaning_tasks, ...summary.maintenance_issues];

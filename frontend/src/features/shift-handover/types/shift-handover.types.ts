@@ -1,4 +1,3 @@
-
 export type ShiftType = 'morning' | 'evening' | 'night';
 
 export type ShiftStatus = 'active' | 'handed_over';
@@ -31,42 +30,42 @@ export interface PaymentTotals {
 }
 
 export interface CleaningTask {
-  task_id: number;
-  room_id: number;
+  task_id: string;
+  room_id: string;
   priority: Priority;
   status: CleaningTaskStatus;
   assigned_date: string;
-  shift_id: number;
+  shift_id: string | null;
   notes?: string | null;
   cleaner_name?: string | null;
   finished_date?: string | null;
-  assigned_by_staff_id?: number | null;
+  assigned_by_staff_id?: string | null;
 }
 
 export interface MaintenanceIssue {
-  issue_id: number;
-  room_id: number;
+  issue_id: string;
+  room_id: string;
   problem: string;
   priority: Priority;
   status: MaintenanceIssueStatus;
   created_date: string;
-  shift_id: number;
-  staff_id: number;
+  shift_id: string;
+  staff_id: string;
   notes?: string | null;
   resolved_date?: string | null;
 }
 
 export interface Payment {
-  payment_id: number;
-  reservation_id: number;
-  staff_id: number;
-  shift_id: number;
+  payment_id: string;
+  reservation_id: string;
+  staff_id: string;
+  shift_id: string;
   amount: number;
   payment_method: PaymentMethod;
   payment_datetime: string;
   payment_verified: boolean;
   notes?: string | null;
-  reversal_of_payment_id?: number | null;
+  reversal_of_payment_id?: string | null;
 }
 
 export interface PendingItems {
