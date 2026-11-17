@@ -342,6 +342,36 @@ describe('Feature 11: Shift Handover, Summary, and Report PDF', () => {
       expect(res2.body.error.code).toBe('SHIFT_CLOSED');
     });
 
+        test('with two active shifts, summary, current and handover use the session shift', async () => {
+      // an old forgotten active shift of the same staff member (stale)
+      const stale = await Shift.create({
+        staff_id: staff._id,
+        shift_date: '2026-10-01',
+        shift_type: 'evening',
+        start_at: new Date('2026-10-01T13:00:00Z'),
+        end_at: new Date('2026-10-01T20:00:00Z'),
+        status: 'active',
+      });
+
+      const current = await request(app).get('/api/v1/shifts/current').set(auth()).set('x-test-time', Cairo13);
+      expect(current.status).toBe(200);
+      expect(current.body.shift_id).toBe(shift.shift_id);
+
+      const summary = await request(app).get('/api/v1/shifts/current/summary').set(auth()).set('x-test-time', Cairo13);
+      expect(summary.status).toBe(200);
+      expect(summary.body.shift.shift_id).toBe(shift.shift_id);
+
+      const res = await request(app)
+        .patch('/api/v1/shifts/current/handover')
+        .set(auth())
+        .set('x-test-time', Cairo13)
+        .send({});
+      expect(res.status).toBe(200);
+      expect(res.body.shift_id).toBe(shift.shift_id);
+
+      const staleAfter = await Shift.findById(stale._id);
+      expect(staleAfter.status).toBe('active');
+    });
     test('handover succeeds from handover-only session when next shift has already opened', async () => {
       // Create and open evening shift for today
       const Cairo16 = DateTime.fromISO(`${today}T16:05:00`, { zone: ZONE }).toISO();

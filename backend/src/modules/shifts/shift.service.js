@@ -288,8 +288,24 @@ async function ensureShiftOpen(staff, session, now = new Date()) {
   throw E.notFound('No active shift found');
 }
 
-async function getCurrentShift(staffId) {
-  const shift = await Shift.findOne({ staff_id: staffId, status: 'active' });
+// The shift the receptionist is working on right now: the session's shift first,
+// then the newest active shift of this staff member (never an arbitrary old one).
+async function resolveActiveShift(staff, session) {
+  if (session && session.shift_id) {
+    const sessionShift = await Shift.findById(session.shift_id);
+    if (
+      sessionShift &&
+      String(sessionShift.staff_id) === String(staff._id) &&
+      sessionShift.status === 'active'
+    ) {
+      return sessionShift;
+    }
+  }
+  return Shift.findOne({ staff_id: staff._id, status: 'active' }).sort({ start_at: -1 });
+}
+
+async function getCurrentShift(staff, session) {
+  const shift = await resolveActiveShift(staff, session);
   if (!shift) {
     throw E.notFound('No active shift.');
   }
@@ -367,10 +383,7 @@ async function buildSummary(shift) {
 }
 
 async function getShiftSummary(staff, session) {
-  let shift = await Shift.findOne({ staff_id: staff._id, status: 'active' });
-  if (!shift && session?.shift_id) {
-    shift = await Shift.findById(session.shift_id);
-  }
+  const shift = await resolveActiveShift(staff, session);
   if (!shift) {
     throw E.notFound('No active shift.');
   }
@@ -379,11 +392,7 @@ async function getShiftSummary(staff, session) {
 }
 
 async function handoverShift({ staff, session, shiftNotes, now = new Date(), ip }) {
-  let shift = await Shift.findOne({ staff_id: staff._id, status: 'active' });
-  if (!shift && session?.shift_id) {
-    const s = await Shift.findById(session.shift_id);
-    if (s && s.status === 'active') shift = s;
-  }
+  let shift = await resolveActiveShift(staff, session);
 
   if (!shift) {
     const closed = await Shift.findOne({ staff_id: staff._id, status: 'handed_over' }).sort({

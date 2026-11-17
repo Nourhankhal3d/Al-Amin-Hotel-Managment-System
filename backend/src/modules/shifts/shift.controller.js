@@ -2,7 +2,7 @@ const shiftService = require('./shift.service');
 const { getNow } = require('../../utils/clock');
 async function getCurrentShift(req, res, next) {
   try {
-    const shift = await shiftService.getCurrentShift(req.auth.staff._id);
+    const shift = await shiftService.getCurrentShift(req.auth.staff, req.auth.session);
     res.status(200).json(shift);
   } catch (err) {
     next(err);
