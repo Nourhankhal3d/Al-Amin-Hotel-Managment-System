@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   getShiftSummary,
   submitShiftHandover,
@@ -6,7 +6,7 @@ import {
 
 export const shiftSummaryKey = ['shift-handover', 'summary'] as const;
 
-// enabled=false بعد التسليم: الملخص بيفضل معروض من الكاش بدل ما يرجع 404
+// enabled=false after handover: the summary stays shown from the cache instead of returning 404
 export function useShiftSummary(enabled: boolean) {
   return useQuery({
     queryKey: shiftSummaryKey,
@@ -16,5 +16,13 @@ export function useShiftSummary(enabled: boolean) {
 }
 
 export function useHandoverShift() {
-  return useMutation({ mutationFn: submitShiftHandover });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: submitShiftHandover,
+    // The handover response is the closed shift: put it straight into the Sidebar's cache,
+    // so the logout warning disappears immediately.
+    onSuccess: (shift) => {
+      queryClient.setQueryData(['shift', 'current'], shift);
+    },
+  });
 }
