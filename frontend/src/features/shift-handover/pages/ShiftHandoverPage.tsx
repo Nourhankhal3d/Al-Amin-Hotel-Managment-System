@@ -161,7 +161,7 @@ export function ShiftHandoverPage() {
       {actions && (
         <>
      
-          <Button variant="gold" form="shift-handover-form" type="submit" disabled={isHandedOver || handover.isPending}>
+          <Button className="shift-handover__submit" variant="gold" form="shift-handover-form" type="submit" disabled={isHandedOver || handover.isPending}>
             <ArrowLeftRight aria-hidden="true" />
             {handover.isPending ? t('handoverPage.submitting') : isHandedOver ? t('handoverPage.submitted') : t('handoverPage.submit')}
           </Button>

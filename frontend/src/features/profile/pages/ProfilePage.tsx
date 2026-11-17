@@ -20,6 +20,8 @@ import { StatCard } from '../../../components/ui/StatCard';
 import { useToast } from '../../../components/ui/ToastContext';
 import { getAuthSession, clearAuthSession } from '../../../core/auth/authManager';
 import { logoutRequest } from '../../auth/services/auth.api';
+import { useCurrentShift } from '../../shift-handover/services/currentShift';
+import { ConfirmDialog } from '../../../components/common/ConfirmDialog';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { formatNumber, formatPercent } from '../../../utils/format';
@@ -40,6 +42,8 @@ export function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ ...contact });
   const [saving, setSaving] = useState(false);
+    const { data: currentShift } = useCurrentShift();
+  const [confirmingLogout, setConfirmingLogout] = useState(false);
 
   async function handleLogout() {
     try {
@@ -49,6 +53,11 @@ export function ProfilePage() {
     }
     clearAuthSession();
     navigate(ROUTES.login, { replace: true });
+  }
+
+    function requestLogout() {
+    if (currentShift?.status === 'active') setConfirmingLogout(true);
+    else void handleLogout();
   }
 
   function openEdit() {
@@ -178,9 +187,21 @@ export function ProfilePage() {
         <Button variant="secondary" onClick={() => navigate(ROUTES.settings)}><KeyRound aria-hidden="true" />{t('profilePage.actions.password')}</Button>
         <Button variant="secondary" onClick={() => navigate(ROUTES.settings)}><Bell aria-hidden="true" />{t('profilePage.actions.notifications')}</Button>
         <Button variant="secondary" onClick={() => navigate(ROUTES.login)}><ArrowLeftRight aria-hidden="true" />{t('profilePage.actions.switch')}</Button>
-        <Button variant="secondary" className="profile-actions__logout" onClick={handleLogout}><LogOut aria-hidden="true" />{t('profilePage.actions.logout')}</Button>
+        <Button variant="secondary" className="profile-actions__logout" onClick={requestLogout}><LogOut aria-hidden="true" />{t('profilePage.actions.logout')}</Button>
       </Card>
 
+      {confirmingLogout && (
+        <ConfirmDialog
+          variant="danger"
+          title={t('handoverPage.logoutWarnTitle')}
+          description={t('handoverPage.logoutWarnDesc')}
+          confirmLabel={t('handoverPage.logoutWarnConfirm')}
+          cancelLabel={t('handoverPage.logoutWarnStay')}
+          onConfirm={() => void handleLogout()}
+          onCancel={() => setConfirmingLogout(false)}
+        />
+      )}
+      
       {isEditing && (
         <div className="ui-drawer-backdrop" onClick={() => setIsEditing(false)}>
           <div className="ui-dialog figma-dialog profile-edit" role="dialog" aria-modal="true" aria-label={t('editProfile')} onClick={(event) => event.stopPropagation()}>
