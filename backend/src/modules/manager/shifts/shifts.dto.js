@@ -25,6 +25,8 @@ function toShiftDto(scheduleRow, actualShift = null, staff = null) {
     shift_type: scheduleRow.shift_type ? scheduleRow.shift_type.toUpperCase() : 'MORNING',
     start_at: scheduleRow.start_at ? new Date(scheduleRow.start_at).toISOString() : null,
     end_at: scheduleRow.end_at ? new Date(scheduleRow.end_at).toISOString() : null,
+    start_time: scheduleRow.start_at ? new Date(scheduleRow.start_at).toISOString() : null,
+    end_time: scheduleRow.end_at ? new Date(scheduleRow.end_at).toISOString() : null,
     status,
     cancel_reason: scheduleRow.cancel_reason || null,
     created_at: scheduleRow.createdAt ? new Date(scheduleRow.createdAt).toISOString() : null,

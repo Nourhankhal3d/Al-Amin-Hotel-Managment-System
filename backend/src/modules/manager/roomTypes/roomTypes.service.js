@@ -8,10 +8,13 @@ const { sanitizeText } = require('../../../utils/arabic');
 const { audit } = require('../../audit/audit.service');
 const { runInTransaction } = require('../../../utils/transaction');
 
-function toRoomTypeDto(type, agg = {}) {
+function toRoomTypeDto(type, agg = {}, rev = 0) {
   const roomsCount = agg.rooms_count || 0;
+  const occupiedCount = agg.occupied_count || 0;
+  const occupancyRate = roomsCount > 0 ? Math.round((occupiedCount / roomsCount) * 100) : 0;
   return {
     id: String(type._id),
+    room_type_id: String(type._id),
     name: type.name,
     description: type.description || '',
     base_price: toEgp(type.base_price),
@@ -20,6 +23,8 @@ function toRoomTypeDto(type, agg = {}) {
     rooms_count: roomsCount,
     price_min: roomsCount > 0 ? toEgp(agg.price_min) : toEgp(type.base_price),
     price_max: roomsCount > 0 ? toEgp(agg.price_max) : toEgp(type.base_price),
+    occupancy_rate_pct: occupancyRate,
+    revenue_month_to_date: toEgp(rev),
     is_active: type.is_active !== false,
   };
 }
@@ -32,6 +37,9 @@ async function listRoomTypes() {
         $group: {
           _id: '$room_type_id',
           rooms_count: { $sum: 1 },
+          occupied_count: {
+            $sum: { $cond: [{ $in: ['$status', ['occupied', 'reserved']] }, 1, 0] },
+          },
           price_min: { $min: '$price_per_night' },
           price_max: { $max: '$price_per_night' },
         },
@@ -59,6 +67,9 @@ async function getRoomType(id) {
       $group: {
         _id: '$room_type_id',
         rooms_count: { $sum: 1 },
+        occupied_count: {
+          $sum: { $cond: [{ $in: ['$status', ['occupied', 'reserved']] }, 1, 0] },
+        },
         price_min: { $min: '$price_per_night' },
         price_max: { $max: '$price_per_night' },
       },

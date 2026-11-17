@@ -9,6 +9,7 @@ const {
   Staff,
   LeaveRequest,
   Session,
+  ShiftReport,
 } = require('../../../db/models');
 const {
   ZONE,
@@ -107,12 +108,14 @@ async function getShiftOverview(businessDate) {
 
   await ensureBaseline(dateStr, dateStr);
 
-  const [schedules, actualShifts] = await Promise.all([
+  const [schedules, actualShifts, reports] = await Promise.all([
     ShiftSchedule.find({ shift_date: dateStr }).populate('staff_id', 'name department role').lean(),
     Shift.find({ shift_date: dateStr }).lean(),
+    ShiftReport.find({ shift_date: dateStr }).lean(),
   ]);
 
   const actualMap = new Map(actualShifts.map((a) => [`${String(a.staff_id)}|${a.shift_type}`, a]));
+  const reportMap = new Map(reports.map((r) => [r.shift_type ? r.shift_type.toLowerCase() : '', r]));
 
   const cards = [];
   const totals = { scheduled: 0, active: 0, completed: 0, cancelled: 0 };
@@ -156,6 +159,8 @@ async function getShiftOverview(businessDate) {
       cardStatus = 'COMPLETED';
     }
 
+    const report = reportMap.get(lowerType);
+
     cards.push({
       shift_type: type,
       start_at: win.start_at.toISOString(),
@@ -167,6 +172,12 @@ async function getShiftOverview(businessDate) {
       counts,
       coverage,
       staff: staffItems,
+      rooms_handled: report ? report.handled_rooms || 0 : 0,
+      gross_revenue: report ? report.gross_revenue || 0 : 0,
+      cleaning_tasks: report ? report.tasks_cleaning || 0 : 0,
+      maintenance_requests: report ? report.maintenance_requests || 0 : 0,
+      pending_items: report ? report.pending_items || 0 : 0,
+      report: report ? { report_id: String(report._id), review_status: report.review_status } : null,
     });
   }
 

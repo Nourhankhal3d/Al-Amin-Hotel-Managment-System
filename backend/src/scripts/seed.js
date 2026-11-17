@@ -218,7 +218,7 @@ async function seed() {
 
   // Link rooms to room types
   await Room.updateMany({ room_type: 'VIP' }, { $set: { room_type_id: vipType._id } });
-  await Room.updateMany({ room_type: 'Standard' }, { $set: { room_type_id: standardType._id } });
+  await Room.updateMany({ room_type: { $in: ['Standard', 'Normal'] } }, { $set: { room_type: 'Standard', room_type_id: standardType._id } });
 
   console.log('3. Seeding Staff accounts...');
   const staffData = [

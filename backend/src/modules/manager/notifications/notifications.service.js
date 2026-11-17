@@ -95,15 +95,24 @@ async function updatePreferences({ staffId, body }) {
     throw E.badRequest('At least one preference must be provided');
   }
 
+  const ALIAS_MAP = {
+    approval_requests: 'approval_request',
+    leave_requests: 'leave_request',
+    critical_complaints: 'critical_complaint',
+    shift_reports: 'shift_report_submitted',
+    system_alerts: 'system',
+  };
+
   const updateFields = {};
-  for (const key of Object.keys(body)) {
+  for (const rawKey of Object.keys(body)) {
+    const key = ALIAS_MAP[rawKey] || rawKey;
     if (!PREF_KEYS.includes(key)) {
       continue;
     }
-    if (typeof body[key] !== 'boolean') {
-      throw E.badRequest(`Preference '${key}' must be a boolean`);
+    if (typeof body[rawKey] !== 'boolean') {
+      throw E.badRequest(`Preference '${rawKey}' must be a boolean`);
     }
-    updateFields[`notification_prefs.${key}`] = body[key];
+    updateFields[`notification_prefs.${key}`] = body[rawKey];
   }
 
   if (Object.keys(updateFields).length === 0) {

@@ -33,17 +33,28 @@ let currentNotificationPreferences: ApiNotificationPreferences = {
 export const managerSettingsHandlers = [
   /**
    * Contract Sec 12:
-   * GET /api/v1/hotel-settings
+   * GET /api/v1/hotel-settings and /api/v1/manager/hotel-settings
    */
   http.get(`${API}/hotel-settings`, () => {
+    return HttpResponse.json({ data: currentHotelSettings });
+  }),
+  http.get(`${API}/manager/hotel-settings`, () => {
     return HttpResponse.json({ data: currentHotelSettings });
   }),
 
   /**
    * Contract Sec 12:
-   * PATCH /api/v1/hotel-settings
+   * PATCH /api/v1/hotel-settings and /api/v1/manager/hotel-settings
    */
   http.patch(`${API}/hotel-settings`, async ({ request }) => {
+    const payload = (await request.json().catch(() => ({}))) as Partial<ApiHotelSettings>;
+    currentHotelSettings = {
+      ...currentHotelSettings,
+      ...payload,
+    };
+    return HttpResponse.json({ data: currentHotelSettings });
+  }),
+  http.patch(`${API}/manager/hotel-settings`, async ({ request }) => {
     const payload = (await request.json().catch(() => ({}))) as Partial<ApiHotelSettings>;
     currentHotelSettings = {
       ...currentHotelSettings,
@@ -54,17 +65,29 @@ export const managerSettingsHandlers = [
 
   /**
    * Contract Sec 12:
-   * GET /api/v1/shift-settings
+   * GET /api/v1/shift-settings and /api/v1/manager/shift-settings
    */
   http.get(`${API}/shift-settings`, () => {
+    return HttpResponse.json({ data: currentShiftSettings });
+  }),
+  http.get(`${API}/manager/shift-settings`, () => {
     return HttpResponse.json({ data: currentShiftSettings });
   }),
 
   /**
    * Contract Sec 12:
-   * PATCH /api/v1/shift-settings
+   * PATCH /api/v1/shift-settings and /api/v1/manager/shift-settings
    */
   http.patch(`${API}/shift-settings`, async ({ request }) => {
+    const payload = (await request.json().catch(() => ({}))) as Partial<ApiShiftSettings>;
+    currentShiftSettings = {
+      morning: payload.morning ? { ...currentShiftSettings.morning, ...payload.morning } : currentShiftSettings.morning,
+      evening: payload.evening ? { ...currentShiftSettings.evening, ...payload.evening } : currentShiftSettings.evening,
+      night: payload.night ? { ...currentShiftSettings.night, ...payload.night } : currentShiftSettings.night,
+    };
+    return HttpResponse.json({ data: currentShiftSettings });
+  }),
+  http.patch(`${API}/manager/shift-settings`, async ({ request }) => {
     const payload = (await request.json().catch(() => ({}))) as Partial<ApiShiftSettings>;
     currentShiftSettings = {
       morning: payload.morning ? { ...currentShiftSettings.morning, ...payload.morning } : currentShiftSettings.morning,
@@ -76,17 +99,28 @@ export const managerSettingsHandlers = [
 
   /**
    * Contract Sec 12:
-   * GET /api/v1/notifications/preferences
+   * GET /api/v1/notifications/preferences and /api/v1/manager/notifications/preferences
    */
   http.get(`${API}/notifications/preferences`, () => {
+    return HttpResponse.json({ data: currentNotificationPreferences });
+  }),
+  http.get(`${API}/manager/notifications/preferences`, () => {
     return HttpResponse.json({ data: currentNotificationPreferences });
   }),
 
   /**
    * Contract Sec 12:
-   * PATCH /api/v1/notifications/preferences
+   * PATCH /api/v1/notifications/preferences and /api/v1/manager/notifications/preferences
    */
   http.patch(`${API}/notifications/preferences`, async ({ request }) => {
+    const payload = (await request.json().catch(() => ({}))) as Partial<ApiNotificationPreferences>;
+    currentNotificationPreferences = {
+      ...currentNotificationPreferences,
+      ...payload,
+    };
+    return HttpResponse.json({ data: currentNotificationPreferences });
+  }),
+  http.patch(`${API}/manager/notifications/preferences`, async ({ request }) => {
     const payload = (await request.json().catch(() => ({}))) as Partial<ApiNotificationPreferences>;
     currentNotificationPreferences = {
       ...currentNotificationPreferences,

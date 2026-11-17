@@ -5,6 +5,7 @@ export type EntityId = string;
 
 export interface RoomType {
   room_type_id: EntityId;
+  id?: EntityId;
   name: string;
   /** Default nightly tariff (EGP); each room keeps its own price_per_night */
   base_price: number;

@@ -11,8 +11,8 @@ export interface ApiHotelSettings {
 }
 
 export interface ApiShiftBoundary {
-  start: string;
-  end: string;
+  start: string | number;
+  end: string | number;
 }
 
 export interface ApiShiftSettings {
@@ -22,12 +22,17 @@ export interface ApiShiftSettings {
 }
 
 export interface ApiNotificationPreferences {
-  approval_requests: boolean;
-  leave_requests: boolean;
-  critical_maintenance: boolean;
-  critical_complaints: boolean;
-  shift_reports: boolean;
-  system_alerts: boolean;
+  approval_requests?: boolean;
+  leave_requests?: boolean;
+  critical_maintenance?: boolean;
+  critical_complaints?: boolean;
+  shift_reports?: boolean;
+  system_alerts?: boolean;
+  approval_request?: boolean;
+  leave_request?: boolean;
+  critical_complaint?: boolean;
+  shift_report_submitted?: boolean;
+  system?: boolean;
 }
 
 // ---------- UI View Models ----------

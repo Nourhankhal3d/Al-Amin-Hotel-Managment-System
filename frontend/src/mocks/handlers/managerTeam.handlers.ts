@@ -465,6 +465,26 @@ export const managerTeamHandlers = [
     return HttpResponse.json({ data: shiftView(shift) }, { status: 201 });
   }),
 
+  http.patch(`${API}/manager/shifts/:id`, async ({ params, request }) => {
+    await delay(300);
+    const shift = shifts.find((item) => item.shift_id === String(params.id));
+    if (!shift || shift.status === 'CANCELLED') return errorResponse('NOT_FOUND', 'Shift not found', 404);
+    if (shift.status !== 'SCHEDULED') return errorResponse('SHIFT_ALREADY_STARTED', 'Shift already started', 409);
+    const body = (await request.json()) as { shift_type?: ShiftType; staff_id?: string };
+    if (body.shift_type !== undefined && !SHIFT_TYPES.includes(body.shift_type)) return errorResponse('VALIDATION_ERROR', 'Invalid shift_type', 400);
+    Object.assign(shift, { shift_type: body.shift_type ?? shift.shift_type, staff_id: body.staff_id ?? shift.staff_id });
+    return HttpResponse.json({ data: shiftView(shift) });
+  }),
+
+  http.delete(`${API}/manager/shifts/:id`, async ({ params }) => {
+    await delay(300);
+    const shift = shifts.find((item) => item.shift_id === String(params.id));
+    if (!shift || shift.status === 'CANCELLED') return errorResponse('NOT_FOUND', 'Shift not found', 404);
+    if (shift.status !== 'SCHEDULED') return errorResponse('SHIFT_ALREADY_STARTED', 'Shift already started', 409);
+    shift.status = 'CANCELLED';
+    return HttpResponse.json({ data: shiftView(shift) });
+  }),
+
   http.patch(`${API}/shifts/:id`, async ({ params, request }) => {
     await delay(300);
     const shift = shifts.find((item) => item.shift_id === String(params.id));
@@ -544,7 +564,7 @@ export const managerTeamHandlers = [
 
   http.patch(`${API}/room-types/:id`, async ({ params, request }) => {
     await delay(300);
-    const type = roomTypes.find((item) => item.room_type_id === String(params.id));
+    const type = roomTypes.find((item) => item.room_type_id === String(params.id) || (item as any).id === String(params.id));
     if (!type) return errorResponse('NOT_FOUND', 'Room type not found', 404);
     const body = (await request.json()) as { base_price?: number; capacity?: number; description?: string; amenities?: unknown };
     if (body.base_price !== undefined && (!Number.isFinite(body.base_price) || body.base_price <= 0)) {

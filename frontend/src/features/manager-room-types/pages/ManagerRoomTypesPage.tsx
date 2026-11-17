@@ -35,7 +35,8 @@ export function ManagerRoomTypesPage() {
   );
 
   const isPricesOpen = searchParams.get(PARAM_PRICES) === '1';
-  const selectedType = roomTypes.find((type) => type.room_type_id === searchParams.get(PARAM_TYPE)) ?? null;
+  const typeParam = searchParams.get(PARAM_TYPE);
+  const selectedType = roomTypes.find((type) => type.room_type_id === typeParam || type.id === typeParam) ?? null;
 
   const setDrawer = (name: string | null, value?: string) => {
     setSearchParams((current) => {

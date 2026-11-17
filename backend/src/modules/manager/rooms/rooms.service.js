@@ -26,7 +26,11 @@ async function listRooms({ page = 1, limit = 100, floor, room_type_id, physical_
   }
   if (room_type_id) {
     if (mongoose.isValidObjectId(room_type_id)) {
-      filter.room_type_id = room_type_id;
+      const typeDoc = await RoomType.findById(room_type_id).lean();
+      filter.$or = [
+        { room_type_id },
+        ...(typeDoc ? [{ room_type: typeDoc.name }] : []),
+      ];
     }
   }
   if (q && q.trim()) {

@@ -83,7 +83,7 @@ app.use(
       ignorePaths: (p) =>
       /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests)/.test(p) ||
       MANAGER_PREFIX.test(p) ||
-      /^\/api\/v1\/(daily-closings|hotel-settings|shift-settings|shift-reports|room-types)/.test(p),
+      /^\/api\/v1\/(daily-closings|hotel-settings|shift-settings|shift-reports|room-types|staff|shifts\/overview|notifications)/.test(p),
   })
 );
 
@@ -102,8 +102,11 @@ app.use(
 // General rate limiter on all API endpoints
 app.use('/api/v1', generalRateLimiter);
 
+const managerAuth = [require('./middleware/auth').authenticate, require('./middleware/requireRole')('manager', 'admin')];
+
 // Module routes
 app.use('/api/v1/auth', require('./modules/auth/auth.routes'));
+app.get('/api/v1/shifts/overview', managerAuth, require('./modules/manager/shifts/shifts.controller').overview);
 app.use('/api/v1/shifts', require('./modules/shifts/shift.routes'));
 
 app.use('/api/v1/rooms', require('./modules/rooms/room.routes'));
@@ -118,12 +121,13 @@ app.use('/api/v1/leave-requests', require('./modules/manager/leaves/receptionist
 app.use('/api/v1/manager', require('./modules/manager'));
 
 // Frontend design & alias routes for manager services calling un-prefixed URLs
-const managerAuth = [require('./middleware/auth').authenticate, require('./middleware/requireRole')('manager', 'admin')];
 app.use('/api/v1/daily-closings', managerAuth, require('./modules/manager/finance/dailyClosings.routes'));
 app.use('/api/v1/hotel-settings', managerAuth, require('./modules/manager/settings/hotelSettings.routes'));
 app.use('/api/v1/shift-settings', managerAuth, require('./modules/manager/settings/shiftSettings.routes'));
 app.use('/api/v1/shift-reports', managerAuth, require('./modules/manager/shiftReports/shiftReports.routes'));
 app.use('/api/v1/room-types', managerAuth, require('./modules/manager/roomTypes/roomTypes.routes'));
+app.use('/api/v1/staff', managerAuth, require('./modules/manager/staff/staff.routes'));
+app.use('/api/v1/notifications', managerAuth, require('./modules/manager/notifications/notifications.routes'));
 if (env.nodeEnv === 'test') {
   app.post(
     '/api/v1/test-shift-write',
