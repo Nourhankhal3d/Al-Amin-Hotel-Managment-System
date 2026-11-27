@@ -23,7 +23,7 @@ const guestSurveySchema = new Schema(
     had_problem: { type: Boolean, required: true },
     problem_details: { type: String, default: null },
     suggestions: { type: String, default: null },
-    overall_rating: star,
+    overall_rating: { type: Number, required: true, min: 1, max: 5 },
     status: { type: String, enum: ['COMPLETED', 'PENDING_REVIEW'], default: 'COMPLETED' },
     staff_id: { type: Schema.Types.ObjectId, ref: 'Staff', required: true },
     shift_id: { type: Schema.Types.ObjectId, ref: 'Shift', required: true },

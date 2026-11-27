@@ -43,7 +43,6 @@ function validateBody(body) {
   if (!r || typeof r !== 'object' || !RATING_KEYS.every((k) => isStar(r[k]))) {
     throw E.validation('Every question needs 1 to 5 stars.');
   }
-  if (!isStar(b.overall_rating)) throw E.validation('Overall rating needs 1 to 5 stars.');
   if (typeof b.had_problem !== 'boolean') throw E.validation('had_problem must be true or false.');
 
   let problem = null;
@@ -65,7 +64,9 @@ function validateBody(body) {
 
   const ratings = {};
   RATING_KEYS.forEach((k) => { ratings[k] = r[k]; });
-  return { ratings, overall_rating: b.overall_rating, had_problem: b.had_problem, problem_details: problem, suggestions, status };
+  const avg = RATING_KEYS.reduce((sum, k) => sum + r[k], 0) / RATING_KEYS.length;
+  const overall_rating = Math.round(avg * 10) / 10;
+  return { ratings, overall_rating, had_problem: b.had_problem, problem_details: problem, suggestions, status };
 }
 
 async function createSurvey({ body, staff, shift, ip, now }) {
