@@ -71,7 +71,8 @@
     "shiftHandover": "Shift handover",
     "shiftReport": "Shift report",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "guestSurveys": "Guest surveys"
   },
   "dashboard": {
     "heroEyebrow": "GOOD MORNING",
@@ -1315,5 +1316,124 @@
       "change": "Change password",
       "soon": "Changing the password will be available through the server"
     }
+  },
+  "guestSurveys": {
+    "eyebrow": "Guest experience",
+    "title": "Guest satisfaction survey",
+    "description": "Record the guest's impression at check-out to help improve the service.",
+    "export": "Export",
+    "newSurvey": "New survey",
+    "loading": "Loading surveys...",
+    "loadError": "Could not load the surveys",
+    "retry": "Try again",
+    "stats": {
+      "total": "Surveys",
+      "average": "Average rating",
+      "complaints": "Complaints",
+      "suggestions": "Suggestions"
+    },
+    "searchPlaceholder": "Search by guest name or room number",
+    "listTitle": "Latest surveys",
+    "listSubtitle": "A short record of guests' impressions at check-out",
+    "averageBadge": "Average: {level}",
+    "levels": {
+      "excellent": "excellent",
+      "veryGood": "very good",
+      "good": "good",
+      "needsWork": "needs work"
+    },
+    "pageLabel": "Page {page} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "emptyTitle": "No results",
+    "emptyDescription": "No survey matches your search. Try another name or room number.",
+    "emptyNoSurveys": "No surveys yet",
+    "emptyNoSurveysHint": "Record the first survey when a guest checks out.",
+    "clearSearch": "Clear search",
+    "roomLabel": "Room {room}",
+    "openSurvey": "Open the survey of {guest}, room {room}",
+    "departure": {
+      "today": "Checks out today",
+      "yesterday": "Checked out yesterday",
+      "onDate": "Checked out {date}",
+      "unknown": "Check-out date unknown"
+    },
+    "statuses": {
+      "COMPLETED": "Completed",
+      "PENDING_REVIEW": "Pending review"
+    },
+    "roomTypes": {
+      "single": "Single",
+      "double": "Double",
+      "triple": "Triple",
+      "suite": "Suite",
+      "family": "Family",
+      "vip": "VIP"
+    },
+    "questions": {
+      "cleanliness": "How do you rate the room's cleanliness?",
+      "staff": "How do you rate the hotel staff?",
+      "speed": "How do you rate the speed of service?",
+      "room_quality": "How do you rate the room's quality?",
+      "check_in": "How was the check-in?",
+      "check_out": "How was the check-out?",
+      "stay_again": "Would you stay with us again?",
+      "recommend": "Would you recommend the hotel?"
+    },
+    "starLabel": "{value} of {max}",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "drawer": {
+      "eyebrow": "Check-out survey",
+      "newTitle": "New satisfaction survey",
+      "viewTitle": "Survey details",
+      "guestTitle": "Guest details",
+      "ratingsTitle": "Rate the stay",
+      "overallTitle": "Overall rating",
+      "overallHint": "The guest's impression of the whole stay",
+      "roomPlaceholder": "Type or pick the room number",
+      "roomNoResults": "No check-out for this room",
+      "problemPlaceholder": "Describe the problem the guest had...",
+      "suggestionsPlaceholder": "Write the guest's suggestions..."
+    },
+    "fields": {
+      "guest": "Guest name",
+      "room": "Room number",
+      "roomType": "Room type",
+      "checkIn": "Check-in date",
+      "checkOut": "Check-out date",
+      "hadProblem": "Did you have any problem during your stay?",
+      "problemDetails": "Problem details",
+      "suggestions": "Suggestions to improve the service",
+      "status": "Survey status",
+      "score": "Average rating"
+    },
+    "errors": {
+      "roomRequired": "Choose the room number",
+      "roomNoStay": "No guest is checking out of this room without a survey",
+      "ratingsRequired": "Rate every question from 1 to 5 stars",
+      "problemRequired": "Describe the problem",
+      "tooLong": "The text is longer than {max} characters",
+      "overallRequired": "Choose the overall rating"
+    },
+    "apiErrors": {
+      "CONFLICT": "This guest already has a survey.",
+      "NOT_FOUND": "This stay is no longer in the check-out list. Refresh the page and try again.",
+      "VALIDATION_ERROR": "Some answers are not valid. Check the survey and try again."
+    },
+    "toastSaved": "Survey of {guest} saved",
+    "toastExported": {
+      "one": "1 survey exported",
+      "two": "2 surveys exported",
+      "few": "{count} surveys exported",
+      "many": "{count} surveys exported"
+    },
+    "toastNothingToExport": "No surveys to export",
+    "departureTitle": "Check-out surveys",
+    "departureSubtitle": "Latest answers recorded during today’s shift"
   }
 }

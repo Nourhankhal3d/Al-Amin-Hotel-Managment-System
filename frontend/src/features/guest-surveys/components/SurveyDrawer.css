@@ -1,0 +1,185 @@
+/* "New survey" drawer: guest card, star questions, problem and suggestions, overall rating, status */
+.survey-form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.survey-form__card {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.survey-form__card:focus { outline: none; }
+
+.survey-form__card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.survey-form__card-title--green { color: var(--color-primary-dark); }
+.survey-form__card-title svg { width: 1.1rem; height: 1.1rem; color: var(--color-primary); }
+
+.survey-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.survey-form__tile {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-height: 4.25rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.survey-form__tile > span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.survey-form__tile strong { color: var(--color-ink); font-size: var(--font-size-sm); }
+
+.survey-form__tile p {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.survey-form__tile--wide { grid-column: 1 / -1; }
+
+.survey-form__tile--row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 0;
+}
+
+/* The room picker sits in the grid like the other tiles */
+.survey-form__grid .ui-combobox__label { color: var(--color-text-muted); font-size: var(--font-size-xs); }
+
+.survey-form__questions {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.survey-form__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-block-end: 1px solid var(--color-border);
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+}
+
+.survey-form__question:last-child { border-block-end: 0; }
+
+.survey-form__field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.survey-form__field > span:first-child {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.survey-form__field textarea {
+  width: 100%;
+  min-height: 5.5rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+}
+
+.survey-form__field textarea::placeholder { color: var(--color-text-muted); }
+.survey-form__field textarea:focus-visible { border-color: var(--color-primary); }
+.survey-form__field .survey-form__control--error { border-color: var(--color-danger); }
+
+.survey-form .ui-select__trigger {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+/* The shared drawer focus rule also rings the input inside the combobox; the combobox already rings its box */
+.survey-form .ui-combobox__control input:focus { box-shadow: none; }
+
+.survey-form__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}
+
+/* Overall rating: soft green box, as in the design */
+.survey-form__overall {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--color-primary-soft);
+  border-radius: var(--radius-panel);
+  background: var(--color-primary-softer);
+}
+
+.survey-form__overall:focus { outline: none; }
+
+.survey-form__overall h3 {
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-md);
+}
+
+.survey-form__overall p {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.survey-form__overall--error { border-color: var(--color-danger); }
+.survey-form__overall--error p { color: var(--color-danger); }
+
+/* Footer: "cancel" on the start side, wider "save" on the end side */
+.survey-form__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.survey-form__footer--single { grid-template-columns: 1fr; }
+
+.survey-form__footer .ui-button { min-height: 3.25rem; border-radius: var(--radius-card); }
+
+@media (max-width: 30rem) {
+  .survey-form__grid { grid-template-columns: 1fr; }
+  .survey-form__question { flex-direction: column; align-items: flex-start; }
+  .survey-form__overall { flex-direction: column; align-items: flex-start; }
+}

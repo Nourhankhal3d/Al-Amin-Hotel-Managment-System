@@ -71,7 +71,8 @@
     "shiftHandover": "الوردية والتسليم",
     "shiftReport": "تقرير الوردية",
     "profile": "الملف الشخصي",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "guestSurveys": "استبيان رضا النزلاء"
   },
   "dashboard": {
     "heroEyebrow": "صباح الخير",
@@ -1316,5 +1317,124 @@
       "change": "تغيير كلمة المرور",
       "soon": "تغيير كلمة المرور سيتاح عبر الخادم"
     }
+  },
+  "guestSurveys": {
+    "eyebrow": "تجربة النزيل",
+    "title": "استبيان رضا النزلاء",
+    "description": "سجّل انطباع النزيل عند المغادرة للمساعدة في تحسين جودة الخدمة.",
+    "export": "تصدير",
+    "newSurvey": "استبيان جديد",
+    "loading": "جارٍ تحميل الاستبيانات...",
+    "loadError": "تعذّر تحميل الاستبيانات",
+    "retry": "إعادة المحاولة",
+    "stats": {
+      "total": "عدد الاستبيانات",
+      "average": "متوسط التقييم",
+      "complaints": "عدد الشكاوى",
+      "suggestions": "عدد الاقتراحات"
+    },
+    "searchPlaceholder": "ابحث باسم النزيل أو رقم الغرفة",
+    "listTitle": "آخر الاستبيانات",
+    "listSubtitle": "سجل مختصر لانطباعات النزلاء عند المغادرة",
+    "averageBadge": "متوسط {level}",
+    "levels": {
+      "excellent": "ممتاز",
+      "veryGood": "جيد جدًا",
+      "good": "جيد",
+      "needsWork": "يحتاج تحسين"
+    },
+    "pageLabel": "صفحة {page} من {total}",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "emptyTitle": "لا توجد نتائج",
+    "emptyDescription": "لا يوجد استبيان يطابق البحث. جرّب اسمًا أو رقم غرفة آخر.",
+    "emptyNoSurveys": "لا توجد استبيانات بعد",
+    "emptyNoSurveysHint": "سجّل أول استبيان عند مغادرة النزيل.",
+    "clearSearch": "مسح البحث",
+    "roomLabel": "غرفة {room}",
+    "openSurvey": "فتح استبيان {guest}، غرفة {room}",
+    "departure": {
+      "today": "مغادرة اليوم",
+      "yesterday": "مغادرة أمس",
+      "onDate": "مغادرة {date}",
+      "unknown": "تاريخ المغادرة غير معروف"
+    },
+    "statuses": {
+      "COMPLETED": "مكتمل",
+      "PENDING_REVIEW": "بانتظار المراجعة"
+    },
+    "roomTypes": {
+      "single": "مفردة",
+      "double": "مزدوجة",
+      "triple": "ثلاثية",
+      "suite": "جناح",
+      "family": "عائلية",
+      "vip": "VIP"
+    },
+    "questions": {
+      "cleanliness": "كيف تقيم نظافة الغرفة؟",
+      "staff": "كيف تقيم تعامل موظفي الفندق؟",
+      "speed": "كيف تقيم سرعة الخدمة؟",
+      "room_quality": "كيف تقيم جودة الغرفة؟",
+      "check_in": "كيف كانت تجربة تسجيل الدخول؟",
+      "check_out": "كيف كانت تجربة تسجيل المغادرة؟",
+      "stay_again": "هل ستقيم في الفندق مرة أخرى؟",
+      "recommend": "هل سترشح الفندق لأحد؟"
+    },
+    "starLabel": "{value} من {max}",
+    "yes": "نعم",
+    "no": "لا",
+    "close": "إغلاق",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ...",
+    "drawer": {
+      "eyebrow": "استبيان المغادرة",
+      "newTitle": "استبيان رضا جديد",
+      "viewTitle": "تفاصيل الاستبيان",
+      "guestTitle": "بيانات النزيل",
+      "ratingsTitle": "تقييم تفاصيل الإقامة",
+      "overallTitle": "التقييم العام",
+      "overallHint": "انطباع النزيل عن الإقامة بالكامل",
+      "roomPlaceholder": "اكتب رقم الغرفة أو اختره",
+      "roomNoResults": "لا توجد مغادرة لهذه الغرفة",
+      "problemPlaceholder": "صف المشكلة التي واجهها النزيل...",
+      "suggestionsPlaceholder": "دوّن اقتراحات النزيل..."
+    },
+    "fields": {
+      "guest": "اسم النزيل",
+      "room": "رقم الغرفة",
+      "roomType": "نوع الغرفة",
+      "checkIn": "تاريخ الوصول",
+      "checkOut": "تاريخ المغادرة",
+      "hadProblem": "هل واجهت أي مشكلة أثناء الإقامة؟",
+      "problemDetails": "تفاصيل المشكلة",
+      "suggestions": "اقتراحات لتحسين الخدمة",
+      "status": "حالة الاستبيان",
+      "score": "متوسط التقييم"
+    },
+    "errors": {
+      "roomRequired": "اختر رقم الغرفة",
+      "roomNoStay": "لا يوجد نزيل يغادر من هذه الغرفة بدون استبيان",
+      "ratingsRequired": "قيّم كل الأسئلة من نجمة إلى ٥ نجوم",
+      "problemRequired": "اكتب تفاصيل المشكلة",
+      "tooLong": "النص أطول من {max} حرف",
+      "overallRequired": "اختر التقييم العام"
+    },
+    "apiErrors": {
+      "CONFLICT": "هذا النزيل لديه استبيان بالفعل.",
+      "NOT_FOUND": "لم تعد هذه الإقامة في قائمة المغادرة. حدّث الصفحة وحاول مرة أخرى.",
+      "VALIDATION_ERROR": "بعض البيانات غير صحيحة. راجع الاستبيان وحاول مرة أخرى."
+    },
+    "toastSaved": "تم حفظ استبيان {guest}",
+    "toastExported": {
+      "one": "تم تصدير استبيان واحد",
+      "two": "تم تصدير استبيانين",
+      "few": "تم تصدير {count} استبيانات",
+      "many": "تم تصدير {count} استبيانًا"
+    },
+    "toastNothingToExport": "لا توجد استبيانات لتصديرها",
+    "departureTitle": "استبيانات المغادرة",
+    "departureSubtitle": "آخر الإجابات المسجلة خلال وردية اليوم"
   }
 }
