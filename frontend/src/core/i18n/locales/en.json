@@ -74,7 +74,8 @@
     "shiftHandover": "Shift handover",
     "shiftReport": "Shift report",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "guestSurveys": "Guest surveys"
   },
   "dashboard": {
     "heroEyebrow": "GOOD MORNING",
@@ -1195,7 +1196,9 @@
         "shifts": "Shifts Overview",
         "roomTypes": "Room Types",
         "profile": "Profile",
-        "settings": "Settings"
+        "settings": "Settings",
+        "aiAssistant": "AI assistant",
+        "aiRecommendations": "Smart recommendations"
       },
       "statusCard": {
         "title": "Hotel Operating Now",
@@ -2769,6 +2772,166 @@
         "VALIDATION_ERROR": "Some details are missing or invalid. Check the amount and the notes.",
         "CONFLICT": "The refund couldn't be recorded: either nothing is left to refund on this booking, or no front-desk shift is open to record it. Check the booking and try again."
       }
+    },
+    "aiRecommendations": {
+      "eyebrow": "Operational insights",
+      "title": "Smart recommendations",
+      "description": "AI recommendations that help management rank what to improve first.",
+      "export": "Export",
+      "refresh": "Refresh recommendations",
+      "refreshing": "Refreshing...",
+      "loading": "Loading recommendations...",
+      "loadError": "Could not load the recommendations",
+      "retry": "Try again",
+      "stats": {
+        "total": "Recommendations",
+        "high": "High priority",
+        "medium": "Medium priority",
+        "low": "Low priority"
+      },
+      "listTitle": "Operational recommendations",
+      "listSubtitle": "Sorted by priority and expected impact",
+      "filterLabel": "Filter by department",
+      "all": "All",
+      "categories": {
+        "HOUSEKEEPING": "Housekeeping",
+        "MAINTENANCE": "Maintenance",
+        "FRONT_DESK": "Front desk",
+        "FINANCE": "Finance",
+        "GUEST_SATISFACTION": "Guest satisfaction",
+        "ROOM_MANAGEMENT": "Room management"
+      },
+      "priorities": {
+        "HIGH": "High priority",
+        "MEDIUM": "Medium priority",
+        "LOW": "Low priority"
+      },
+      "reviewStatuses": {
+        "NEW": "New",
+        "REVIEWED": "Reviewed",
+        "LATER": "Later"
+      },
+      "fields": {
+        "reason": "Reason",
+        "expectedBenefit": "Expected benefit",
+        "summary": "Summary",
+        "reasonFull": "Why this recommendation",
+        "supportingStats": "Supporting numbers",
+        "suggestedActions": "Suggested actions",
+        "expectedResult": "Expected result",
+        "managerNotes": "Manager notes",
+        "priority": "Priority",
+        "category": "Department",
+        "title": "Recommendation",
+        "reviewStatus": "Review status"
+      },
+      "viewDetails": "View details",
+      "openRecommendation": "View details: {title}",
+      "drawerEyebrow": "Recommendation details",
+      "close": "Close",
+      "later": "Later",
+      "markReviewed": "Mark as reviewed",
+      "saving": "Saving...",
+      "notesPlaceholder": "Add your notes about this recommendation...",
+      "errors": {
+        "notesTooLong": "Notes are longer than {max} characters"
+      },
+      "emptyAll": "No recommendations right now",
+      "emptyAllHint": "Refresh so the assistant reads the hotel's latest numbers.",
+      "emptyCategory": "No recommendations in this department",
+      "emptyCategoryHint": "Pick another department or show all.",
+      "toastRefreshed": {
+        "one": "Refreshed: 1 recommendation",
+        "two": "Refreshed: 2 recommendations",
+        "few": "Refreshed: {count} recommendations",
+        "many": "Refreshed: {count} recommendations"
+      },
+      "toastReviewed": "Recommendation marked as reviewed",
+      "toastLater": "Recommendation left for later",
+      "toastExported": {
+        "one": "1 recommendation exported",
+        "two": "2 recommendations exported",
+        "few": "{count} recommendations exported",
+        "many": "{count} recommendations exported"
+      },
+      "toastNothingToExport": "No recommendations to export",
+      "apiErrors": {
+        "AI_UNAVAILABLE": "The AI assistant is not available right now. The saved recommendations are still shown; try again later.",
+        "NOT_FOUND": "This recommendation no longer exists. Refresh the recommendations.",
+        "VALIDATION_ERROR": "Some data is not valid. Check it and try again."
+      }
+    },
+    "aiAssistant": {
+      "eyebrow": "Management tools",
+      "title": "AI assistant",
+      "description": "A quick way to understand the hotel's state from its daily data.",
+      "exportButton": "Export",
+      "newConversation": "New conversation",
+      "loading": "Loading the assistant...",
+      "loadError": "Could not load the conversations",
+      "retry": "Try again",
+      "stats": {
+        "occupied": "Occupied rooms",
+        "available": "Available rooms",
+        "maintenance": "Maintenance requests",
+        "cleaning": "Cleaning requests",
+        "revenue": "Revenue",
+        "satisfaction": "Guest satisfaction"
+      },
+      "chatTitle": "AI assistant",
+      "ready": "Ready to help",
+      "loadingConversation": "Loading the conversation...",
+      "welcomeTitle": "How can I help today?",
+      "welcomeText": "Ask about occupancy, cleaning, maintenance, revenue or guest complaints, or pick a suggested question.",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thinking": "Reading the hotel's data...",
+      "prompts": {
+        "complaints": "What are the main guest complaints?",
+        "waitingCleaning": "Are there rooms waiting for cleaning?",
+        "needMaintenance": "Are there rooms that need maintenance?",
+        "vacantRooms": "How many rooms are available?",
+        "shiftsSummary": "Today's shifts summary",
+        "revenueSummary": "Today's revenue summary",
+        "topIssues": "What are the main current issues?",
+        "occupiedRooms": "How many rooms are occupied?"
+      },
+      "inputLabel": "Your question",
+      "inputPlaceholder": "Ask about hotel operations...",
+      "send": "Send",
+      "errors": {
+        "tooLong": "The question is longer than {max} characters"
+      },
+      "recentTitle": "Recent conversations",
+      "recentSubtitle": "Management questions saved today",
+      "noConversations": "No conversations yet",
+      "todayTitle": "Today's questions",
+      "questionsCount": {
+        "one": "1 question",
+        "two": "2 questions",
+        "few": "{count} questions",
+        "many": "{count} questions"
+      },
+      "conversationsCount": {
+        "one": "1 conversation",
+        "two": "2 conversations",
+        "few": "{count} conversations",
+        "many": "{count} conversations"
+      },
+      "quickTitle": "Quick suggestions",
+      "export": {
+        "sender": "Sender",
+        "manager": "Manager",
+        "time": "Time",
+        "message": "Message"
+      },
+      "toastExported": "Conversation “{title}” exported",
+      "toastNothingToExport": "No messages to export",
+      "apiErrors": {
+        "AI_UNAVAILABLE": "The AI assistant is not available right now. Try sending the question again shortly.",
+        "NOT_FOUND": "This conversation no longer exists. Start a new one.",
+        "VALIDATION_ERROR": "The question is not valid. Write it again."
+      }
     }
   },
   "submanager": {
@@ -3257,5 +3420,124 @@
         "en": "English"
       }
     }
+  },
+  "guestSurveys": {
+    "eyebrow": "Guest experience",
+    "title": "Guest satisfaction survey",
+    "description": "Record the guest's impression at check-out to help improve the service.",
+    "export": "Export",
+    "newSurvey": "New survey",
+    "loading": "Loading surveys...",
+    "loadError": "Could not load the surveys",
+    "retry": "Try again",
+    "stats": {
+      "total": "Surveys",
+      "average": "Average rating",
+      "complaints": "Complaints",
+      "suggestions": "Suggestions"
+    },
+    "searchPlaceholder": "Search by guest name or room number",
+    "listTitle": "Latest surveys",
+    "listSubtitle": "A short record of guests' impressions at check-out",
+    "averageBadge": "Average: {level}",
+    "levels": {
+      "excellent": "excellent",
+      "veryGood": "very good",
+      "good": "good",
+      "needsWork": "needs work"
+    },
+    "pageLabel": "Page {page} of {total}",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "emptyTitle": "No results",
+    "emptyDescription": "No survey matches your search. Try another name or room number.",
+    "emptyNoSurveys": "No surveys yet",
+    "emptyNoSurveysHint": "Record the first survey when a guest checks out.",
+    "clearSearch": "Clear search",
+    "roomLabel": "Room {room}",
+    "openSurvey": "Open the survey of {guest}, room {room}",
+    "departure": {
+      "today": "Checks out today",
+      "yesterday": "Checked out yesterday",
+      "onDate": "Checked out {date}",
+      "unknown": "Check-out date unknown"
+    },
+    "statuses": {
+      "COMPLETED": "Completed",
+      "PENDING_REVIEW": "Pending review"
+    },
+    "roomTypes": {
+      "single": "Single",
+      "double": "Double",
+      "triple": "Triple",
+      "suite": "Suite",
+      "family": "Family",
+      "vip": "VIP"
+    },
+    "questions": {
+      "cleanliness": "How do you rate the room's cleanliness?",
+      "staff": "How do you rate the hotel staff?",
+      "speed": "How do you rate the speed of service?",
+      "room_quality": "How do you rate the room's quality?",
+      "check_in": "How was the check-in?",
+      "check_out": "How was the check-out?",
+      "stay_again": "Would you stay with us again?",
+      "recommend": "Would you recommend the hotel?"
+    },
+    "starLabel": "{value} of {max}",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "drawer": {
+      "eyebrow": "Check-out survey",
+      "newTitle": "New satisfaction survey",
+      "viewTitle": "Survey details",
+      "guestTitle": "Guest details",
+      "ratingsTitle": "Rate the stay",
+      "overallTitle": "Overall rating",
+      "overallHint": "The guest's impression of the whole stay",
+      "roomPlaceholder": "Type or pick the room number",
+      "roomNoResults": "No check-out for this room",
+      "problemPlaceholder": "Describe the problem the guest had...",
+      "suggestionsPlaceholder": "Write the guest's suggestions..."
+    },
+    "fields": {
+      "guest": "Guest name",
+      "room": "Room number",
+      "roomType": "Room type",
+      "checkIn": "Check-in date",
+      "checkOut": "Check-out date",
+      "hadProblem": "Did you have any problem during your stay?",
+      "problemDetails": "Problem details",
+      "suggestions": "Suggestions to improve the service",
+      "status": "Survey status",
+      "score": "Average rating"
+    },
+    "errors": {
+      "roomRequired": "Choose the room number",
+      "roomNoStay": "No guest is checking out of this room without a survey",
+      "ratingsRequired": "Rate every question from 1 to 5 stars",
+      "problemRequired": "Describe the problem",
+      "tooLong": "The text is longer than {max} characters",
+      "overallRequired": "Choose the overall rating"
+    },
+    "apiErrors": {
+      "CONFLICT": "This guest already has a survey.",
+      "NOT_FOUND": "This stay is no longer in the check-out list. Refresh the page and try again.",
+      "VALIDATION_ERROR": "Some answers are not valid. Check the survey and try again."
+    },
+    "toastSaved": "Survey of {guest} saved",
+    "toastExported": {
+      "one": "1 survey exported",
+      "two": "2 surveys exported",
+      "few": "{count} surveys exported",
+      "many": "{count} surveys exported"
+    },
+    "toastNothingToExport": "No surveys to export",
+    "departureTitle": "Check-out surveys",
+    "departureSubtitle": "Latest answers recorded during today’s shift"
   }
 }

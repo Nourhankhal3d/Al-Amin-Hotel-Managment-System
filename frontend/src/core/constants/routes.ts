@@ -7,6 +7,7 @@ export const ROUTES = {
   payments: '/payments',
   shiftHandover: '/shift-handover',
   shiftReport: '/shift-report',
+  guestSurveys: '/guest-surveys',
   profile: '/profile',
   settings: '/settings',
 
@@ -21,6 +22,8 @@ export const ROUTES = {
   managerRefunds: '/manager/refunds',
   managerPasswordRequests: '/manager/password-requests',
   managerShifts: '/manager/shifts',
+  managerAiAssistant: '/manager/ai-assistant',
+  managerAiRecommendations: '/manager/ai-recommendations',
   managerRoomTypes: '/manager/room-types',
   managerProfile: '/manager/profile',
   managerSettings: '/manager/settings',

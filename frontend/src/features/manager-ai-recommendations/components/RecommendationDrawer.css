@@ -1,0 +1,81 @@
+/* Head card: priority badge, then the recommendation title */
+.ai-rec-details__head {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+
+.ai-rec-details__head strong {
+  color: var(--color-ink);
+  font-size: var(--font-size-md);
+  line-height: 1.6;
+}
+
+/* Supporting numbers: small rows with a document icon on a soft background */
+.ai-rec-details__card {
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+}
+
+.ai-rec-details__stats {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ai-rec-details__stats li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+  color: var(--color-text-muted);
+  background: var(--color-gold-soft);
+  font-size: var(--font-size-xs);
+}
+
+.ai-rec-details__stats svg { flex: 0 0 1.1rem; width: 1.1rem; height: 1.1rem; color: var(--color-gold-ink); }
+
+.ai-rec-details__actions {
+  display: grid;
+  gap: var(--space-2);
+  padding-inline-start: var(--space-8, 2rem);
+}
+
+/* Expected result: soft green box with a check, as in the design */
+.ai-rec-details__result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--color-primary-soft);
+}
+
+.ai-rec-details__result > span { display: grid; gap: var(--space-1); }
+.ai-rec-details__result small { color: var(--color-text-muted); font-size: var(--font-size-xs); }
+.ai-rec-details__result strong { color: var(--color-primary-dark); font-size: var(--font-size-sm); }
+.ai-rec-details__result svg { flex: 0 0 1.25rem; width: 1.25rem; height: 1.25rem; color: var(--color-primary); }
+
+.ai-rec-details__field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ai-rec-details__label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.ai-rec-details__control--error { border-color: var(--color-danger); }
+
+.ai-rec-details__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}

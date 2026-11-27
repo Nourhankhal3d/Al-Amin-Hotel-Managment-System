@@ -74,7 +74,8 @@
     "shiftHandover": "الوردية والتسليم",
     "shiftReport": "تقرير الوردية",
     "profile": "الملف الشخصي",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "guestSurveys": "استبيان رضا النزلاء"
   },
   "dashboard": {
     "heroEyebrow": "صباح الخير",
@@ -1195,7 +1196,9 @@
         "shifts": "نظرة عامة على الورديات",
         "roomTypes": "أنواع الغرف",
         "profile": "الملف الشخصي",
-        "settings": "الإعدادات"
+        "settings": "الإعدادات",
+        "aiAssistant": "المساعد الذكي",
+        "aiRecommendations": "التوصيات الذكية"
       },
       "statusCard": {
         "title": "الفندق يعمل الآن",
@@ -2813,6 +2816,166 @@
         "VALIDATION_ERROR": "بعض البيانات ناقصة أو غير صحيحة، راجع المبلغ والملاحظات.",
         "CONFLICT": "تعذّر تسجيل الاسترداد: إما أنه لم يتبقَّ مبلغ قابل للاسترداد في هذا الحجز، أو لا توجد وردية استقبال مفتوحة لتسجيله. راجع الحجز وحاول مرة أخرى."
       }
+    },
+    "aiRecommendations": {
+      "eyebrow": "رؤى تشغيلية",
+      "title": "التوصيات الذكية",
+      "description": "توصيات ذكية تساعد الإدارة على ترتيب فرص التحسين والتشغيل.",
+      "export": "تصدير",
+      "refresh": "تحديث التوصيات",
+      "refreshing": "جارٍ التحديث...",
+      "loading": "جارٍ تحميل التوصيات...",
+      "loadError": "تعذّر تحميل التوصيات",
+      "retry": "إعادة المحاولة",
+      "stats": {
+        "total": "عدد التوصيات",
+        "high": "عالية الأولوية",
+        "medium": "متوسطة الأولوية",
+        "low": "منخفضة الأولوية"
+      },
+      "listTitle": "التوصيات التشغيلية",
+      "listSubtitle": "مرتبة حسب الأولوية والتأثير المتوقع",
+      "filterLabel": "تصفية حسب القسم",
+      "all": "الكل",
+      "categories": {
+        "HOUSEKEEPING": "النظافة",
+        "MAINTENANCE": "الصيانة",
+        "FRONT_DESK": "الاستقبال",
+        "FINANCE": "الشؤون المالية",
+        "GUEST_SATISFACTION": "رضا النزلاء",
+        "ROOM_MANAGEMENT": "إدارة الغرف"
+      },
+      "priorities": {
+        "HIGH": "عالية الأولوية",
+        "MEDIUM": "متوسطة الأولوية",
+        "LOW": "منخفضة الأولوية"
+      },
+      "reviewStatuses": {
+        "NEW": "جديدة",
+        "REVIEWED": "تمت المراجعة",
+        "LATER": "مؤجلة"
+      },
+      "fields": {
+        "reason": "السبب",
+        "expectedBenefit": "الفائدة المتوقعة",
+        "summary": "ملخص التوصية",
+        "reasonFull": "سبب التوصية",
+        "supportingStats": "إحصائيات داعمة",
+        "suggestedActions": "الإجراءات المقترحة",
+        "expectedResult": "النتيجة المتوقعة",
+        "managerNotes": "ملاحظات المدير",
+        "priority": "الأولوية",
+        "category": "القسم",
+        "title": "التوصية",
+        "reviewStatus": "حالة المراجعة"
+      },
+      "viewDetails": "عرض التفاصيل",
+      "openRecommendation": "عرض تفاصيل التوصية: {title}",
+      "drawerEyebrow": "تفاصيل التوصية",
+      "close": "إغلاق",
+      "later": "لاحقًا",
+      "markReviewed": "تمت المراجعة",
+      "saving": "جارٍ الحفظ...",
+      "notesPlaceholder": "أضف ملاحظاتك حول التوصية...",
+      "errors": {
+        "notesTooLong": "الملاحظات أطول من {max} حرف"
+      },
+      "emptyAll": "لا توجد توصيات الآن",
+      "emptyAllHint": "حدّث التوصيات ليقرأ المساعد الذكي أحدث بيانات الفندق.",
+      "emptyCategory": "لا توجد توصيات في هذا القسم",
+      "emptyCategoryHint": "اختر قسمًا آخر أو اعرض كل التوصيات.",
+      "toastRefreshed": {
+        "one": "تم التحديث: توصية واحدة",
+        "two": "تم التحديث: توصيتان",
+        "few": "تم التحديث: {count} توصيات",
+        "many": "تم التحديث: {count} توصية"
+      },
+      "toastReviewed": "تم تسجيل التوصية كمراجَعة",
+      "toastLater": "تم تأجيل التوصية",
+      "toastExported": {
+        "one": "تم تصدير توصية واحدة",
+        "two": "تم تصدير توصيتين",
+        "few": "تم تصدير {count} توصيات",
+        "many": "تم تصدير {count} توصية"
+      },
+      "toastNothingToExport": "لا توجد توصيات لتصديرها",
+      "apiErrors": {
+        "AI_UNAVAILABLE": "المساعد الذكي غير متاح الآن. التوصيات المحفوظة ما زالت معروضة، حاول التحديث لاحقًا.",
+        "NOT_FOUND": "لم تعد هذه التوصية موجودة. حدّث التوصيات.",
+        "VALIDATION_ERROR": "بعض البيانات غير صحيحة. راجعها وحاول مرة أخرى."
+      }
+    },
+    "aiAssistant": {
+      "eyebrow": "أدوات الإدارة",
+      "title": "المساعد الذكي",
+      "description": "واجهة سريعة لفهم حالة الفندق من خلال بياناته اليومية.",
+      "exportButton": "تصدير",
+      "newConversation": "محادثة جديدة",
+      "loading": "جارٍ تحميل المساعد...",
+      "loadError": "تعذّر تحميل المحادثات",
+      "retry": "إعادة المحاولة",
+      "stats": {
+        "occupied": "الغرف المشغولة",
+        "available": "الغرف المتاحة",
+        "maintenance": "طلبات الصيانة",
+        "cleaning": "طلبات التنظيف",
+        "revenue": "الإيرادات",
+        "satisfaction": "رضا النزلاء"
+      },
+      "chatTitle": "المساعد الذكي",
+      "ready": "جاهز للمساعدة",
+      "loadingConversation": "جارٍ تحميل المحادثة...",
+      "welcomeTitle": "كيف أساعدك اليوم؟",
+      "welcomeText": "اسأل عن الإشغال أو التنظيف أو الصيانة أو الإيرادات أو شكاوى النزلاء، أو اختر سؤالًا من الاقتراحات.",
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "thinking": "جارٍ تحليل بيانات الفندق...",
+      "prompts": {
+        "complaints": "ما أبرز شكاوى النزلاء؟",
+        "waitingCleaning": "هل توجد غرف بانتظار التنظيف؟",
+        "needMaintenance": "هل توجد غرف تحتاج صيانة؟",
+        "vacantRooms": "كم عدد الغرف الفارغة؟",
+        "shiftsSummary": "ملخص ورديات اليوم",
+        "revenueSummary": "ملخص إيرادات اليوم",
+        "topIssues": "ما أهم المشاكل الحالية؟",
+        "occupiedRooms": "كم عدد الغرف المشغولة؟"
+      },
+      "inputLabel": "سؤالك",
+      "inputPlaceholder": "اكتب سؤالك عن عمليات الفندق...",
+      "send": "إرسال",
+      "errors": {
+        "tooLong": "السؤال أطول من {max} حرف"
+      },
+      "recentTitle": "المحادثات الأخيرة",
+      "recentSubtitle": "أسئلة الإدارة المحفوظة اليوم",
+      "noConversations": "لا توجد محادثات بعد",
+      "todayTitle": "أسئلة اليوم",
+      "questionsCount": {
+        "one": "سؤال واحد",
+        "two": "سؤالان",
+        "few": "{count} أسئلة",
+        "many": "{count} سؤالًا"
+      },
+      "conversationsCount": {
+        "one": "محادثة واحدة",
+        "two": "محادثتان",
+        "few": "{count} محادثات",
+        "many": "{count} محادثة"
+      },
+      "quickTitle": "اقتراحات سريعة",
+      "export": {
+        "sender": "المرسل",
+        "manager": "المدير",
+        "time": "الوقت",
+        "message": "الرسالة"
+      },
+      "toastExported": "تم تصدير محادثة «{title}»",
+      "toastNothingToExport": "لا توجد رسائل لتصديرها",
+      "apiErrors": {
+        "AI_UNAVAILABLE": "المساعد الذكي غير متاح الآن. حاول إرسال السؤال بعد قليل.",
+        "NOT_FOUND": "لم تعد هذه المحادثة موجودة. ابدأ محادثة جديدة.",
+        "VALIDATION_ERROR": "السؤال غير صالح. اكتبه مرة أخرى."
+      }
     }
   },
   "submanager": {
@@ -3301,5 +3464,124 @@
         "en": "English"
       }
     }
+  },
+  "guestSurveys": {
+    "eyebrow": "تجربة النزيل",
+    "title": "استبيان رضا النزلاء",
+    "description": "سجّل انطباع النزيل عند المغادرة للمساعدة في تحسين جودة الخدمة.",
+    "export": "تصدير",
+    "newSurvey": "استبيان جديد",
+    "loading": "جارٍ تحميل الاستبيانات...",
+    "loadError": "تعذّر تحميل الاستبيانات",
+    "retry": "إعادة المحاولة",
+    "stats": {
+      "total": "عدد الاستبيانات",
+      "average": "متوسط التقييم",
+      "complaints": "عدد الشكاوى",
+      "suggestions": "عدد الاقتراحات"
+    },
+    "searchPlaceholder": "ابحث باسم النزيل أو رقم الغرفة",
+    "listTitle": "آخر الاستبيانات",
+    "listSubtitle": "سجل مختصر لانطباعات النزلاء عند المغادرة",
+    "averageBadge": "متوسط {level}",
+    "levels": {
+      "excellent": "ممتاز",
+      "veryGood": "جيد جدًا",
+      "good": "جيد",
+      "needsWork": "يحتاج تحسين"
+    },
+    "pageLabel": "صفحة {page} من {total}",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "emptyTitle": "لا توجد نتائج",
+    "emptyDescription": "لا يوجد استبيان يطابق البحث. جرّب اسمًا أو رقم غرفة آخر.",
+    "emptyNoSurveys": "لا توجد استبيانات بعد",
+    "emptyNoSurveysHint": "سجّل أول استبيان عند مغادرة النزيل.",
+    "clearSearch": "مسح البحث",
+    "roomLabel": "غرفة {room}",
+    "openSurvey": "فتح استبيان {guest}، غرفة {room}",
+    "departure": {
+      "today": "مغادرة اليوم",
+      "yesterday": "مغادرة أمس",
+      "onDate": "مغادرة {date}",
+      "unknown": "تاريخ المغادرة غير معروف"
+    },
+    "statuses": {
+      "COMPLETED": "مكتمل",
+      "PENDING_REVIEW": "بانتظار المراجعة"
+    },
+    "roomTypes": {
+      "single": "مفردة",
+      "double": "مزدوجة",
+      "triple": "ثلاثية",
+      "suite": "جناح",
+      "family": "عائلية",
+      "vip": "VIP"
+    },
+    "questions": {
+      "cleanliness": "كيف تقيم نظافة الغرفة؟",
+      "staff": "كيف تقيم تعامل موظفي الفندق؟",
+      "speed": "كيف تقيم سرعة الخدمة؟",
+      "room_quality": "كيف تقيم جودة الغرفة؟",
+      "check_in": "كيف كانت تجربة تسجيل الدخول؟",
+      "check_out": "كيف كانت تجربة تسجيل المغادرة؟",
+      "stay_again": "هل ستقيم في الفندق مرة أخرى؟",
+      "recommend": "هل سترشح الفندق لأحد؟"
+    },
+    "starLabel": "{value} من {max}",
+    "yes": "نعم",
+    "no": "لا",
+    "close": "إغلاق",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ...",
+    "drawer": {
+      "eyebrow": "استبيان المغادرة",
+      "newTitle": "استبيان رضا جديد",
+      "viewTitle": "تفاصيل الاستبيان",
+      "guestTitle": "بيانات النزيل",
+      "ratingsTitle": "تقييم تفاصيل الإقامة",
+      "overallTitle": "التقييم العام",
+      "overallHint": "انطباع النزيل عن الإقامة بالكامل",
+      "roomPlaceholder": "اكتب رقم الغرفة أو اختره",
+      "roomNoResults": "لا توجد مغادرة لهذه الغرفة",
+      "problemPlaceholder": "صف المشكلة التي واجهها النزيل...",
+      "suggestionsPlaceholder": "دوّن اقتراحات النزيل..."
+    },
+    "fields": {
+      "guest": "اسم النزيل",
+      "room": "رقم الغرفة",
+      "roomType": "نوع الغرفة",
+      "checkIn": "تاريخ الوصول",
+      "checkOut": "تاريخ المغادرة",
+      "hadProblem": "هل واجهت أي مشكلة أثناء الإقامة؟",
+      "problemDetails": "تفاصيل المشكلة",
+      "suggestions": "اقتراحات لتحسين الخدمة",
+      "status": "حالة الاستبيان",
+      "score": "متوسط التقييم"
+    },
+    "errors": {
+      "roomRequired": "اختر رقم الغرفة",
+      "roomNoStay": "لا يوجد نزيل يغادر من هذه الغرفة بدون استبيان",
+      "ratingsRequired": "قيّم كل الأسئلة من نجمة إلى ٥ نجوم",
+      "problemRequired": "اكتب تفاصيل المشكلة",
+      "tooLong": "النص أطول من {max} حرف",
+      "overallRequired": "اختر التقييم العام"
+    },
+    "apiErrors": {
+      "CONFLICT": "هذا النزيل لديه استبيان بالفعل.",
+      "NOT_FOUND": "لم تعد هذه الإقامة في قائمة المغادرة. حدّث الصفحة وحاول مرة أخرى.",
+      "VALIDATION_ERROR": "بعض البيانات غير صحيحة. راجع الاستبيان وحاول مرة أخرى."
+    },
+    "toastSaved": "تم حفظ استبيان {guest}",
+    "toastExported": {
+      "one": "تم تصدير استبيان واحد",
+      "two": "تم تصدير استبيانين",
+      "few": "تم تصدير {count} استبيانات",
+      "many": "تم تصدير {count} استبيانًا"
+    },
+    "toastNothingToExport": "لا توجد استبيانات لتصديرها",
+    "departureTitle": "استبيانات المغادرة",
+    "departureSubtitle": "آخر الإجابات المسجلة خلال وردية اليوم"
   }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeftRight, BedDouble, FileText, LayoutGrid, LogOut, Settings, Sparkles, User, Wallet, Wrench } from 'lucide-react';
+import { ArrowLeftRight, BedDouble, FileText, LayoutGrid, LogOut, NotebookText, Settings, Sparkles, User, Wallet, Wrench } from 'lucide-react';
 import { Logo } from '../../components/common/Logo';
 import { clearAuthSession } from '../../core/auth/authManager';
 import { logoutRequest } from '../../features/auth/services/auth.api';
@@ -19,6 +19,7 @@ const items = [
   { labelKey: 'nav.payments', path: ROUTES.payments, icon: Wallet },
   { labelKey: 'nav.shiftHandover', path: ROUTES.shiftHandover, icon: ArrowLeftRight },
   { labelKey: 'nav.shiftReport', path: ROUTES.shiftReport, icon: FileText },
+  { labelKey: 'nav.guestSurveys', path: ROUTES.guestSurveys, icon: NotebookText },
   { labelKey: 'nav.profile', path: ROUTES.profile, icon: User },
   { labelKey: 'nav.settings', path: ROUTES.settings, icon: Settings },
 ] as const;

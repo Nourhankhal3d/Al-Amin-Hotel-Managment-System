@@ -8,6 +8,7 @@ import { MaintenancePage } from '../../features/maintenance/pages/MaintenancePag
 import { PaymentsPage } from '../../features/payments/pages/PaymentsPage';
 import { ShiftHandoverPage } from '../../features/shift-handover/pages/ShiftHandoverPage';
 import { ShiftReportPage } from '../../features/shift-report/pages/ShiftReportPage';
+import { GuestSurveysPage } from '../../features/guest-surveys';
 import { ProfilePage } from '../../features/profile/pages/ProfilePage';
 import { SettingsPage } from '../../features/settings/pages/SettingsPage';
 import { ROUTES } from '../../core/constants/routes';
@@ -29,6 +30,8 @@ import { ManagerMaintenancePage } from '../../features/manager-maintenance';
 import { ManagerFinancePage } from '../../features/manager-finance';
 import { ManagerReportsPage } from '../../features/manager-reports';
 import { ManagerRefundsPage } from '../../features/manager-refunds';
+import { ManagerAiAssistantPage } from '../../features/manager-ai-assistant';
+import { ManagerAiRecommendationsPage } from '../../features/manager-ai-recommendations';
 import { SubManagerDashboardPage } from '../../features/submanager-dashboard';
 import { SubManagerFinancePage } from '../../features/submanager-finance';
 import { SubManagerReportsPage } from '../../features/submanager-reports';
@@ -49,6 +52,7 @@ export function AppRouter() {
           <Route path={ROUTES.payments} element={<PaymentsPage />} />
           <Route path={ROUTES.shiftHandover} element={<ShiftHandoverPage />} />
           <Route path={ROUTES.shiftReport} element={<ShiftReportPage />} />
+          <Route path={ROUTES.guestSurveys} element={<GuestSurveysPage />} />
           <Route path={ROUTES.profile} element={<ProfilePage />} />
           <Route path={ROUTES.settings} element={<SettingsPage />} />
         </Route>
@@ -64,6 +68,8 @@ export function AppRouter() {
           <Route path={ROUTES.managerRefunds} element={<ManagerRefundsPage />} />
           <Route path={ROUTES.managerPasswordRequests} element={<ManagerPasswordRequestsPage />} />
           <Route path={ROUTES.managerShifts} element={<ManagerShiftsPage />} />
+          <Route path={ROUTES.managerAiAssistant} element={<ManagerAiAssistantPage />} />
+          <Route path={ROUTES.managerAiRecommendations} element={<ManagerAiRecommendationsPage />} />
           <Route path={ROUTES.managerRoomTypes} element={<ManagerRoomTypesPage />} />
           <Route path={ROUTES.managerProfile} element={<ManagerProfilePage />} />
           <Route path={ROUTES.managerSettings} element={<ManagerSettingsPage />} />
