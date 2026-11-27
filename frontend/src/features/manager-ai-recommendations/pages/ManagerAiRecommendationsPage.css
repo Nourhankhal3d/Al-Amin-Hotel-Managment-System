@@ -1,0 +1,74 @@
+.manager-ai-recs {
+  min-width: 0;
+}
+
+/* Three cards per row, as in the design (the fourth wraps under the first) */
+.manager-ai-recs__stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.manager-ai-recs__stats .ui-stat-card--green .ui-stat-card__icon { color: var(--color-primary); }
+.manager-ai-recs__stats .ui-stat-card--gold .ui-stat-card__icon { color: var(--color-gold-ink); }
+
+/* Title on the start side, category chips on the end side */
+.manager-ai-recs__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.manager-ai-recs__filters-copy h2 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.manager-ai-recs__filters-copy p {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.manager-ai-recs__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.manager-ai-recs__chip {
+  min-height: 2.5rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.manager-ai-recs__chip:hover { border-color: var(--color-primary); color: var(--color-primary-dark); }
+
+.manager-ai-recs__chip--active,
+.manager-ai-recs__chip--active:hover {
+  border-color: var(--color-primary);
+  color: #fff;
+  background: var(--color-primary);
+}
+
+.manager-ai-recs__chip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 72rem) {
+  .manager-ai-recs__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 36rem) {
+  .manager-ai-recs__stats { grid-template-columns: 1fr; }
+}

@@ -12,6 +12,8 @@ import {
   ArrowLeftRight,
   Settings,
   LogOut,
+  MessageCircle,
+  Check,
 } from 'lucide-react';
 import { clearAuthSession } from '../../core/auth/authManager';
 import { logoutRequest } from '../../features/auth/services/auth.api';
@@ -30,6 +32,8 @@ const sidebarItems = [
   { key: 'refunds', path: ROUTES.managerRefunds, icon: Wallet }, // same icon as finance in the design
   { key: 'passwordRequests', path: ROUTES.managerPasswordRequests, icon: Settings }, // design uses the gear here
   { key: 'shifts', path: ROUTES.managerShifts, icon: ArrowLeftRight },
+  { key: 'aiAssistant', path: ROUTES.managerAiAssistant, icon: MessageCircle },
+  { key: 'aiRecommendations', path: ROUTES.managerAiRecommendations, icon: Check },
   { key: 'roomTypes', path: ROUTES.managerRoomTypes, icon: ReceiptText },
   { key: 'profile', path: ROUTES.managerProfile, icon: User },
   { key: 'settings', path: ROUTES.managerSettings, icon: Settings },

@@ -1,0 +1,30 @@
+.manager-ai-assistant {
+  min-width: 0;
+}
+
+/* Six cards: three per row, as in the design */
+.manager-ai-assistant__stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.manager-ai-assistant__stats .ui-stat-card--green .ui-stat-card__icon { color: var(--color-primary); }
+.manager-ai-assistant__stats .ui-stat-card--gold .ui-stat-card__icon { color: var(--color-gold-ink); }
+
+/* Recent conversations on the start side, the chat on the end side */
+.manager-ai-assistant__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: var(--space-5);
+}
+
+@media (max-width: 72rem) {
+  .manager-ai-assistant__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .manager-ai-assistant__layout { grid-template-columns: 1fr; }
+  /* On narrow screens the chat comes first */
+  .manager-ai-assistant__layout > .ai-chat { order: -1; }
+}
+
+@media (max-width: 36rem) {
+  .manager-ai-assistant__stats { grid-template-columns: 1fr; }
+}
