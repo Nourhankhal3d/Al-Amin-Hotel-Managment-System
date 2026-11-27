@@ -49,6 +49,7 @@ const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
 
 app.get('/health', (req, res) => res.json({ ok: true }));
+app.use('/api/v1/guest-surveys', require('./modules/guest-surveys/guestSurvey.routes'));
 
 const apiSpecPath = path.resolve(__dirname, '../openapi/staff-management-api.yaml');
 
