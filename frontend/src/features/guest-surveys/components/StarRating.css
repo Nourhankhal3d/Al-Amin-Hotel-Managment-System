@@ -1,0 +1,42 @@
+/* Stars run left to right in both languages, as in the design */
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  direction: ltr;
+}
+
+.star-rating__star {
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--color-border-strong, #d9d4cb);
+  cursor: pointer;
+  transition: color 120ms ease, transform 120ms ease;
+}
+
+.star-rating__star svg { width: 1.35rem; height: 1.35rem; stroke-width: 1.6; }
+.star-rating--lg .star-rating__star svg { width: 1.6rem; height: 1.6rem; }
+
+.star-rating__star--on { color: var(--color-gold); }
+
+.star-rating:not(.star-rating--readonly) .star-rating__star:hover { transform: scale(1.12); }
+
+.star-rating--readonly .star-rating__star { cursor: default; }
+
+/* The real radio button: invisible, but still focusable and read by screen readers */
+.star-rating__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.star-rating__star:has(.star-rating__input:focus-visible) {
+  border-radius: var(--radius-control);
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.star-rating[aria-invalid='true'] .star-rating__star:not(.star-rating__star--on) { color: var(--color-danger); opacity: 0.55; }

@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw';
+import { guestSurveysHandlers } from './guestSurveys.handler';
 import type { RoomStatus } from '../../types/common.types';
 
 // شكل الغرفة كما يرجعه الـ API (معرّف هنا عشان الـ mocks ماتعتمدش على types الـ features)
@@ -658,6 +659,7 @@ const writeHandlers = [
 ];
 
 export const handlers = [
+  ...guestSurveysHandlers,
   ...writeHandlers,
 
   // Development-only mock login. Not real authentication.
