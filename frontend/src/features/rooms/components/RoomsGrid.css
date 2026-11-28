@@ -16,3 +16,27 @@
 @media (max-width: 40rem) {
   .rooms-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--space-3) var(--space-4) var(--space-4); }
 }
+/* One group per floor: a small title with a hairline, then that floor's cards */
+.rooms-floor + .rooms-floor { margin-top: var(--space-2); }
+
+.rooms-floor__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-4) var(--space-6) 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.rooms-floor__title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+@media (max-width: 40rem) {
+  .rooms-floor__title { padding: var(--space-4) var(--space-4) 0; }
+}

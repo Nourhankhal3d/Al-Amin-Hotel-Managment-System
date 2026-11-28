@@ -12,3 +12,7 @@
   font-weight: var(--font-weight-semibold);
   white-space: nowrap;
 }
+
+.payments-page__amount--negative {
+  color: var(--color-danger);
+}
