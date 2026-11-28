@@ -26,7 +26,8 @@ export function ExpensesTable({ expenses, language }: ExpensesTableProps) {
       return <Badge tone="warning">{t(`paymentsPage.expenses.categories.${expense.category}`)}</Badge>;
     } },
     { key: 'amount', label: t('paymentsPage.expenses.columns.amount'), render: (row: unknown) => (
-      <span className="payments-page__amount">{formatAmount((row as Expense).amount, language)}</span>
+      // An expense is money going out: shown as a negative amount in red
+      <span className="payments-page__amount payments-page__amount--negative">{formatAmount(-(row as Expense).amount, language)}</span>
     ) },
     { key: 'time', label: t('paymentsPage.expenses.columns.time'), render: (row: unknown) => formatPaymentTime((row as Expense).recordedAt, language) },
     { key: 'notes', label: t('paymentsPage.expenses.columns.notes'), render: (row: unknown) => (row as Expense).notes ?? '—' },

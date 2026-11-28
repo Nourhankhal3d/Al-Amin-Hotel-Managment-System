@@ -453,6 +453,11 @@
     "gridSubtitle": "{count} rooms in one grid · click to update live",
     "card": {
       "room": "Room"
+    },
+    "floorHeading": {
+      "1": "First floor",
+      "2": "Second floor",
+      "3": "Third floor"
     }
   },
   "save": "Save Changes",

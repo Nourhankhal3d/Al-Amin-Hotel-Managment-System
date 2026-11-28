@@ -7,3 +7,7 @@
 @media (max-width: 56rem) {
   .payments-ledger { grid-template-columns: 1fr; }
 }
+/* A figure below zero (expenses, or a net loss) is shown in red */
+.payments-ledger__card--negative .ui-stat-card__value {
+  color: var(--color-danger);
+}
