@@ -18,6 +18,7 @@ const { E } = require('../../utils/errors');
 const { sanitizeText } = require('../../utils/arabic');
 const { audit } = require('../audit/audit.service');
 const pdfUtils = require('../../utils/pdf');
+const { buildReportDetails } = require('./shiftReport.details');
 const { toCleaningTaskDto } = require('../cleaning/cleaning.dto');
 const { toMaintenanceIssueDto } = require('../maintenance/maintenance.dto');
 const { toPaymentDto } = require('../payments/payment.dto');
@@ -471,9 +472,12 @@ async function handoverShift({ staff, session, shiftNotes, now = new Date(), ip 
     summary.shift.handed_over_at = now.toISOString();
     summary.shift.shift_notes = cleanNotes;
 
+    // Room numbers, payments, expenses, surveys... shown in the PDF only (the summary API is unchanged)
+    const details = await buildReportDetails(shift, summary);
     const { pdfBuffer, sha256 } = await pdfUtils.generateShiftReportPdf({
       ...summary,
       staff,
+      details,
     });
 
     await ShiftReport.create({
